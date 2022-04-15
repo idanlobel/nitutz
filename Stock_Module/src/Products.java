@@ -17,7 +17,7 @@ public class Products {
     private int ID;
     private String name;
     private Double current_sell_price;
-    private Double percentage;
+    private Double overall_sale_percentage;
 
 
     public Products(int id, String name, int quantity,Double cost_price,Double sell_price,LocalDate expiry,String manufactorer,String category)
@@ -34,7 +34,7 @@ public class Products {
         this.prices_history=new Hashtable<>();
         this.prices_history.put(LocalDate.now(),sell_price);
         this.current_sell_price=sell_price;
-        this.percentage=0.0;
+        this.overall_sale_percentage=0.0;
         this.min_quantity=10;
 
     }
@@ -75,7 +75,7 @@ public class Products {
         Double price_after_sale=this.current_sell_price-(this.current_sell_price*precentage);
         this.current_sell_price=price_after_sale;
         this.prices_history.put(start_date,price_after_sale);
-        this.percentage=this.percentage+percentage;
+        this.overall_sale_percentage=this.overall_sale_percentage+precentage;
         update_prices(price_after_sale);
     }
 
@@ -85,7 +85,7 @@ public class Products {
         Double price_before_sale=this.current_sell_price/(1.0-percentage);
         this.current_sell_price=price_before_sale;
         this.prices_history.put(LocalDate.now(),price_before_sale);
-        this.percentage=this.percentage-percentage;
+        this.overall_sale_percentage=this.overall_sale_percentage-percentage;
         update_prices(price_before_sale);
     }
 
