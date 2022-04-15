@@ -26,15 +26,16 @@ public class Products {
         this.ID=id;
         this.name=name;
         this.update_quantity(quantity,cost_price,expiry);
-        this.storage_quantity=0;
+        this.storage_quantity=quantity;
         this.shelf_quantity=0;
         this.quantity=shelf_quantity+storage_quantity;
         this.manufactorer=manufactorer;
         this.category=category;
         this.prices_history=new Hashtable<>();
-        this.prices_history.put(LocalDate.now(),cost_price);
+        this.prices_history.put(LocalDate.now(),sell_price);
         this.current_sell_price=sell_price;
         this.percentage=0.0;
+        this.min_quantity=10;
 
     }
     public int getQuantity() {
@@ -57,6 +58,7 @@ public class Products {
             this.product_list.add(new Product(this.name,LocalDate.now(),cost_price,current_sell_price,expiry));
         }
         this.storage_quantity=this.storage_quantity+number;
+        this.quantity=this.shelf_quantity+storage_quantity;
 
     }
 
@@ -68,11 +70,11 @@ public class Products {
         }
     }
 
-    public void Record_sale(double precentage)
+    public void Record_sale(double precentage,LocalDate start_date)
     {
         Double price_after_sale=this.current_sell_price-(this.current_sell_price*precentage);
         this.current_sell_price=price_after_sale;
-        this.prices_history.put(LocalDate.now(),price_after_sale);
+        this.prices_history.put(start_date,price_after_sale);
         this.percentage=this.percentage+percentage;
         update_prices(price_after_sale);
     }
@@ -85,5 +87,15 @@ public class Products {
         this.prices_history.put(LocalDate.now(),price_before_sale);
         this.percentage=this.percentage-percentage;
         update_prices(price_before_sale);
+    }
+
+    public Double getsellprice()
+    {
+        return this.current_sell_price;
+    }
+
+    public Double get_by_date(LocalDate date)
+    {
+        return this.prices_history.get(date);
     }
 }
