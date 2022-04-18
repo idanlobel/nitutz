@@ -1,3 +1,5 @@
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Worker {
@@ -6,6 +8,28 @@ public class Worker {
     String email_address;
     BankAccount bankAccount;
     EmploymentConditions employmentConditions;
-    enum Job {Cashier, Trucking, Store_Keeper};
-    List<Job> jobs;
+    List<String> jobs = Arrays.asList("Cashier", "Trucking", "Store Keeper"); //TODO:: Need to add more...
+    List<String> workerJobs;
+
+    //Create a new worker
+    public Worker(String name, int id, String email_address, BankAccount bankAccount, List<String> workerJobs) {
+        this.name = name;
+        this.id = id;
+        this.email_address = email_address;
+        this.bankAccount = bankAccount;
+        this.workerJobs = workerJobs;
+    }
+
+    public String toString(){
+        String s =  "Name " + name + ", ID: " + id + ", Jobs: ";
+        for (String job : jobs){
+            s+= job + " ,";
+        }
+        return (s.substring(0, s.length()) + "."); //removing the last ',' and adding a '.'
+    }
+
+    //check if the job already exists
+    protected boolean hasJob(String job){
+        return jobs.contains(job);
+    }
 }
