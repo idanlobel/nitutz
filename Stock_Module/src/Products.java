@@ -1,3 +1,4 @@
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -10,17 +11,20 @@ public class Products {
     private int shelf_quantity;
     private int storage_quantity;
     private String manufactorer;
-    private String category;
+    private String main_category;
+    private String sub_category;
+    private String sub_sub_category;
     private int sold_quantity;
     private int min_quantity;
     private Dictionary<LocalDate,Double> prices_history;
+    private List<Integer> sales_history;
     private int ID;
     private String name;
     private Double current_sell_price;
     private Double overall_sale_percentage;
 
 
-    public Products(int id, String name, int quantity,Double cost_price,Double sell_price,LocalDate expiry,String manufactorer,String category)
+    public Products(int id, String name, int quantity,Double cost_price,Double sell_price,LocalDate expiry,String manufactorer,String category,String sub_category,String sub_sub_category)
     {
         this.product_list=new ArrayList<>();
         this.ID=id;
@@ -30,12 +34,15 @@ public class Products {
         this.shelf_quantity=0;
         this.quantity=shelf_quantity+storage_quantity;
         this.manufactorer=manufactorer;
-        this.category=category;
+        this.main_category=category;
         this.prices_history=new Hashtable<>();
         this.prices_history.put(LocalDate.now(),sell_price);
         this.current_sell_price=sell_price;
         this.overall_sale_percentage=0.0;
         this.min_quantity=10;
+        this.sub_category=sub_category;
+        this.sub_sub_category=sub_sub_category;
+
 
     }
     public int getQuantity() {
@@ -70,13 +77,14 @@ public class Products {
         }
     }
 
-    public void Record_sale(double precentage,LocalDate start_date)
+    public void Record_sale(double precentage,LocalDate start_date,int sale_id)
     {
         Double price_after_sale=this.current_sell_price-(this.current_sell_price*precentage);
         this.current_sell_price=price_after_sale;
         this.prices_history.put(start_date,price_after_sale);
         this.overall_sale_percentage=this.overall_sale_percentage+precentage;
         update_prices(price_after_sale);
+        this.sales_history.add(sale_id);
     }
 
 
@@ -97,5 +105,44 @@ public class Products {
     public Double get_by_date(LocalDate date)
     {
         return this.prices_history.get(date);
+    }
+    public String getName(){return this.name;}
+    public String getManufactorer()
+    {
+        return  this.manufactorer;
+    }
+    public int getShelf_quantity()
+    {
+        return  this.shelf_quantity;
+    }
+
+    public int getStorage_quantity() {
+        return storage_quantity;
+    }
+
+    public int get_store_quantity()
+    {
+        return this.shelf_quantity+this.storage_quantity;
+    }
+
+    public List<Integer> getSales_history()
+    {
+        return this.sales_history;
+    }
+
+    public String getMain_category()
+    {
+        return this.main_category;
+    }
+
+    public String getSub_category()
+    {
+        return this.sub_category;
+    }
+
+
+    public String getSub_sub_category()
+    {
+        return this.sub_sub_category;
     }
 }

@@ -33,6 +33,40 @@ public class Product {
     {
      this.sell_price=new_sell_price;
     }
+    public  Location getLocation()
+    {
+        return  this.location;
+    }
+    public  boolean isSold()
+    {
+        return this.sold;
+    }
+
+    public double getcostprice()
+    {
+        return this.cost_price;
+
+    }
+    public double getsoldprice()
+    {
+        return this.sell_price;
+
+    }
+
+    public LocalDate getExpire_date()
+    {
+        return this.expire_date;
+    }
+
+    public String getName()
+    {
+        return this.name;
+    }
+
+    public boolean isBroken()
+    {
+        return this.broken;
+    }
 
 
 
