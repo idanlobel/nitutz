@@ -1,6 +1,7 @@
+package Domain_Layer;
+
 import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class Schedule {
 
@@ -28,7 +29,7 @@ public class Schedule {
 
     } */
 
-    //TODO:: For now we can't implement this method because we don't know which shifts the HR would like to add -
+    //TODO:: For now we can't implement this method because we don't know which shifts the Business_Layer.HR would like to add -
     // Later we can implement it by using a GUI interface.
    /* public boolean editWorkerSchedule(int workerID, int workerScheduleID){
 

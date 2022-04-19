@@ -1,3 +1,5 @@
+package Domain_Layer;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,6 +18,14 @@ public class TempData {
         if (tmpData == null)
             tmpData = new TempData();
         return tmpData;
-        // .
+    }
+
+    public int containsWorker(String userName, String password){
+        for(Worker w : workers){
+            if(w.name == userName && w.passwordsMatch(password)){
+                return w.id;
+            }
+        }
+        return -1; //The login info is incorrect.
     }
 }

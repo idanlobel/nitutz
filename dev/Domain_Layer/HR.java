@@ -1,10 +1,11 @@
-import java.util.LinkedList;
+package Domain_Layer;
+
 import java.util.List;
 
 public class HR extends Worker {
 
-    public HR(String name, int id, String email_address, BankAccount bankAccount, List<String> jobs) {
-        super(name, id, email_address, bankAccount, jobs);
+    public HR(String name, int id, String password, String email_address, BankAccount bankAccount, List<String> jobs) {
+        super(name, id, password, email_address, bankAccount, jobs);
     }
 
     //Adding a new worker to the database (will be deleted at the end of the current running program)
@@ -29,7 +30,7 @@ public class HR extends Worker {
     //TODO:: For the moment we can't implement that, because we need to know what fields he wants to update...
     //Update an employee
    /* public boolean editWorker(int workerID){
-        for(Worker w: TempData.getInstance().workers) {
+        for(Business_Layer.Worker w: Business_Layer.TempData.getInstance().workers) {
             if (w.id == workerID) {
                 return false; //There's already such worker
             }

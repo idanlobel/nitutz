@@ -1,10 +1,12 @@
+package Domain_Layer;
+
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Worker {
     String name;
     int id;
+    private String password;
     String email_address;
     BankAccount bankAccount;
     EmploymentConditions employmentConditions;
@@ -12,12 +14,17 @@ public class Worker {
     List<String> workerJobs;
 
     //Create a new worker
-    public Worker(String name, int id, String email_address, BankAccount bankAccount, List<String> workerJobs) {
+    public Worker(String name, int id, String password, String email_address, BankAccount bankAccount, List<String> workerJobs) {
         this.name = name;
         this.id = id;
         this.email_address = email_address;
         this.bankAccount = bankAccount;
         this.workerJobs = workerJobs;
+        this.password = password;
+    }
+
+    public boolean passwordsMatch(String password){
+        return this.password == password;
     }
 
     public String toString(){
