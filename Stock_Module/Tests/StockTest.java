@@ -2,6 +2,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -53,4 +54,24 @@ class StockTest {
         stock_test.remove_sale(stock_test.getsales().get(0).getId());
         assertEquals(75, stock_test.get_products(2).getsellprice());
     }
+
+    @Test
+    void sorted_by_expiration() throws Exception {
+        stock_test.Order(2,50,50.0,LocalDate.of(2022,8,20),"something","something","something","something","something");
+        stock_test.Order(87,50,50.0,LocalDate.of(2022,6,20),"something","something","something","something","something");
+        List<Product> testme= stock_test.sorted_by_expiration();
+        assertEquals(LocalDate.of(2022,6,20), testme.get(0).getExpire_date());
+    }
+
+    @Test
+    void sale_by_category() throws Exception {
+
+        stock_test.Order(2,50,100.0,LocalDate.of(1111,1,20),"something","something","dairy","milk","300");
+        stock_test.Order(5,50,10.0,LocalDate.of(1111,1,20),"something","something","drinks","beer","500");
+        stock_test.sale_by_category("dairy",0,LocalDate.now(),LocalDate.of(2222,2,2),"holiday",0.5);
+        assertEquals(75, stock_test.get_products(2).getsellprice());
+
+    }
+
+
 }

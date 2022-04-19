@@ -30,17 +30,17 @@ public class Stock {
     }
 
     //orders products with required quantity
-    public void Order(int id, int quantity, Double cost, LocalDate expiry, String name, String manufactorer, String category,String sub_cat,String sub_sub_cat) {
+    public void Order(int product_id, int quantity, Double cost, LocalDate expiry, String name, String manufactorer, String category,String sub_cat,String sub_sub_cat) {
         boolean added = false;
         for (Products products : this.products_list) {
-            if (products.getID() == id) {
+            if (products.getID() == product_id) {
                 products.update_quantity(quantity, cost, expiry);
                 added = true;
             }
         }
         if (!added) {
             //maybe we should ask the client if there is a default price for selling , for exmaple : cost * 1.5
-            Products products = new Products(id, name, quantity, cost, cost * 1.5, expiry, manufactorer, category,sub_cat,sub_sub_cat);
+            Products products = new Products(product_id, name, quantity, cost, cost * 1.5, expiry, manufactorer, category,sub_cat,sub_sub_cat);
             products_list.add(products);
         }
 

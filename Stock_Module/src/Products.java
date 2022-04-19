@@ -42,6 +42,7 @@ public class Products {
         this.min_quantity=10;
         this.sub_category=sub_category;
         this.sub_sub_category=sub_sub_category;
+        this.sales_history=new ArrayList<>();
 
 
     }
@@ -144,5 +145,10 @@ public class Products {
     public String getSub_sub_category()
     {
         return this.sub_sub_category;
+    }
+
+    public List<Integer> getsaleshistory()
+    {
+        return this.sales_history;
     }
 }

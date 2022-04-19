@@ -23,4 +23,11 @@ class ProductsTest {
         assertEquals(80.0,products_test.get_by_date(LocalDate.of(2000,2,2)));
         assertEquals(100.0,products_test.get_by_date(LocalDate.now()));
     }
+
+    @Test
+    void record_sale_2() throws Exception {
+        sale_test.Add_Products(products_test);
+        assertEquals(0,products_test.getsaleshistory().get(0));
+
+    }
 }
