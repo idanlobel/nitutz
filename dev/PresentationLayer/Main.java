@@ -1,18 +1,25 @@
-package Service_Layer;
+package PresentationLayer;
+
+import Service_Layer.Login;
+import Service_Layer.ServiceLayer;
 
 import java.util.Scanner;
 
 public class Main {
 
+
     public static void main(String[] args) {
+        ServiceLayer serviceLayer;
         Scanner sc= new Scanner(System.in);
         System.out.println("Hello! welcome to our system. Firstly, please enter your login information: ");
         String decision = sc.nextLine();
         if(decision == "Login"){
             Login loginInfo = Login();
             while(!loginInfo.isAUser()){
+
                 System.out.println("The information you've entered is incorrect, please try again: ");
             }
+
             //TODO:: after logged-in successfully
 
         }

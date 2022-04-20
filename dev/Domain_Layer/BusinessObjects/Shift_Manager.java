@@ -1,4 +1,4 @@
-package Domain_Layer;
+package Domain_Layer.BusinessObjects;
 
 import java.util.List;
 

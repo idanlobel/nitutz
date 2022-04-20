@@ -1,7 +1,6 @@
 package Service_Layer;
 
-import java.util.Scanner;
-import Domain_Layer.*;
+import Domain_Layer.BusinessControllers.WorkerController;
 
 public class Login {
     String userName;
@@ -15,8 +14,8 @@ public class Login {
     }
 
     public boolean isAUser() {
-        TempData tmpData = TempData.getInstance();
-        workerID = tmpData.containsWorker(userName, password);
+        WorkerController workerController = WorkerController.getInstance();
+        workerID = workerController.containsWorker(userName, password);
         if (workerID != -1) {
             return true;
         }
