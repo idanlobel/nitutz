@@ -1,3 +1,5 @@
+package busniess_layer;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,8 +18,9 @@ public class Product {
     private LocalDate delivery_date;
     private LocalDate sell_date;
     private boolean sold;
+    private int ID;
 
-    public Product(String name,LocalDate delivery_date,Double cost_price,Double sell_price,LocalDate expire)
+    public Product(String name,LocalDate delivery_date,Double cost_price,Double sell_price,LocalDate expire,int id)
     {
         this.name=name;
         this.delivery_date=delivery_date;
@@ -27,6 +30,7 @@ public class Product {
         this.location=Location.storage;
         this.broken=false;
         this.sold=false;
+        this.ID=id;
     }
 
     public void set_sell_price(double new_sell_price)
@@ -66,6 +70,16 @@ public class Product {
     public boolean isBroken()
     {
         return this.broken;
+    }
+
+    public int get_id()
+    {
+        return this.ID;
+    }
+
+    public void set_is_broken()
+    {
+        this.broken=true;
     }
 
 

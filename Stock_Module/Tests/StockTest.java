@@ -1,3 +1,7 @@
+import busniess_layer.Product;
+import busniess_layer.Products;
+import busniess_layer.Sale;
+import busniess_layer.Stock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,7 +46,7 @@ class StockTest {
     void sale() throws Exception {
 
         stock_test.Order(2,50,50.0,LocalDate.of(1111,1,20),"something","something","something","something","something");
-        stock_test.Sale(2,1,LocalDate.now(),LocalDate.of(2030,2,2),"something",0.5);
+        stock_test.Sale(2,LocalDate.now(),LocalDate.of(2030,2,2),"something",0.5);
         assertEquals(37.5, stock_test.get_products(2).getsellprice());
 
     }
@@ -50,7 +54,7 @@ class StockTest {
     @Test
     void remove_sale() throws Exception {
         stock_test.Order(2,50,50.0,LocalDate.of(1111,1,20),"something","something","something","something","something");
-        stock_test.Sale(2,1,LocalDate.now(),LocalDate.of(2030,2,2),"something",0.5);
+        stock_test.Sale(2,LocalDate.now(),LocalDate.of(2030,2,2),"something",0.5);
         stock_test.remove_sale(stock_test.getsales().get(0).getId());
         assertEquals(75, stock_test.get_products(2).getsellprice());
     }
@@ -68,7 +72,7 @@ class StockTest {
 
         stock_test.Order(2,50,100.0,LocalDate.of(1111,1,20),"something","something","dairy","milk","300");
         stock_test.Order(5,50,10.0,LocalDate.of(1111,1,20),"something","something","drinks","beer","500");
-        stock_test.sale_by_category("dairy",0,LocalDate.now(),LocalDate.of(2222,2,2),"holiday",0.5);
+        stock_test.sale_by_category("dairy",LocalDate.now(),LocalDate.of(2222,2,2),"holiday",0.5);
         assertEquals(75, stock_test.get_products(2).getsellprice());
 
     }

@@ -1,4 +1,7 @@
-import java.time.Instant;
+package busniess_layer;
+
+import busniess_layer.Product;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -18,16 +21,16 @@ public class Products {
     private int min_quantity;
     private Dictionary<LocalDate,Double> prices_history;
     private List<Integer> sales_history;
-    private int ID;
+    private long catalog_number;
     private String name;
     private Double current_sell_price;
     private Double overall_sale_percentage;
 
 
-    public Products(int id, String name, int quantity,Double cost_price,Double sell_price,LocalDate expiry,String manufactorer,String category,String sub_category,String sub_sub_category)
+    public Products(long catalog_number, String name, int quantity,Double cost_price,Double sell_price,LocalDate expiry,String manufactorer,String category,String sub_category,String sub_sub_category)
     {
         this.product_list=new ArrayList<>();
-        this.ID=id;
+        this.catalog_number=catalog_number;
         this.name=name;
         this.update_quantity(quantity,cost_price,expiry);
         this.storage_quantity=quantity;
@@ -53,9 +56,9 @@ public class Products {
     {
         return this.min_quantity;
     }
-    public int getID()
+    public long getCatalog_number()
     {
-        return this.ID;
+        return this.catalog_number;
     }
     public List<Product> getProduct_list(){return this.product_list;}
 
@@ -63,7 +66,7 @@ public class Products {
     {
         for(int i=0;i<number;i++)
         {
-            this.product_list.add(new Product(this.name,LocalDate.now(),cost_price,current_sell_price,expiry));
+            this.product_list.add(new Product(this.name,LocalDate.now(),cost_price,current_sell_price,expiry,ID_Generator.getInstance().Get_ID()));
         }
         this.storage_quantity=this.storage_quantity+number;
         this.quantity=this.shelf_quantity+storage_quantity;
@@ -150,5 +153,24 @@ public class Products {
     public List<Integer> getsaleshistory()
     {
         return this.sales_history;
+    }
+
+    public void set_min_quantity(int new_min)
+    {
+        this.min_quantity=new_min;
+    }
+
+    public boolean set_broken_item(int id)
+    {
+        boolean found=false;
+
+        for(Product p:this.product_list)
+        {
+            if(p.get_id()==id) {
+                p.set_is_broken();
+                found = true;
+            }
+        }
+        return found;
     }
 }

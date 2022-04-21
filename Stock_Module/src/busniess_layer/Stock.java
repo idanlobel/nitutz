@@ -1,3 +1,5 @@
+package busniess_layer;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,50 +32,31 @@ public class Stock {
     }
 
     //orders products with required quantity
-    public void Order(int product_id, int quantity, Double cost, LocalDate expiry, String name, String manufactorer, String category,String sub_cat,String sub_sub_cat) {
+    public void Order(long products_catalog_number, int quantity, Double cost, LocalDate expiry, String name, String manufactorer, String category,String sub_cat,String sub_sub_cat) {
         boolean added = false;
         for (Products products : this.products_list) {
-            if (products.getID() == product_id) {
+            if (products.getCatalog_number()== products_catalog_number) {
                 products.update_quantity(quantity, cost, expiry);
                 added = true;
             }
         }
         if (!added) {
             //maybe we should ask the client if there is a default price for selling , for exmaple : cost * 1.5
-            Products products = new Products(product_id, name, quantity, cost, cost * 1.5, expiry, manufactorer, category,sub_cat,sub_sub_cat);
+            Products products = new Products(products_catalog_number, name, quantity, cost, cost * 1.5, expiry, manufactorer, category,sub_cat,sub_sub_cat);
             products_list.add(products);
         }
 
     }
 
-    public void Sale(int products_id, int sales_id, LocalDate startdate, LocalDate endate, String reason, double percentage) throws Exception {
-        boolean foundsale = false;
-        int index_of_sale = -1;
-        //this for checks if this sale already exists and we want to add to it more products
-        //if there isn't we will make new instance of sale
-        for (Sale sale : this.sales_list) {
-            if (sale.getId() == sales_id) {
-                foundsale = true;
-                index_of_sale = this.sales_list.indexOf(sale);
-                break;
+    public void Sale(long products_catalog_number, LocalDate startdate, LocalDate endate, String reason, double percentage) throws Exception {
 
-            }
 
-        }
         //this checks the products list to add sale to products with provided id
         for (Products products : this.products_list) {
-            if (products.getID() == products_id) {
-                if (!foundsale) {
-
-                    Sale new_sale = new Sale(percentage,ID_Generator.getInstance().Get_ID(), LocalDate.now(), endate, reason);
+            if (products.getCatalog_number() == products_catalog_number) {
+                    Sale new_sale = new Sale(percentage, ID_Generator.getInstance().Get_ID(), LocalDate.now(), endate, reason);
                     new_sale.Add_Products(products);
                     this.sales_list.add(new_sale);
-
-
-                } else {
-                    this.sales_list.get(index_of_sale).Add_Products(products);
-
-                }
             }
 
         }
@@ -81,8 +64,21 @@ public class Stock {
 
     }
 
-    public void sale_by_category(String category,int sales_id, LocalDate startdate, LocalDate endate, String reason, double percentage) throws Exception {
-        Sale new_sale=new Sale(percentage,ID_Generator.getInstance().Get_ID(), startdate,endate,reason);
+    public void Add_to_sale(long products_catalog_number,int sales_id) throws Exception {
+        for(Products p:this.products_list)
+        {
+            if(p.getCatalog_number()==products_catalog_number)
+            {
+                for(Sale sale:this.sales_list)
+                {
+                    sale.Add_Products(p);
+                }
+            }
+        }
+    }
+
+    public void sale_by_category(String category,LocalDate startdate, LocalDate endate, String reason, double percentage) throws Exception {
+        Sale new_sale=new Sale(percentage, ID_Generator.getInstance().Get_ID(), startdate,endate,reason);
         for(Products p :this.products_list)
         {
             if(p.getMain_category().equals(category))
@@ -102,9 +98,9 @@ public class Stock {
         }
     }
 
-    public Products get_products(int id) {
+    public Products get_products(int catalog_number) {
         for (Products products : this.products_list) {
-            if (products.getID() == id) {
+            if (products.getCatalog_number() == catalog_number) {
                 return products;
             }
 
@@ -121,16 +117,12 @@ public class Stock {
         List<Products> answer_list=new ArrayList<>();
         for (Products products : this.products_list) {
             if (products.getMain_category().equals(main_cat) & products.getSub_category().equals(sub_cat) & products.getSub_sub_category().equals(sub_sub_cat)){
-
-
-
                 answer_list.add(products);
             }
-
-
         }
+        Report repo=new Report(Report.Subject.stock_report,ID_Generator.getInstance().Get_ID(),answer_list,null,null);
 
-
+        repo.Fill_Me();
         return answer_list;
 
 
@@ -141,29 +133,33 @@ public class Stock {
         return  this.sales_list;
     }
 
-    public void make_stock_report()
+    public Report make_stock_report()
     {
-        Report r=new Report(Report.Subject.stock_report,ID_Generator.getInstance().Get_ID());
-        r.Fill_Me(this.products_list,null,null);
+        Report r=new Report(Report.Subject.stock_report, ID_Generator.getInstance().Get_ID(),this.products_list,null,null);
+        r.Fill_Me();
+        return r;
     }
 
-    public void make_prices_report()
+    public Report make_prices_report()
     {
-        Report r=new Report(Report.Subject.prices_report,ID_Generator.getInstance().Get_ID());
-        r.Fill_Me(null,null,this.get_every_product());
+        Report r=new Report(Report.Subject.prices_report, ID_Generator.getInstance().Get_ID(),null,null,get_every_product());
+        r.Fill_Me();
+        return r;
     }
 
 
-    public void make_sales_report()
+    public Report make_sales_report()
     {
-        Report r=new Report(Report.Subject.sales_report,ID_Generator.getInstance().Get_ID());
-        r.Fill_Me(this.products_list,this.sales_list,null);
+        Report r=new Report(Report.Subject.sales_report, ID_Generator.getInstance().Get_ID(),this.products_list,this.sales_list,null);
+        r.Fill_Me();
+        return r;
     }
 
-    public void make_defective_report()
+    public Report make_defective_report()
     {
-        Report r=new Report(Report.Subject.defective_items_report,ID_Generator.getInstance().Get_ID());
-        r.Fill_Me(null,null,this.get_every_product());
+        Report r=new Report(Report.Subject.defective_items_report, ID_Generator.getInstance().Get_ID(),null,null,get_every_product());
+        r.Fill_Me();
+        return r;
     }
 
 
@@ -180,7 +176,15 @@ public class Stock {
         }
         Collections.sort(sorted_list, Comparator.comparing(Product::getExpire_date));
 
+
+
+
         return sorted_list;
+    }
+
+    public Report make_sorted_by_expiration_report()
+    {
+        return new Report(Report.Subject.stock_report,ID_Generator.getInstance().Get_ID(), null,null,this.sorted_by_expiration());
     }
 
     public List<Product> get_every_product()
@@ -195,6 +199,19 @@ public class Stock {
 
         }
         return everyproductinstore;
+    }
+
+    public boolean set_product_broken(int id,int catalog_number)
+    {
+        boolean found=false;
+        for(Products p:this.products_list)
+        {
+            if(p.getCatalog_number()==catalog_number)
+            {
+                found=p.set_broken_item(id);
+            }
+        }
+        return found;
     }
 
 }

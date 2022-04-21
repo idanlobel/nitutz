@@ -1,8 +1,7 @@
-import java.security.KeyPair;
+package busniess_layer;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
 
 
@@ -31,11 +30,8 @@ public class Sale {
         return this.ID;
     }
 
-    public void Add_Products(Products p) throws Exception {
-        if(this.percentage<0 | this.percentage>1)
-        {
-            throw new Exception("percenrage is illegal, change percentage");
-        }
+    public void Add_Products(Products p)  {
+
         this.products_in_sale.add(p);
         p.Record_sale(percentage,start_date,this.ID);
 

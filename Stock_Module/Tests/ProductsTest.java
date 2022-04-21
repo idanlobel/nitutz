@@ -1,3 +1,5 @@
+import busniess_layer.Products;
+import busniess_layer.Sale;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
