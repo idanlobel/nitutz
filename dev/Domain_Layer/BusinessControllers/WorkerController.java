@@ -47,7 +47,6 @@ public class WorkerController {
     }
 
     public boolean addWorker(Worker worker) {
-
         if (repository.addWorker(worker)) {
             workers.add(worker);
             return true;
@@ -70,6 +69,9 @@ public class WorkerController {
                 return w;
             }
         }
+
+        if(hr.getId() == workerID)
+            return hr;
         return null;
     }
 

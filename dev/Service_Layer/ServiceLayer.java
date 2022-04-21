@@ -42,6 +42,7 @@ public class ServiceLayer {
         else return false;
     }
     public WeeklyScheduleSL viewWeeklySchedule(int callerID, int weekID) {
+        //TODO: FIX THIS - A LOT OF NULL POINTER EXCEPTIONS
         if (!workerController.isHR(callerID))
             return null;//TODO:: we actually need to throw exceptions or responses like we did last year
         Weekly_Schedule weekly_schedule = shiftsController.getWeeklySchedule(weekID);
@@ -58,14 +59,19 @@ public class ServiceLayer {
                                 WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
                                 workerSLS0.add(workerSL);
                             }
-                            shiftSLS[i][0] = new ShiftSL(workerSLS0, shifts[i][0].getShift_manager().getId());
+                            if (shifts[i][0].getShift_manager() != null) {
+                                shiftSLS[i][0] = new ShiftSL(workerSLS0, shifts[i][0].getShift_manager().getId());
+                            }
                             List<WorkerSL> workerSLS1 = new LinkedList<>();
                             List<Worker> workers1 = shifts[i][1].getShiftWorkers();
                             for (Worker worker : workers1) {
                                 WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
                                 workerSLS1.add(workerSL);
                             }
-                            shiftSLS[i][1] = new ShiftSL(workerSLS1, shifts[i][1].getShift_manager().getId());
+                            if (shifts[i][1].getShift_manager() != null) {
+                                shiftSLS[i][1] = new ShiftSL(workerSLS1, shifts[i][1].getShift_manager().getId());
+                            }
+
                         }
                     }
                 }
@@ -111,5 +117,15 @@ public class ServiceLayer {
     public WorkerScheduleSL viewWorkerSchedule(int workerID){
         Worker_Schedule worker_schedule = shiftsController.getWorkerSchedule(workerID);
         return new WorkerScheduleSL(worker_schedule.getSchedule());
+    }
+
+    public boolean isShiftReady(int callerID, int weekID, int day, int shift){
+        if(!workerController.isHR(callerID))return false;
+        return shiftsController.isShiftIsReady(weekID, day, shift);
+    }
+
+    public boolean isWeeklyScheduleReady(int callerID, int weekID){
+        if(!workerController.isHR(callerID))return false;
+        return shiftsController.isWeeklyScheduleReady(weekID);
     }
 }

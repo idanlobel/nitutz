@@ -19,4 +19,14 @@ public class Weekly_Schedule {
         }
         return null;
     }
+
+    public boolean isWeeklyScheduleReady(){
+        for(int i =0; i <5; i++){
+            for(int j= 0; j<2; j++){
+                if(!schedule[i][j].isShiftIsReady())
+                    return false;
+            }
+        }
+        return true;
+    }
 }

@@ -81,4 +81,21 @@ public class ShiftsController {
        return getWeeklySchedule(weekID).getShift(day,shift).removeTransaction(transactionID, workerID);
     }
 
+    public boolean isShiftIsReady (int weekID, int day, int shift){
+        Weekly_Schedule weekly_schedule = getWeeklySchedule(weekID);
+        if(weekly_schedule != null){
+            Shift sft = weekly_schedule.getShift(day,shift);
+            return sft.isShiftIsReady();
+        }
+        return false;
+    }
+
+    public boolean isWeeklyScheduleReady (int weekID) {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 2; j++) {
+                if (!isShiftIsReady(weekID, i, j)) return false;
+            }
+        }
+        return true;
+    }
 }

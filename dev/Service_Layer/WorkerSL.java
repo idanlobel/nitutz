@@ -21,11 +21,11 @@ public class WorkerSL {
         this.workerJobs = workerJobs;
     }
     public String toString(){
-        String s =  "Name " + name + ", ID: " + id + ", Jobs: ";
+        String s =  "Name: " + name + ", ID: " + id + ", Jobs: ";
         for (String job : workerJobs){
             s+= job + " ,";
         }
-        return (s.substring(0, s.length()) + "."); //removing the last ',' and adding a '.'
+        return (s.substring(0, s.length() -1 ) + ".\n"); //removing the last ','
     }
     public String getName() {
         return name;
