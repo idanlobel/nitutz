@@ -23,20 +23,45 @@ public class Shift {
         return  shift_manager;
     }
     public void setShiftManager(Worker worker){
-        //shift_manager = new Shift_Manager(worker.name,worker.id,worker.email_address,worker.bankAccount,worker.employmentConditions);
+        shift_manager = new Shift_Manager(worker.name, worker.id, worker.getPassword(), worker.email_address, worker.bankAccount,
+                worker.workerJobs);
     }
-    public void addWorkerToShift(Worker worker) {
-        workers.add(worker);
-    }
-    public void removeWorkerToShift(Worker worker) {
-        workers.remove(worker);
-    }
-    public boolean removeTransaction(int transactionID, int workerID){
-        if (shift_manager.id!=workerID)return false;
-        for (Transaction tran:shift_transactions) if (tran.transactionID==transactionID){shift_transactions.remove(tran); return true;}
+    public boolean addWorkerToShift(Worker worker) {
+        if(!workers.contains(worker)) {
+            workers.add(worker);
+            return true;
+        }
         return false;
     }
-    public void addTransactaction(Transaction transaction){
-        this.shift_transactions.add(transaction);
+    public boolean removeWorkerFromShift(Worker worker) {
+        if(workers.contains(worker)) {
+            workers.remove(worker);
+            return true;
+        }
+        else return false;
+    }
+    public boolean removeTransaction(int transactionID, int workerID){
+        if (shift_manager == null || shift_manager.getId()!=workerID)return false;
+        for (Transaction tran:shift_transactions)
+            if (tran.transactionID==transactionID){shift_transactions.remove(tran); return true;}
+        return false;
+    }
+    public boolean addTransaction(Transaction transaction, int workerID){
+        if(shift_manager != null && shift_manager.getId() == workerID) {
+            this.shift_transactions.add(transaction);
+           return true;
+        }
+        else {
+            for (Worker w : workers) {
+                if (w.getId() == workerID) {
+                    if (!w.workerJobs.contains("cashier")) return false;
+                    else {
+                       this.shift_transactions.add(transaction);
+                       return true;
+                    }
+                }
+            }
+            return false; //The worker isn't in this shift.
+        }
     }
 }

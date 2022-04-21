@@ -18,4 +18,14 @@ public class ShiftSL {
     public int getManagerID() {
         return managerID;
     }
+
+    public String toString(){
+        String s = "";
+        if(workers != null) {
+            for (WorkerSL wk : workers) {
+                s += wk.toString() + "\n";
+            }
+        }
+        return s;
+    }
 }

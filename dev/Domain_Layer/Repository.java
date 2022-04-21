@@ -1,10 +1,8 @@
 package Domain_Layer;
 
-import Domain_Layer.BusinessObjects.HR;
-import Domain_Layer.BusinessObjects.Weekly_Schedule;
-import Domain_Layer.BusinessObjects.Worker;
-import Domain_Layer.BusinessObjects.Worker_Schedule;
+import Domain_Layer.BusinessObjects.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,13 +18,20 @@ public class Repository {
         return repository;
     }
     public List<Worker> readWorkers(){
-        //here fill the workers to your own satisfaction
-        //you will probably need to create a bank account for each and all that shit
-        return new LinkedList<>();
+        List<Worker> workers = Arrays.asList(new Worker("Yossi", 1, "BBBbbb97",
+                "popkins@walla.co.il", new BankAccount(306752, 188),
+                Arrays.asList("Cashier", "Trucking")),
+                new Worker("Bob", 2, "Bobinka97",
+                        "pinkas@walla.co.il", new BankAccount(765732, 190),
+                        Arrays.asList("Cashier", "Store Keeper")));
+        return workers;
         //for now this is the implementation
     }
     public HR readHR(){
-        return null;//create HR to your own satisfaction
+        HR hr = new HR("Ori", 3, "OriK3000", "OriK@gmail.com",
+                new BankAccount(202562, 015), Arrays.asList());
+        return hr;
+        //create HR to your own satisfaction - Loads at the beginning of the program.
     }
     public boolean addWorker(Worker workerToAdd){
         //implement when the time comes
@@ -40,10 +45,15 @@ public class Repository {
     }
 
     public HashMap<Integer, Worker_Schedule> readWorkerSchedules() {
-        return new HashMap<>(); //you can fill initial data here as well to your own satisfaction
+        HashMap<Integer, Worker_Schedule> workersSchedule = new HashMap<>();
+        workersSchedule.put(1, new Worker_Schedule());
+        //workersSchedule.put(2,new Worker_Schedule());
+        return workersSchedule; //you can fill initial data here as well to your own satisfaction
     }
 
     public HashMap<Integer, Weekly_Schedule> readWeeklySchedules() {
-        return new HashMap<>();//you can fill initial data here as well to your own satisfaction
+        HashMap<Integer, Weekly_Schedule> weeklySchedule = new HashMap<>();
+        weeklySchedule.put(1, new Weekly_Schedule());
+        return weeklySchedule;//you can fill initial data here as well to your own satisfaction
     }
 }

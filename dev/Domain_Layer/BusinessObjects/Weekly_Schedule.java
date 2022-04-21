@@ -14,6 +14,9 @@ public class Weekly_Schedule {
         return schedule[day][shiftType];
     }
     public Shift[][] getSchedule() {
-        return schedule;
+        if(schedule != null) {
+            return schedule;
+        }
+        return null;
     }
 }

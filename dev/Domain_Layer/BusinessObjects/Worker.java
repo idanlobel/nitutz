@@ -2,8 +2,10 @@ package Domain_Layer.BusinessObjects;
 
 import Domain_Layer.BusinessControllers.ShiftsController;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class Worker {
     String name;
@@ -13,8 +15,8 @@ public class Worker {
     BankAccount bankAccount;
 
     EmploymentConditions employmentConditions;
-    static List<String> jobs = Arrays.asList("Cashier", "Trucking", "Store Keeper", "Steward", "Director of Procurement and Logistics",
-            "Driver");
+    static List<String> jobs = new ArrayList<String>(Arrays.asList("cashier", "trucking", "store keeper", "steward", "director of procurement and logistics",
+            "driver"));
     List<String> workerJobs;
 
     //Create a new worker
@@ -26,8 +28,13 @@ public class Worker {
         this.workerJobs = workerJobs;
         this.password = password;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
     public boolean passwordsMatch(String password){
-        return this.password == password;
+        return this.password.equals(password);
     }
     public String toString(){
         String s =  "Name " + name + ", ID: " + id + ", Jobs: ";
@@ -38,6 +45,7 @@ public class Worker {
     }
     //check if the job already exists
     protected boolean hasJob(String job){
+        job = job.toLowerCase();
         return jobs.contains(job);
     }
 

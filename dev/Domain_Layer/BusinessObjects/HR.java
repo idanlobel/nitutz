@@ -3,6 +3,7 @@ package Domain_Layer.BusinessObjects;
 import Domain_Layer.BusinessControllers.WorkerController;
 
 import java.util.List;
+import java.util.Locale;
 
 public class HR extends Worker {
 
@@ -34,7 +35,7 @@ public class HR extends Worker {
     public boolean addJob (String job){
             if(hasJob(job))
                 return false; //Job already exists
-            jobs.add(job);
+            jobs.add(job.toLowerCase());
             return true;
     }
 }
