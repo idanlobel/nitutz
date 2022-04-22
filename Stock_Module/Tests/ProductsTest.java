@@ -16,14 +16,14 @@ class ProductsTest {
     @BeforeEach
     void setUp() {
 
-        products_test=new Products(1,"something",10,50.0,100.0, LocalDate.of(2000,2,2),"something","something","something","something");
-        sale_test=new Sale(0.2,0,LocalDate.of(2000,2,2),LocalDate.of(2022,2,2),"something");
+        products_test=new Products(1,"something",10,50.0,100.0, LocalDate.of(2000,2,2).toString(),"something","something","something","something");
+        sale_test=new Sale(20,0,LocalDate.of(2000,2,2).toString(),LocalDate.of(2022,2,2).toString(),"something");
     }
     @Test
     void record_sale() throws Exception {
         sale_test.Add_Products(products_test);
-        assertEquals(80.0,products_test.get_by_date(LocalDate.of(2000,2,2)));
-        assertEquals(100.0,products_test.get_by_date(LocalDate.now()));
+        assertEquals(80.0,products_test.get_by_date(LocalDate.of(2000,2,2).toString()));
+        assertEquals(100.0,products_test.get_by_date(LocalDate.now().toString()));
     }
 
     @Test

@@ -32,11 +32,11 @@ public class Stock {
     }
 
     //orders products with required quantity
-    public void Order(long products_catalog_number, int quantity, Double cost, LocalDate expiry, String name, String manufactorer, String category,String sub_cat,String sub_sub_cat) {
+    public void Order(long products_catalog_number, int quantity, Double cost, String expiry, String name, String manufactorer, String category,String sub_cat,String sub_sub_cat) {
         boolean added = false;
         for (Products products : this.products_list) {
             if (products.getCatalog_number()== products_catalog_number) {
-                products.update_quantity(quantity, cost, expiry);
+                products.update_quantity2(quantity, cost, expiry);
                 added = true;
             }
         }
@@ -48,13 +48,13 @@ public class Stock {
 
     }
 
-    public void Sale(long products_catalog_number, LocalDate startdate, LocalDate endate, String reason, double percentage) throws Exception {
+    public void Sale(long products_catalog_number, String startdate, String endate, String reason, double percentage) throws Exception {
 
 
         //this checks the products list to add sale to products with provided id
         for (Products products : this.products_list) {
             if (products.getCatalog_number() == products_catalog_number) {
-                    Sale new_sale = new Sale(percentage, ID_Generator.getInstance().Get_ID(), LocalDate.now(), endate, reason);
+                    Sale new_sale = new Sale(percentage, ID_Generator.getInstance().Get_ID(), LocalDate.now().toString(), endate, reason);
                     new_sale.Add_Products(products);
                     this.sales_list.add(new_sale);
             }
@@ -77,14 +77,43 @@ public class Stock {
         }
     }
 
-    public void sale_by_category(String category,LocalDate startdate, LocalDate endate, String reason, double percentage) throws Exception {
+    public void sale_by_category(String startdate, String endate, String reason, double percentage,String category,String sub_category,String sub_sub_category) throws Exception {
         Sale new_sale=new Sale(percentage, ID_Generator.getInstance().Get_ID(), startdate,endate,reason);
+        boolean sub_is_null=false;
+        boolean sub_sub_is_null=false;
+        if(sub_category==null)
+           sub_is_null=true;
+        if (sub_sub_category==null)
+           sub_sub_is_null=true;
         for(Products p :this.products_list)
         {
-            if(p.getMain_category().equals(category))
-            {
-                new_sale.Add_Products(p);
+            if(!sub_is_null & !sub_sub_is_null) {
+                if (p.getMain_category().equals(category) & p.getSub_category().equals(sub_category) & p.getSub_sub_category().equals(sub_sub_category)) {
+                    new_sale.Add_Products(p);
+                }
             }
+
+
+            if(!sub_is_null & sub_sub_is_null) {
+                if (p.getMain_category().equals(category) & p.getSub_category().equals(sub_category) ) {
+                    new_sale.Add_Products(p);
+                }
+            }
+
+
+            if(sub_is_null & !sub_sub_is_null) {
+                if (p.getMain_category().equals(category)  & p.getSub_sub_category().equals(sub_sub_category)) {
+                    new_sale.Add_Products(p);
+                }
+            }
+
+            if(sub_is_null & sub_sub_is_null) {
+                if (p.getMain_category().equals(category) ) {
+                    new_sale.Add_Products(p);
+                }
+            }
+
+
         }
     }
 
@@ -113,7 +142,7 @@ public class Stock {
 
     }
 
-    public List<Products> get_products_by_categories(String main_cat,String sub_cat,String sub_sub_cat) {
+    public Report get_products_by_categories(String main_cat,String sub_cat,String sub_sub_cat) {
         List<Products> answer_list=new ArrayList<>();
         for (Products products : this.products_list) {
             if (products.getMain_category().equals(main_cat) & products.getSub_category().equals(sub_cat) & products.getSub_sub_category().equals(sub_sub_cat)){
@@ -123,7 +152,7 @@ public class Stock {
         Report repo=new Report(Report.Subject.stock_report,ID_Generator.getInstance().Get_ID(),answer_list,null,null);
 
         repo.Fill_Me();
-        return answer_list;
+        return repo;
 
 
     }
@@ -184,7 +213,7 @@ public class Stock {
 
     public Report make_sorted_by_expiration_report()
     {
-        return new Report(Report.Subject.stock_report,ID_Generator.getInstance().Get_ID(), null,null,this.sorted_by_expiration());
+        return new Report(Report.Subject.sortedby_expiry_report,ID_Generator.getInstance().Get_ID(), null,null,this.sorted_by_expiration());
     }
 
     public List<Product> get_every_product()

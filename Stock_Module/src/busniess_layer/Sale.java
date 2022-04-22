@@ -8,15 +8,15 @@ import java.util.List;
 public class Sale {
     private double percentage;
     private int ID;
-    private LocalDate start_date;
-    private LocalDate end_date;
+    private String start_date;
+    private String end_date;
     private String reason;
     private List<Products> products_in_sale=new ArrayList<>();
 
 
 
-    public Sale(double percentage,int Id, LocalDate start_date, LocalDate end_date, String reason) {
-        this.percentage = percentage;
+    public Sale(double percentage,int Id, String start_date, String end_date, String reason) {
+        this.percentage = percentage/100;
         this.start_date = start_date;
         this.end_date = end_date;
         this.reason = reason;
@@ -53,11 +53,11 @@ public class Sale {
         this.percentage=percentage;
     }
 
-    public LocalDate getStart_date()
+    public String getStart_date()
     {
         return this.start_date;
     }
-    public LocalDate getEnd_date()
+    public String getEnd_date()
     {
         return this.end_date;
     }

@@ -19,7 +19,7 @@ public class Products {
     private String sub_sub_category;
     private int sold_quantity;
     private int min_quantity;
-    private Dictionary<LocalDate,Double> prices_history;
+    private Dictionary<String,Double> prices_history;
     private List<Integer> sales_history;
     private long catalog_number;
     private String name;
@@ -27,19 +27,19 @@ public class Products {
     private Double overall_sale_percentage;
 
 
-    public Products(long catalog_number, String name, int quantity,Double cost_price,Double sell_price,LocalDate expiry,String manufactorer,String category,String sub_category,String sub_sub_category)
+    public Products(long catalog_number, String name, int quantity,Double cost_price,Double sell_price,String expiry,String manufactorer,String category,String sub_category,String sub_sub_category)
     {
         this.product_list=new ArrayList<>();
         this.catalog_number=catalog_number;
         this.name=name;
-        this.update_quantity(quantity,cost_price,expiry);
+        this.update_quantity2(quantity,cost_price,expiry);
         this.storage_quantity=quantity;
         this.shelf_quantity=0;
         this.quantity=shelf_quantity+storage_quantity;
         this.manufactorer=manufactorer;
         this.main_category=category;
         this.prices_history=new Hashtable<>();
-        this.prices_history.put(LocalDate.now(),sell_price);
+        this.prices_history.put(LocalDate.now().toString(),sell_price);
         this.current_sell_price=sell_price;
         this.overall_sale_percentage=0.0;
         this.min_quantity=10;
@@ -62,7 +62,18 @@ public class Products {
     }
     public List<Product> getProduct_list(){return this.product_list;}
 
-    public void update_quantity(int number,double cost_price,LocalDate expiry)
+//    public void update_quantity(int number,double cost_price,LocalDate expiry)
+//    {
+//        for(int i=0;i<number;i++)
+//        {
+//            this.product_list.add(new Product(this.name,LocalDate.now(),cost_price,current_sell_price,expiry,ID_Generator.getInstance().Get_ID()));
+//        }
+//        this.storage_quantity=this.storage_quantity+number;
+//        this.quantity=this.shelf_quantity+storage_quantity;
+//
+//    }
+
+    public void update_quantity2(int number,double cost_price,String expiry)
     {
         for(int i=0;i<number;i++)
         {
@@ -81,11 +92,11 @@ public class Products {
         }
     }
 
-    public void Record_sale(double precentage,LocalDate start_date,int sale_id)
+    public void Record_sale(double precentage,String start_date,int sale_id)
     {
         Double price_after_sale=this.current_sell_price-(this.current_sell_price*precentage);
         this.current_sell_price=price_after_sale;
-        this.prices_history.put(start_date,price_after_sale);
+        this.prices_history.put(start_date.toString(),price_after_sale);
         this.overall_sale_percentage=this.overall_sale_percentage+precentage;
         update_prices(price_after_sale);
         this.sales_history.add(sale_id);
@@ -96,7 +107,7 @@ public class Products {
     {
         Double price_before_sale=this.current_sell_price/(1.0-percentage);
         this.current_sell_price=price_before_sale;
-        this.prices_history.put(LocalDate.now(),price_before_sale);
+        this.prices_history.put(LocalDate.now().toString(),price_before_sale);
         this.overall_sale_percentage=this.overall_sale_percentage-percentage;
         update_prices(price_before_sale);
     }
@@ -106,7 +117,7 @@ public class Products {
         return this.current_sell_price;
     }
 
-    public Double get_by_date(LocalDate date)
+    public Double get_by_date(String date)
     {
         return this.prices_history.get(date);
     }

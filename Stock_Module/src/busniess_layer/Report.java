@@ -1,12 +1,14 @@
 package busniess_layer;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Report {
     //maybe we make it abstarct
     //every subject will be a subclass of report
     public enum Subject {
-        sales_report,prices_report, stock_report , order_report , defective_items_report , expired_items_report
+        sales_report,prices_report, stock_report , order_report , defective_items_report , sortedby_expiry_report
     }
 
     private Subject subject;
@@ -36,16 +38,20 @@ public class Report {
                     }
 
                 }
+                break;
             }
             case prices_report:{
 
+                List<Product> newlist=new ArrayList<>();
                     for(Product product:every_product)
                     {
                         if(!product.isSold())
                         {
-                           this.every_product.remove(product);
+                           newlist.add(product);
                         }
                     }
+                    this.every_product=newlist;
+                    break;
 
             }
             case sales_report:{
@@ -69,6 +75,7 @@ public class Report {
                         this.products.remove(p);
                     }
                 }
+                break;
             }
             case defective_items_report:{
                 for(Product p:every_product)
@@ -78,6 +85,11 @@ public class Report {
                        this.every_product.remove(p);
                     }
                 }
+                break;
+            }
+            case sortedby_expiry_report:{
+                //do nothing, maybe add later if sold then remove
+                break;
             }
         }
     }
@@ -95,17 +107,22 @@ public class Report {
 
 
                 }
+                break;
             }
 
             case prices_report:{
-
+                int counter=0;
                 for(Product product:every_product)
                 {
                     if(product.isSold())
                     {
                         answer+="name:   "+product.getName()+"  cost price: "+product.getcostprice()+"  sell price:  "+product.getsoldprice()+"\n";
+                        counter++;
                     }
                 }
+                if(counter==0)
+                    answer="nothing sold!";
+                break;
 
             }
 
@@ -120,12 +137,13 @@ public class Report {
                             if(s.getId()==sale_id)
                             {
 
-                                answer +="start date:  "+s.getStart_date() + "end date:   "+s.getEnd_date()+"  reason:   "+s.getReason()+"\n";
+                                answer +="start date:  "+s.getStart_date() + "    end date:   "+s.getEnd_date()+"  reason:   "+s.getReason()+"\n";
                             }
                         }
                     }
 
                 }
+                break;
             }
 
             case defective_items_report:{
@@ -135,7 +153,23 @@ public class Report {
                        answer+="name:  "+p.getName()+"   is broken or defective! \n";
 
                 }
+                break;
             }
+            case sortedby_expiry_report:{
+                for(Product p:every_product)
+                {
+                    if(p.getExpire_date().isBefore(LocalDate.now()))
+                    {
+                        answer+="name:  "+p.getName()+"location:  "+p.getLocation()+"expiry date:  "+p.getExpire_date()+"\n";
+                        answer+="has expired!!!!!!\n";
+                    }
+                    else
+                    {
+                        answer+="name:  "+p.getName()+"location:  "+p.getLocation()+"expiry date:  "+p.getExpire_date()+"\n";
+                    }
+                }
+            }
+            break;
 
 
 

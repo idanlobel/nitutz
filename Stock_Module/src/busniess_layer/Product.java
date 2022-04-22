@@ -14,16 +14,16 @@ public class Product {
     private Double cost_price;
     private Double sell_price;
     private boolean broken;
-    private LocalDate expire_date;
-    private LocalDate delivery_date;
-    private LocalDate sell_date;
+    private String expire_date;
+    private String delivery_date;
+    private String sell_date;
     private boolean sold;
     private int ID;
 
-    public Product(String name,LocalDate delivery_date,Double cost_price,Double sell_price,LocalDate expire,int id)
+    public Product(String name,LocalDate delivery_date,Double cost_price,Double sell_price,String expire,int id)
     {
         this.name=name;
-        this.delivery_date=delivery_date;
+        this.delivery_date=delivery_date.toString();
         this.expire_date=expire;
         this.sell_price=sell_price;
         this.cost_price=cost_price;
@@ -59,7 +59,7 @@ public class Product {
 
     public LocalDate getExpire_date()
     {
-        return this.expire_date;
+        return LocalDate.parse(this.expire_date);
     }
 
     public String getName()
