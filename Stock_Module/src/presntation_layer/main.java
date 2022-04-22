@@ -10,11 +10,13 @@ public class main {
     public static void main(String[] args) {
         Stock_Manager stock_manager=new Stock_Manager();
         System.out.println("welcome to my stock!!!");
+
         Scanner scanner=new Scanner(System.in);
         String current_order="";
         String[] order_in_array=new String[20];
         while(!current_order.equals("exit"))
         {
+            System.out.println("please enter your command");
              current_order=scanner.nextLine();
             order_in_array=current_order.split(" ");
             if(order_in_array[0].equals("order")|order_in_array[0].equals("Order"))
@@ -22,13 +24,15 @@ public class main {
 
 
                 stock_manager.make_order(order_in_array[1],order_in_array[2],order_in_array[3],order_in_array[4],order_in_array[5],order_in_array[6],order_in_array[7],order_in_array[8],order_in_array[9]);
+                System.out.println("order done successfully");
             }
             if(order_in_array[0].equals("sale")|order_in_array[0].equals("Sale"))
             {
-                if((order_in_array[1].equals("By")| order_in_array[1].equals("by")) &(order_in_array[2].equals("Catalog")| order_in_array[1].equals("catalog")))
+                if(order_in_array[1].toLowerCase(Locale.ROOT).equals("by") &(order_in_array[2].toLowerCase(Locale.ROOT).equals("category")))
                 {
                     try {
                         stock_manager.make_sale_by_catgeory(order_in_array[3],order_in_array[4],order_in_array[5],order_in_array[6],order_in_array[7],order_in_array[8],order_in_array[9]);
+                        System.out.println("sale by category done successfully");
                     }
                     catch (Exception e)
                     {
@@ -41,6 +45,7 @@ public class main {
 
                     try {
                         stock_manager.make_sale(order_in_array[1],order_in_array[2],order_in_array[3],order_in_array[4],order_in_array[5]);
+                        System.out.println("sale done successfully");
                     }
                     catch (Exception e)
                     {
@@ -54,6 +59,7 @@ public class main {
 
                 try {
                     stock_manager.add_product_to_sale(order_in_array[1],order_in_array[3]);
+                    System.out.println("added to existing sale done successfully");
                 }
                 catch (Exception e)
                 {
@@ -70,23 +76,28 @@ public class main {
             {
                 switch (order_in_array[1].toLowerCase(Locale.ROOT)) {
                     case "stock": {
+                        System.out.println("showing stock report");
                         System.out.println(stock_manager.make_stock_report().tostring());
                         break;
                     }
 
                     case "prices":{
+                        System.out.println("showing prices report");
                         System.out.println(stock_manager.make_prices_report().tostring());
                         break;
                     }
                     case "sales":{
+                        System.out.println("showing sales report");
                         System.out.println(stock_manager.make_sales_report().tostring());
                         break;
                     }
                     case "defective":{
+                        System.out.println("showing defective report");
                         System.out.println(stock_manager.make_defective_report().tostring());
                         break;
                     }
                     case "expiry":{
+                        System.out.println("showing expiry report");
                         System.out.println(stock_manager.make_expiry_report().tostring());
                         break;
                     }
@@ -107,6 +118,8 @@ public class main {
 
 
         }
+
+        System.out.println("exiting.. see you later");
 
 
 

@@ -81,9 +81,9 @@ public class Stock {
         Sale new_sale=new Sale(percentage, ID_Generator.getInstance().Get_ID(), startdate,endate,reason);
         boolean sub_is_null=false;
         boolean sub_sub_is_null=false;
-        if(sub_category==null)
+        if(sub_category.equals("null"))
            sub_is_null=true;
-        if (sub_sub_category==null)
+        if (sub_sub_category.equals("null"))
            sub_sub_is_null=true;
         for(Products p :this.products_list)
         {
@@ -115,6 +115,7 @@ public class Stock {
 
 
         }
+        this.sales_list.add(new_sale);
     }
 
     public void remove_sale(int sale_id) {
@@ -144,18 +145,59 @@ public class Stock {
 
     public Report get_products_by_categories(String main_cat,String sub_cat,String sub_sub_cat) {
         List<Products> answer_list=new ArrayList<>();
-        for (Products products : this.products_list) {
-            if (products.getMain_category().equals(main_cat) & products.getSub_category().equals(sub_cat) & products.getSub_sub_category().equals(sub_sub_cat)){
-                answer_list.add(products);
+
+
+        boolean sub_is_null=false;
+        boolean sub_sub_is_null=false;
+        if(sub_cat.equals("null"))
+            sub_is_null=true;
+        if (sub_sub_cat.equals("null"))
+            sub_sub_is_null=true;
+
+            if(!sub_is_null & !sub_sub_is_null) {
+                for (Products products : this.products_list) {
+                    if (products.getMain_category().equals(main_cat) & products.getSub_category().equals(sub_cat) & products.getSub_sub_category().equals(sub_sub_cat)) {
+                        answer_list.add(products);
+                    }
+                }
             }
+
+
+
+            if(!sub_is_null & sub_sub_is_null) {
+                for (Products products : this.products_list) {
+                    if (products.getMain_category().equals(main_cat) & products.getSub_category().equals(sub_cat) ){
+                        answer_list.add(products);
+                    }
+                }
+            }
+
+
+            if(sub_is_null & !sub_sub_is_null) {
+                for (Products products : this.products_list) {
+                    if (products.getMain_category().equals(main_cat) & products.getSub_sub_category().equals(sub_sub_cat)) {
+                        answer_list.add(products);
+                    }
+                }
+            }
+
+            if(sub_is_null & sub_sub_is_null) {
+                for (Products products : this.products_list) {
+                    if (products.getMain_category().equals(main_cat) ){
+                        answer_list.add(products);
+                    }
+            }
+
+
+
         }
         Report repo=new Report(Report.Subject.stock_report,ID_Generator.getInstance().Get_ID(),answer_list,null,null);
 
         repo.Fill_Me();
         return repo;
 
+}
 
-    }
 
     public List<Sale> getsales()
     {

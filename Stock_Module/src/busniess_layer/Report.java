@@ -32,12 +32,14 @@ public class Report {
     {
         switch (subject) {
             case stock_report: {
+                List <Products> newlist=new ArrayList<>();
                 for (Products p:products) {
-                    if(p.getQuantity()==0) {
-                       this.products.remove(p);
+                    if(p.getQuantity()>0) {
+                       newlist.add(p);
                     }
 
                 }
+                this.products=newlist;
                 break;
             }
             case prices_report:{
@@ -55,7 +57,8 @@ public class Report {
 
             }
             case sales_report:{
-                boolean found_sale=false;
+                List<Products> newlist=new ArrayList<>();
+
                 for(Products p :products)
                 {
 
@@ -65,26 +68,27 @@ public class Report {
                         {
                             if(s.getId()==sale_id)
                             {
-                                found_sale=true;
+                                newlist.add(p);
 
                             }
                         }
                     }
-                    if(!found_sale)
-                    {
-                        this.products.remove(p);
-                    }
+
+
                 }
+                this.products=newlist;
                 break;
             }
             case defective_items_report:{
+                List<Product> brokenproducts=new ArrayList<>();
                 for(Product p:every_product)
                 {
-                    if(!p.isBroken())
+                    if(p.isBroken())
                     {
-                       this.every_product.remove(p);
+                       brokenproducts.add(p);
                     }
                 }
+                this.every_product=brokenproducts;
                 break;
             }
             case sortedby_expiry_report:{

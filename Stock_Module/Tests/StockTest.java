@@ -70,9 +70,9 @@ class StockTest {
     @Test
     void sale_by_category() throws Exception {
 
-        stock_test.Order(2,50,100.0,LocalDate.of(1111,1,20).toString(),"something","something","dairy",null,null);
+        stock_test.Order(2,50,100.0,LocalDate.of(1111,1,20).toString(),"something","something","dairy","null","null");
         stock_test.Order(5,50,10.0,LocalDate.of(1111,1,20).toString(),"something","something","drinks","beer","500");
-        stock_test.sale_by_category(LocalDate.now().toString(),LocalDate.of(2222,2,2).toString(),"holiday",50,"dairy",null,null);
+        stock_test.sale_by_category(LocalDate.now().toString(),LocalDate.of(2222,2,2).toString(),"holiday",50,"dairy","null","null");
         assertEquals(75, stock_test.get_products(2).getsellprice());
 
     }

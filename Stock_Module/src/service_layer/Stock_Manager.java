@@ -15,11 +15,7 @@ public class Stock_Manager {
     }
 
 
-    public void stockreport()
-    {
-        mystock.make_stock_report();
 
-    }
 
     public void make_order(String product_catalog_number, String quantity, String cost, String expiry,String name, String manufactorer, String category, String sub_cat, String sub_sub_cat)
     {
