@@ -116,6 +116,8 @@ public class Shift {
         if(workers.contains(worker)) {
             workers.remove(worker);
             removeFromMustJobs_Counter(worker);
+            if(shift_manager != null && shift_manager.getId() == worker.getId())
+                shift_manager = null;
             return true;
         }
         else return false;

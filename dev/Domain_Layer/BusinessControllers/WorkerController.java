@@ -1,9 +1,6 @@
 package Domain_Layer.BusinessControllers;
 
-import Domain_Layer.BusinessObjects.BankAccount;
-import Domain_Layer.BusinessObjects.EmploymentConditions;
-import Domain_Layer.BusinessObjects.HR;
-import Domain_Layer.BusinessObjects.Worker;
+import Domain_Layer.BusinessObjects.*;
 import Domain_Layer.Repository;
 
 import java.util.Date;
@@ -62,6 +59,8 @@ public class WorkerController {
         if(worker == null) {
             workers.add(new Worker(name, id, password, email_address, new BankAccount(bankID, branch),
                     new EmploymentConditions(salary, new Date()), new LinkedList<>()));
+            if(!ShiftsController.getInstance().workers_Schedules.containsKey(id))
+                ShiftsController.getInstance().workers_Schedules.put(id, new Worker_Schedule());
             return true;
         }
         return false;
@@ -78,6 +77,8 @@ public class WorkerController {
         for (Worker w : WorkerController.getInstance().getWorkers()) {
             if (w.getId() == workerID) {
                 workers.remove(w);
+                if(ShiftsController.getInstance().workers_Schedules.containsKey(workerID))
+                    ShiftsController.getInstance().workers_Schedules.remove(workerID);
                 return true;
             }
         }

@@ -70,6 +70,14 @@ public class ShiftsController {
         }
         return null;
     }
+    public Worker getShiftManager(int weekID, int day, int shift){
+        Weekly_Schedule weekly_schedule = getWeeklySchedule(weekID);
+        if(weekly_schedule != null){
+            Shift sft = weekly_schedule.getShift(day,shift);
+            return sft.getShift_manager();
+        }
+        return null;
+    }
     public boolean createWeeklySchedule(int weekID) {
         if(weekly_Schedules.containsKey(weekID)) return false;
         weekly_Schedules.put(weekID,new Weekly_Schedule());

@@ -94,6 +94,14 @@ public class ServiceLayer {
         }
         return null;
     }
+    public String getShiftManagerInfo (int callerID,int weekID, int day, int shift){
+        if (!workerController.isHR(callerID))return "There has been an issue";//TODO:: we actually need to throw exceptions or responses like we did last year
+        Worker worker = shiftsController.getShiftManager(weekID, day, shift);
+        if(worker != null){
+            return worker.getName() + ": " + worker.getId();
+        }
+        return "There's currently no shift manager.";
+    }
     public boolean createWeeklySchedule(int callerID,int weekID) {
         if (!workerController.isHR(callerID))return false;
         return shiftsController.createWeeklySchedule(weekID);
@@ -159,7 +167,10 @@ public class ServiceLayer {
     //the following method can be used by the HR as well:
     public WorkerScheduleSL viewWorkerSchedule(int workerID){
         Worker_Schedule worker_schedule = shiftsController.getWorkerSchedule(workerID);
-        return new WorkerScheduleSL(worker_schedule.getSchedule());
+        if(worker_schedule != null) {
+            return new WorkerScheduleSL(worker_schedule.getSchedule());
+        }
+        return null;//TODO:: Need to change that.
     }
 
     public boolean isShiftReady(int callerID, int weekID, int day, int shift){

@@ -29,10 +29,9 @@ public class Main {
         // As a 'Shift Manager' worker: 3 - addTransaction, 4 - removeTransaction
         // As an 'HR' worker: 5 - addJobs, 6 - createWeeklySchedule, 7 - showShiftWorkers, 8 - viewWeeklySchedule,
         //                    9 - setShiftManagerToWeeklySchedule, 10 - removeWorkerFromWeeklySchedule,
-        //                    11 - addWorkerToWeeklySchedule (There's no register for users!
-        //                         Only the HR can add new workers to the company),
-        //                    12 - isShiftReady, 13 - isWeeklyScheduleReady, 14 - showAllWorkers,
-        //                    15 - registerAWorker, 16 - removeAWorker, 17 - editAWorker,
+        //                    11 - addWorkerToWeeklySchedule, 12 - isShiftReady, 13 - isWeeklyScheduleReady, 14 - showAllWorkers,
+        //                    15 - registerAWorker (There's no register for users! Only the HR can add new workers to the company),
+        //                    16 - removeAWorker, 17 - editAWorker,
         //                    18 - addJobForAWorker, 19 - removeJobFromAWorker
         //                    99 - exit the program: hence log-out
 
@@ -84,7 +83,8 @@ public class Main {
                     boolean ans1 = serviceLayer.addTransaction((int) l1.get(0),
                             (int) l1.get(1), (int) l1.get(2), (int) l1.get(3), loginInfo.getWorkerID());
                     if (ans1) System.out.println("The transaction has been made successfully");
-                    else System.out.println("You're not authorized to make a transaction.");
+                    else System.out.println("There has been an issue: The transaction already exists, or you're not authorized to perform" +
+                            " this action.");
 
                     break;
                 case 4: //removeTransaction - a 'shift manager' or an 'HR' can perform this method
@@ -98,7 +98,7 @@ public class Main {
 
                     break;
 
-                //'HR' worker method:
+                //'HR' worker methods:
                 case 5: //addJobs
                     if(!isHR(loginInfo.isHr()))
                         break;
@@ -133,7 +133,9 @@ public class Main {
                         System.out.println("You've entered a wrong week ID (meaning this Weekly Schedule doesn't exist)");
                     else if (workersInShift.isEmpty())
                         System.out.println("There are no workers in the specified shift");
-                    else System.out.println("The workers in the desired shift are: " + workersInShift.toString());
+                    else System.out.println("The workers in the desired shift are: " + workersInShift.toString() + "\n" +
+                                "And the shift manager is: " + serviceLayer.getShiftManagerInfo(loginInfo.getWorkerID(), (int) list1.get(0),
+                                (int) list1.get(1), (int) list1.get(2)));
                     break;
                 case 8: //viewWeeklySchedule TODO:: For now, if the Weekly Schedule is 'empty', it will show it to the HR as null
                     //TODO: FIX THIS - A LOT OF NULL POINTER EXCEPTIONS

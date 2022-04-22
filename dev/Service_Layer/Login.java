@@ -4,7 +4,7 @@ import Domain_Layer.BusinessControllers.WorkerController;
 
 public class Login {
     int id;
-    String password;
+    String password; //TODO:: Delete this once we have a database!
     String name;
     int workerID;
     boolean isHr;
