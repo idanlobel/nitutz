@@ -44,6 +44,7 @@ public class ShiftsController {
     public boolean editWorkerSchedule(int workerID, boolean present, int day, int shiftType){
         if ((day>5 || day<0) || (shiftType !=0&&shiftType!=1))return false;
         if(!workers_Schedules.containsKey(workerID)) return false;
+        if(WorkerController.getInstance().isHR(workerID) && shiftType == 1 && present == true) return  false; //The HR can only work in morning shifts
         getWorkerSchedule(workerID).editShiftPresence(present,day,shiftType);
         //repository: Update in the database
         return true;
