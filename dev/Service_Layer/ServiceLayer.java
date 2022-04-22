@@ -4,6 +4,7 @@ import Domain_Layer.BusinessControllers.ShiftsController;
 import Domain_Layer.BusinessControllers.WorkerController;
 import Domain_Layer.BusinessObjects.*;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -101,6 +102,48 @@ public class ServiceLayer {
         if(!workerController.isHR(callerID))return false;
         return workerController.addJob(job);
     }
+
+    public List<WorkerSL> showAllWorkers(int callerID){
+        if (!workerController.isHR(callerID))return null; //TODO:: we actually need to throw exceptions or responses like we did last year
+        List<WorkerSL> workerSLS = new LinkedList<>();
+        List<Worker> workers = workerController.getWorkers();
+        if(workers != null) {
+            for (Worker worker : workers) {
+                WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
+                workerSLS.add(workerSL);
+            }
+            return workerSLS;
+        }
+        return null;
+    }
+
+    public boolean registerAWorker(int callerID, String name, int id, String password, String email_address, int bankID,
+                                   int branch, int salary){
+        if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
+        return workerController.addWorker(name, id, password, email_address, bankID, branch, salary);
+    }
+
+    public boolean removeAWorker(int callerID, int workerID){
+        if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
+        return workerController.deleteWorker(workerID);
+    }
+
+    public boolean editAWorker(/*int callerID, */ String name, String password, String email_address, int bankID,
+                                   int branch, int salary, int workerID){
+        //if (!workerController.isHR(callerID)) throw Exception(); //TODO:: we actually need to throw exceptions or responses like we did last year
+        return workerController.editWorker(name, password, email_address, bankID, branch, salary, workerID);
+    }
+
+    public boolean addJobForAWorker(int callerID, int workerID, String job){
+        if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
+        return workerController.addJobForAWorker(workerID, job);
+    }
+
+    public boolean removeJobFromAWorker(int callerID, int workerID, String job){
+        if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
+        return workerController.removeJobFromAWorker(workerID, job);
+    }
+
     //these are shiftManager methods
     public boolean addTransaction(int weekID, int day, int shift, int transactionID, int workerID){
         return shiftsController.addTransaction(weekID,day,shift,transactionID, workerID);

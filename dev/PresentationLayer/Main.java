@@ -30,7 +30,10 @@ public class Main {
         // As an 'HR' worker: 5 - addJobs, 6 - createWeeklySchedule, 7 - showShiftWorkers, 8 - viewWeeklySchedule,
         //                    9 - setShiftManagerToWeeklySchedule, 10 - removeWorkerFromWeeklySchedule,
         //                    11 - addWorkerToWeeklySchedule (There's no register for users!
-        //                         Only the HR can add new workers to the company).
+        //                         Only the HR can add new workers to the company),
+        //                    12 - isShiftReady, 13 - isWeeklyScheduleReady, 14 - showAllWorkers,
+        //                    15 - registerAWorker, 16 - removeAWorker, 17 - editAWorker,
+        //                    18 - addJobForAWorker, 19 - removeJobFromAWorker
         //                    99 - exit the program: hence log-out
 
         int choice = 0;
@@ -225,6 +228,79 @@ public class Main {
                     else System.out.println("The Weekly Schedule isn't ready or doesn't exist, please make sure you've entered the " +
                             "information correctly.");
                     break;
+                case 14: //showAllWorkers
+                    if (!loginInfo.isHr()) {
+                        System.out.println("You're not authorized to perform this action.");
+                        break;
+                    }
+                    List<WorkerSL> allWorkers = serviceLayer.showAllWorkers(loginInfo.getID());
+                    if(allWorkers == null) System.out.println("There are no currently workers in the System.");
+                    else System.out.println(allWorkers.toString());
+                    break;
+                case 15: //registerAWorker
+                    if (!loginInfo.isHr()) {
+                        System.out.println("You're not authorized to perform this action.");
+                        break;
+                    }
+                    List<Object> wD = registerAWorker();
+                    if(serviceLayer.registerAWorker(loginInfo.getWorkerID(), wD.get(0) + "", (int) wD.get(1),
+                            wD.get(2) + "", wD.get(3) + "", (int) wD.get(4), (int) wD.get(5), (int) wD.get(6)))
+                        System.out.println("The worker has been registered successfully");
+                    else System.out.println("A worker with the same ID already exists in the System. If you wish to update his details " +
+                            "please use the 'edit' method.");
+                    break;
+                case 16: //removeAWorker
+                    if (!loginInfo.isHr()) {
+                        System.out.println("You're not authorized to perform this action.");
+                        break;
+                    }
+                    sc= new Scanner(System.in);
+                    System.out.println("Please enter the worker's ID: ");
+                    int wID = sc.nextInt();
+                    if(serviceLayer.removeAWorker(loginInfo.getID(), wID))
+                        System.out.println("The worker has been removed successfully");
+                    else System.out.println("The worker doesn't exist in the system, please make sure that you've " +
+                            "entered everything correctly and try again.");
+                    break;
+                case 17: //editAWorker
+                    if (!loginInfo.isHr()) {
+                        System.out.println("You're not authorized to perform this action.");
+                        break;
+                    }
+                    System.out.println("Please enter information that you'd like to update, " +
+                            "if you don't want to update something, just hit enter (without typing anything) or " +
+                            "'0' if you're required to put in a number: ");
+                    List<Object> ewD = editAWorker();
+                    if(serviceLayer.editAWorker(ewD.get(0) + "", ewD.get(1) + "",
+                            ewD.get(2) + "", (int) ewD.get(3), (int) ewD.get(4), (int) ewD.get(5), (int) ewD.get(6)))
+                        System.out.println("The worker has been updated successfully");
+                    else System.out.println("The worker doesn't exist in the system, please make sure that you've " +
+                            "entered everything correctly and try again.");
+                    break;
+                case 18: //addJobForAWorker
+                    if (!loginInfo.isHr()) {
+                        System.out.println("You're not authorized to perform this action.");
+                        break;
+                    }
+                    List<Object> workerJob = addOrRemoveAJob_Worker();
+                    if(serviceLayer.addJobForAWorker(loginInfo.getID(), (int) workerJob.get(0), workerJob.get(1) + ""))
+                        System.out.println("The job has been added successfully");
+                    else System.out.println("The worker doesn't exist in the system or the worker already has this job" +
+                            " or the job isn't from the provided list of jobs," +
+                            " please make sure that you've entered everything correctly and try again.");
+                    break;
+                case 19: //removeJobFromAWorker
+                    if (!loginInfo.isHr()) {
+                        System.out.println("You're not authorized to perform this action.");
+                        break;
+                    }
+                    List<Object> workerJobR = addOrRemoveAJob_Worker();
+                    if(serviceLayer.removeJobFromAWorker(loginInfo.getID(), (int) workerJobR.get(0), workerJobR.get(1) + ""))
+                        System.out.println("The job has been removed successfully");
+                    else System.out.println("The worker doesn't exist in the system or the worker doesn't have this job or the job isn't " +
+                            "on the provided list of jobs" +
+                            ", please make sure that you've entered everything correctly and try again.");
+                    break;
                 case 99:
                     System.out.println("You've been successfully logged-out.");
                     break;
@@ -364,5 +440,57 @@ public class Main {
         }
 
         return Arrays.asList(shiftWeek, shiftDay - 1, shiftType, wID);
+    }
+
+    private static List<Object> registerAWorker() {
+        Scanner sc1 = new Scanner(System.in);
+        Scanner sc2 = new Scanner(System.in);
+        System.out.println("Please enter the name of the worker: ");
+        String name = sc1.nextLine();
+        System.out.println("Please enter the worker's ID: ");
+        int wID = sc2.nextInt();
+        System.out.println("Please enter the password of the worker: ");
+        String password= sc1.nextLine();
+        System.out.println("Please enter the email address of the worker: ");
+        String email_address = sc1.nextLine();
+        System.out.println("Please enter the worker's Bank ID: ");
+        int bankID = sc2.nextInt();
+        System.out.println("Please enter the worker's branch number: ");
+        int branch = sc2.nextInt();
+        System.out.println("Please enter the worker's salary: ");
+        int salary = sc2.nextInt();
+
+        return Arrays.asList(name, wID, password, email_address, bankID, branch, salary);
+    }
+
+    private static List<Object> editAWorker() {
+        Scanner sc1 = new Scanner(System.in);
+        Scanner sc2 = new Scanner(System.in);
+        System.out.println("Please enter the name of the worker or hit enter: ");
+        String name = sc1.nextLine();
+        System.out.println("Please enter the password of the worker or hit enter: ");
+        String password= sc1.nextLine();
+        System.out.println("Please enter the email address of the worker or hit enter: ");
+        String email_address = sc1.nextLine();
+        System.out.println("Please enter the worker's Bank ID or hit '0': ");
+        int bankID = sc2.nextInt();
+        System.out.println("Please enter the worker's branch number or hit '0': ");
+        int branch = sc2.nextInt();
+        System.out.println("Please enter the worker's salary or hit '0': ");
+        int salary = sc2.nextInt();
+        System.out.println("Please enter the worker's ID: ");
+        int wID = sc2.nextInt();
+
+        return Arrays.asList(name, password, email_address, bankID, branch, salary, wID);
+    }
+
+    private static List<Object> addOrRemoveAJob_Worker() {
+        Scanner sc1 = new Scanner(System.in);
+        Scanner sc2 = new Scanner(System.in);
+        System.out.println("Please enter the worker's ID: ");
+        int wID = sc2.nextInt();
+        System.out.println("Please enter the name of the job (from the provided list of jobs): ");
+        String job = sc1.nextLine();
+        return Arrays.asList(wID, job);
     }
 }

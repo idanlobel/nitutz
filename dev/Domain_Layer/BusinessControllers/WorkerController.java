@@ -1,19 +1,25 @@
 package Domain_Layer.BusinessControllers;
 
+import Domain_Layer.BusinessObjects.BankAccount;
+import Domain_Layer.BusinessObjects.EmploymentConditions;
 import Domain_Layer.BusinessObjects.HR;
 import Domain_Layer.BusinessObjects.Worker;
 import Domain_Layer.Repository;
 
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 public class WorkerController {
     private static WorkerController workerController = null;
     private Repository repository = Repository.getInstance();
-    List<Worker> workers;
+    LinkedList<Worker> workers;
     HR hr;
 
     private WorkerController() {
         //TODO:: צריך לשנות פה שיקרא מקובץ טקסט במקום ויכניס לתוך הרשימה...
+        workers = new LinkedList<>();
         readWorkersFromData();
         readHRFromData();
     }
@@ -46,21 +52,36 @@ public class WorkerController {
         return workers;
     }
 
-    public boolean addWorker(Worker worker) {
-        if (repository.addWorker(worker)) {
+    public boolean addWorker(String name, int id, String password, String email_address, int bankID, int branch, int salary) {
+       /* if (repository.addWorker(worker)) {
             workers.add(worker);
+            return true;
+        }
+        return false; */
+        Worker worker = getWorker(id);
+        if(worker == null) {
+            workers.add(new Worker(name, id, password, email_address, new BankAccount(bankID, branch),
+                    new EmploymentConditions(salary, new Date()), new LinkedList<>()));
             return true;
         }
         return false;
     }
 
     public boolean deleteWorker(int workerID) {
-        for (Worker w : workers) {
+       /* for (Worker w : workers) {
             if (w.getId() == workerID) {
                 return repository.deleteWorker(w);
             }
         }
-        return false;
+        return false; */
+        if(hr.getId() == workerID) return false; //Can't remove an HR from the system!
+        for (Worker w : WorkerController.getInstance().getWorkers()) {
+            if (w.getId() == workerID) {
+                workers.remove(w);
+                return true;
+            }
+        }
+        return false; //worker doesn't exist in the system
     }
 
     public Worker getWorker(int workerID) {
@@ -89,6 +110,7 @@ public class WorkerController {
         return hr.addJob(job);
     }
 
+
     public String getWorkerName(int id) {
         for (Worker w : workers) {
             if (w.getId() == id) {
@@ -98,5 +120,37 @@ public class WorkerController {
         if(this.hr.getId() == id)
             return this.hr.getName();
         return null;
+    }
+
+    public boolean editWorker(String name, String password, String email_address, int bankID, int branch, int salary, int workerID) {
+        Worker worker = getWorker(workerID);
+        if(worker != null) {
+            if (!name.equals("")) worker.setName(name);
+            if (!password.equals("")) worker.setPassword(password);
+            if (!email_address.equals("")) worker.setEmail_address(email_address);
+            if (bankID != 0) worker.getBankAccount().setBankID(bankID);
+            if (branch != 0) worker.getBankAccount().setBranch(branch);
+            if (salary != 0) worker.getEmploymentConditions().setSalary(salary);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean addJobForAWorker(int workerID, String job) {
+        Worker worker = getWorker(workerID);
+        if(worker != null && Worker.getJobs().contains(job.toLowerCase()) && !worker.getWorkerJobs().contains(job.toLowerCase())) {
+            worker.getWorkerJobs().add(job.toLowerCase());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeJobFromAWorker(int workerID, String job) {
+        Worker worker = getWorker(workerID);
+        if(worker != null && worker.getWorkerJobs().contains(job.toLowerCase())) {
+            worker.getWorkerJobs().remove(job.toLowerCase());
+            return true;
+        }
+        return false;
     }
 }

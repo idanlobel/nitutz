@@ -2,10 +2,7 @@ package Domain_Layer.BusinessObjects;
 
 import Domain_Layer.BusinessControllers.ShiftsController;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class Worker {
     String name;
@@ -15,18 +12,57 @@ public class Worker {
     BankAccount bankAccount;
 
     EmploymentConditions employmentConditions;
-    static List<String> jobs = new ArrayList<String>(Arrays.asList("cashier", "trucking", "store keeper", "steward", "director of procurement and logistics",
+    static LinkedList<String> jobs = new LinkedList(Arrays.asList("cashier", "trucking", "store keeper", "steward", "director of procurement and logistics",
             "driver"));
-    List<String> workerJobs;
+    LinkedList<String> workerJobs;
+
+    public static LinkedList<String> getJobs() {
+        return jobs;
+    }
+
 
     //Create a new worker
-    public Worker(String name, int id, String password, String email_address, BankAccount bankAccount, List<String> workerJobs) {
+    public Worker(String name, int id, String password, String email_address, BankAccount bankAccount,
+                  EmploymentConditions employmentConditions, LinkedList<String> workerJobs) {
         this.name = name;
         this.id = id;
         this.email_address = email_address;
         this.bankAccount = bankAccount;
         this.workerJobs = workerJobs;
         this.password = password;
+        this.employmentConditions = employmentConditions;
+    }
+
+    public BankAccount getBankAccount() {
+        return bankAccount;
+    }
+
+    public EmploymentConditions getEmploymentConditions() {
+        return employmentConditions;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail_address(String email_address) {
+        this.email_address = email_address;
+    }
+
+    public void setBankAccount(BankAccount bankAccount) {
+        this.bankAccount = bankAccount;
+    }
+
+    public void setEmploymentConditions(EmploymentConditions employmentConditions) {
+        this.employmentConditions = employmentConditions;
     }
 
     public String getPassword() {

@@ -16,7 +16,8 @@ public class Shift {
     List<Worker> workers;
     static List<String> mustJobs = new ArrayList<String>(Arrays.asList("store keeper", "steward", "cashier", "driver"));
     List<Transaction> shift_transactions;
-    public Shift(Shift_Manager shift_manager, List<Worker> workers, List<Transaction> transactions) { //For when we have a database to read from...
+    public Shift(Shift_Manager shift_manager, List<Worker> workers, List<Transaction> transactions) {
+        //For when we have a database to read from...
         this.shift_manager = shift_manager;
         this.workers = workers;
         this.shift_transactions = transactions;
@@ -39,7 +40,7 @@ public class Shift {
     }
     public void setShiftManager(Worker worker){
         shift_manager = new Shift_Manager(worker.name, worker.id, worker.getPassword(), worker.email_address, worker.bankAccount,
-                worker.workerJobs);
+                worker.employmentConditions, worker.workerJobs);
         if(!workers.contains(worker)) workers.add(worker);
     }
 
