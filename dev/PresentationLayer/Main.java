@@ -100,10 +100,8 @@ public class Main {
 
                 //'HR' worker method:
                 case 5: //addJobs
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     sc = new Scanner(System.in);
                     System.out.println("Please enter the Job's name that you'd like to add: ");
                     String job = sc.nextLine();
@@ -113,10 +111,8 @@ public class Main {
                     break;
 
                 case 6: //createWeeklySchedule
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     sc = new Scanner(System.in);
                     System.out.println("Please enter the id of the week for the weekly schedule: ");
                     int weekID = sc.nextInt();
@@ -127,10 +123,8 @@ public class Main {
                                 " in the System, therefore it hasn't been created, please try again.");
                     break;
                 case 7: //showShiftWorkers
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     List<Object> list1 = showShiftWorkers();
                     if (list1 == null) break;
                     List<WorkerSL> workersInShift = serviceLayer.showShiftWorkers(loginInfo.getWorkerID(), (int) list1.get(0),
@@ -144,10 +138,8 @@ public class Main {
                 case 8: //viewWeeklySchedule TODO:: For now, if the Weekly Schedule is 'empty', it will show it to the HR as null
                     //TODO: FIX THIS - A LOT OF NULL POINTER EXCEPTIONS
                     //(We want to change that later on)
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     sc = new Scanner(System.in);
                     System.out.println("Please enter the id of the week for the weekly schedule: ");
                     int weeklyID = sc.nextInt();
@@ -158,10 +150,8 @@ public class Main {
                             Arrays.deepToString(weeklySchedule.getShiftSLS()));
                     break;
                 case 9: //setShiftManagerToWeeklySchedule
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     List<Object> lst = addOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (lst == null) break;
 
@@ -172,10 +162,8 @@ public class Main {
                             " entered everything correctly.");
                     break;
                 case 10: //removeWorkerFromWeeklySchedule
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     List<Object> ls = addOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (ls == null) break;
 
@@ -187,10 +175,8 @@ public class Main {
                             " entered everything correctly.");
                     break;
                 case 11: //addWorkerToWeeklySchedule
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     List<Object> list2 = addOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (list2 == null) break;
 
@@ -202,10 +188,8 @@ public class Main {
                             " entered everything correctly.");
                     break;
                 case 12: //isShiftReady
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     List<Object> list3 = showShiftWorkers();
                     if(serviceLayer.isShiftReady(loginInfo.getWorkerID(), (int)list3.get(0), (int)list3.get(1),
                             (int)list3.get(2)))
@@ -215,10 +199,8 @@ public class Main {
                             "information correctly.");
                     break;
                 case 13: //isWeeklyScheduleReady
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     System.out.println("Please enter the id of the week for the weekly schedule: ");
                     int weekly_id_number = sc.nextInt();
 
@@ -229,19 +211,15 @@ public class Main {
                             "information correctly.");
                     break;
                 case 14: //showAllWorkers
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     List<WorkerSL> allWorkers = serviceLayer.showAllWorkers(loginInfo.getID());
                     if(allWorkers == null) System.out.println("There are no currently workers in the System.");
                     else System.out.println(allWorkers.toString());
                     break;
                 case 15: //registerAWorker
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     List<Object> wD = registerAWorker();
                     if(serviceLayer.registerAWorker(loginInfo.getWorkerID(), wD.get(0) + "", (int) wD.get(1),
                             wD.get(2) + "", wD.get(3) + "", (int) wD.get(4), (int) wD.get(5), (int) wD.get(6)))
@@ -250,10 +228,8 @@ public class Main {
                             "please use the 'edit' method.");
                     break;
                 case 16: //removeAWorker
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     sc= new Scanner(System.in);
                     System.out.println("Please enter the worker's ID: ");
                     int wID = sc.nextInt();
@@ -263,10 +239,8 @@ public class Main {
                             "entered everything correctly and try again.");
                     break;
                 case 17: //editAWorker
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     System.out.println("Please enter information that you'd like to update, " +
                             "if you don't want to update something, just hit enter (without typing anything) or " +
                             "'0' if you're required to put in a number: ");
@@ -278,10 +252,8 @@ public class Main {
                             "entered everything correctly and try again.");
                     break;
                 case 18: //addJobForAWorker
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     List<Object> workerJob = addOrRemoveAJob_Worker();
                     if(serviceLayer.addJobForAWorker(loginInfo.getID(), (int) workerJob.get(0), workerJob.get(1) + ""))
                         System.out.println("The job has been added successfully");
@@ -290,10 +262,8 @@ public class Main {
                             " please make sure that you've entered everything correctly and try again.");
                     break;
                 case 19: //removeJobFromAWorker
-                    if (!loginInfo.isHr()) {
-                        System.out.println("You're not authorized to perform this action.");
+                    if(!isHR(loginInfo.isHr()))
                         break;
-                    }
                     List<Object> workerJobR = addOrRemoveAJob_Worker();
                     if(serviceLayer.removeJobFromAWorker(loginInfo.getID(), (int) workerJobR.get(0), workerJobR.get(1) + ""))
                         System.out.println("The job has been removed successfully");
@@ -321,6 +291,14 @@ public class Main {
         String password= scLogin2.nextLine();
         Login login = new Login(id, password);
         return login;
+    }
+
+    private static boolean isHR(boolean isHr){
+        if (!isHr) {
+            System.out.println("You're not authorized to perform this action.");
+            return false;
+        }
+        return true;
     }
 
     private static List<Object> editWorkerSchedule(boolean isHr){
