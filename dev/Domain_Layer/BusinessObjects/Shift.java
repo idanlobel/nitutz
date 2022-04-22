@@ -94,7 +94,6 @@ public class Shift {
         updateShiftIsReady();
     }
 
-
     private void updateShiftIsReady() {
         for(int i =0; i<mustJobs_Counter.length; i++) {
             if (mustJobs_Counter[i] == 0) {
@@ -125,7 +124,7 @@ public class Shift {
         if ((shift_manager == null || shift_manager.getId()!=workerID) && !WorkerController.getInstance().isHR(workerID)) return false;
         if(shift_transactions != null) {
             for (Transaction tran : shift_transactions)
-                if (tran.transactionID == transactionID) {
+                if (tran.getTransactionID() == transactionID && tran.getWorkerID() == workerID) {
                     shift_transactions.remove(tran);
                     return true;
                 }
@@ -137,14 +136,15 @@ public class Shift {
             shift_transactions = new LinkedList<>();
         }
 
-        if((shift_manager != null && shift_manager.getId() == workerID) || WorkerController.getInstance().isHR(workerID)) {
+        if(((shift_manager != null && shift_manager.getId() == workerID) || WorkerController.getInstance().isHR(workerID)) &&
+                !hasTransaction(transaction.getTransactionID())) {
             this.shift_transactions.add(transaction);
             return true;
         }
         else {
             for (Worker w : workers) {
                 if (w.getId() == workerID) {
-                    if (!w.workerJobs.contains("cashier")) return false;
+                    if (!w.workerJobs.contains("cashier") || hasTransaction(transaction.getTransactionID())) return false;
                     else {
                        this.shift_transactions.add(transaction);
                        return true;
@@ -153,5 +153,13 @@ public class Shift {
             }
             return false; //The worker isn't in this shift.
         }
+    }
+
+    private boolean hasTransaction(int transactionID){
+        if(shift_transactions != null) {
+            for (Transaction tran : shift_transactions)
+                if (tran.transactionID == transactionID) return true;
+        }
+        return false;
     }
 }

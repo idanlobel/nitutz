@@ -10,4 +10,12 @@ public class Transaction {
         this.transactionID = transactionID;
         this.workerID = workerID;
     }
+
+    public int getTransactionID() {
+        return transactionID;
+    }
+
+    public int getWorkerID() {
+        return workerID;
+    }
 }

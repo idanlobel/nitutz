@@ -44,7 +44,8 @@ public class ShiftsController {
     public boolean editWorkerSchedule(int workerID, boolean present, int day, int shiftType){
         if ((day>5 || day<0) || (shiftType !=0&&shiftType!=1))return false;
         if(!workers_Schedules.containsKey(workerID)) return false;
-        if(WorkerController.getInstance().isHR(workerID) && shiftType == 1 && present == true) return  false; //The HR can only work in morning shifts
+        if(WorkerController.getInstance().isHR(workerID) && shiftType == 1 && present == true) return  false; //The HR can only work in
+                                                                                                             // morning shifts
         getWorkerSchedule(workerID).editShiftPresence(present,day,shiftType);
         //repository: Update in the database
         return true;
@@ -53,7 +54,7 @@ public class ShiftsController {
     //TODO:: For now we can't implement this method because we don't know which shifts the Business_Layer.HR would like to add -
     // Later we can implement it by using a GUI interface.
     public boolean addWorkerToWeeklySchedule(int weekID,int day, int shift, Worker worker) {
-        getWeeklySchedule(weekID).getShift(day,shift).addWorkerToShift(worker); return true;
+        return getWeeklySchedule(weekID).getShift(day,shift).addWorkerToShift(worker);
     }
     public boolean removeWorkerFromWeeklySchedule(int weekID,int day, int shift, Worker worker) {
         return getWeeklySchedule(weekID).getShift(day,shift).removeWorkerFromShift(worker);
