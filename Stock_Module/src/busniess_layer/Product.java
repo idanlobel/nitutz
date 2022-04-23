@@ -20,7 +20,7 @@ public class Product {
     private boolean sold;
     private int ID;
 
-    public Product(String name,LocalDate delivery_date,Double cost_price,Double sell_price,String expire,int id)
+    public Product(String name,String delivery_date,Double cost_price,Double sell_price,String expire,int id)
     {
         this.name=name;
         this.delivery_date=delivery_date.toString();

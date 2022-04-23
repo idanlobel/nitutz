@@ -32,7 +32,7 @@ public class Products {
         this.product_list=new ArrayList<>();
         this.catalog_number=catalog_number;
         this.name=name;
-        this.update_quantity2(quantity,cost_price,expiry);
+        this.update_quantity(quantity,cost_price,expiry);
         this.storage_quantity=quantity;
         this.shelf_quantity=0;
         this.quantity=shelf_quantity+storage_quantity;
@@ -62,22 +62,13 @@ public class Products {
     }
     public List<Product> getProduct_list(){return this.product_list;}
 
-//    public void update_quantity(int number,double cost_price,LocalDate expiry)
-//    {
-//        for(int i=0;i<number;i++)
-//        {
-//            this.product_list.add(new Product(this.name,LocalDate.now(),cost_price,current_sell_price,expiry,ID_Generator.getInstance().Get_ID()));
-//        }
-//        this.storage_quantity=this.storage_quantity+number;
-//        this.quantity=this.shelf_quantity+storage_quantity;
-//
-//    }
 
-    public void update_quantity2(int number,double cost_price,String expiry)
+
+    public void update_quantity(int number,double cost_price,String expiry)
     {
         for(int i=0;i<number;i++)
         {
-            this.product_list.add(new Product(this.name,LocalDate.now(),cost_price,current_sell_price,expiry,ID_Generator.getInstance().Get_ID()));
+            this.product_list.add(new Product(this.name,LocalDate.now().toString(),cost_price,current_sell_price,expiry,ID_Generator.getInstance().Get_ID()));
         }
         this.storage_quantity=this.storage_quantity+number;
         this.quantity=this.shelf_quantity+storage_quantity;

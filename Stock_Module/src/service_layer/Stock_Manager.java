@@ -16,7 +16,15 @@ public class Stock_Manager {
 
 
 
+public void Auto_start() throws Exception {
+    this.make_order("500","20","100","2022-12-12","beer","beer's_spring","drinks","beverages","500_ml");
+    this.make_order("123","200","10","2022-05-30","milk","tnuva","dairy","drinks","null");
+    this.make_order("99","5","1000","2022-04-20","pizza","pizza_hut","food","fast_food","null");
+    this.make_sale("500","2022-04-23","2022-08-09","easter","10");
 
+    this.set_broken_product("10","500");
+    this.set_broken_product("151","123");
+}
     public void make_order(String product_catalog_number, String quantity, String cost, String expiry,String name, String manufactorer, String category, String sub_cat, String sub_sub_cat)
     {
 

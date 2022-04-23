@@ -7,8 +7,9 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Stock_Manager stock_manager=new Stock_Manager();
+        stock_manager.Auto_start();
         System.out.println("welcome to my stock!!!");
 
         Scanner scanner=new Scanner(System.in);
@@ -104,9 +105,9 @@ public class main {
                 }
             }
 
-            if(order_in_array.length==3 && order_in_array[0].toLowerCase(Locale.ROOT).equals("set") & order_in_array[1].toLowerCase(Locale.ROOT).equals("broken") & order_in_array[2].toLowerCase(Locale.ROOT).equals("item"))
+            if(order_in_array.length>3 && order_in_array[0].toLowerCase(Locale.ROOT).equals("set") & order_in_array[1].toLowerCase(Locale.ROOT).equals("broken") & order_in_array[2].toLowerCase(Locale.ROOT).equals("item"))
             {
-                if(stock_manager.set_broken_product(order_in_array[2],order_in_array[3]))
+                if(stock_manager.set_broken_product(order_in_array[3],order_in_array[4]))
                 {
                     System.out.println("successfully set item to broken state");
                 }

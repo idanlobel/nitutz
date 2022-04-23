@@ -154,7 +154,7 @@ public class Report {
                 for(Product p:every_product)
                 {
 
-                       answer+="name:  "+p.getName()+"   is broken or defective! \n";
+                       answer+="name:  "+p.getName()+" id:  "+p.get_id()+   "   is broken or defective! \n";
 
                 }
                 break;
@@ -164,12 +164,12 @@ public class Report {
                 {
                     if(p.getExpire_date().isBefore(LocalDate.now()))
                     {
-                        answer+="name:  "+p.getName()+"location:  "+p.getLocation()+"expiry date:  "+p.getExpire_date()+"\n";
+                        answer+="name:  "+p.getName()+"  location:  "+p.getLocation()+"   expiry date:  "+p.getExpire_date()+"\n";
                         answer+="has expired!!!!!!\n";
                     }
                     else
                     {
-                        answer+="name:  "+p.getName()+"location:  "+p.getLocation()+"expiry date:  "+p.getExpire_date()+"\n";
+                        answer+="name:  "+p.getName()+"  location:  "+p.getLocation()+"   expiry date:  "+p.getExpire_date()+"\n";
                     }
                 }
             }

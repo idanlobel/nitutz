@@ -36,7 +36,7 @@ public class Stock {
         boolean added = false;
         for (Products products : this.products_list) {
             if (products.getCatalog_number()== products_catalog_number) {
-                products.update_quantity2(quantity, cost, expiry);
+                products.update_quantity(quantity, cost, expiry);
                 added = true;
             }
         }
