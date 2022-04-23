@@ -1,0 +1,76 @@
+package busniess_layer;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class Sale {
+    private double percentage;
+    private int ID;
+    private String start_date;
+    private String end_date;
+    private String reason;
+    private List<Products> products_in_sale=new ArrayList<>();
+
+
+
+    public Sale(double percentage,int Id, String start_date, String end_date, String reason) {
+        this.percentage = percentage/100;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.reason = reason;
+
+
+//        this.products_in_sale.add(product);
+        this.ID=Id;
+    }
+    public int getId()
+    {
+        return this.ID;
+    }
+
+    public void Add_Products(Products p)  {
+
+        this.products_in_sale.add(p);
+        p.Record_sale(percentage,start_date,this.ID);
+
+    }
+
+    public void sale_is_over()
+    {
+        for (Products products:this.products_in_sale) {
+            products.sale_is_over(this.percentage);
+
+        }
+    }
+
+    public void SetPercentage(double percentage) throws Exception {
+        if(percentage<0 || percentage >100)
+        {
+            throw new Exception("illegal percentage , it must be 0<x<=100");
+        }
+        this.percentage=percentage;
+    }
+
+    public String getStart_date()
+    {
+        return this.start_date;
+    }
+    public String getEnd_date()
+    {
+        return this.end_date;
+    }
+
+    public Double getpercentage()
+    {
+        return this.percentage;
+    }
+
+    public String getReason()
+    {
+        return this.reason;
+    }
+
+
+}
