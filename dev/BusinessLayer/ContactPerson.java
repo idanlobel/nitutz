@@ -3,10 +3,11 @@ package BusinessLayer;
 public class ContactPerson {
     private final String name;
     String Email;
-    int cellNumber;
+    String cellNumber;
 
-    public ContactPerson(String name,String Email){
+    public ContactPerson(String name,String Email,String cellNumber){
         this.name=name;
         this.Email=Email;
+        this.cellNumber=cellNumber;
     }
 }

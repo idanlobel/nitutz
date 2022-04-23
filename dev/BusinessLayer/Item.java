@@ -1,10 +1,16 @@
 package BusinessLayer;
 
 public class Item {
-    private int id;
-
+    private int supplierId;
+    private int buyPrice;
     public int getId() {
-        return id;
+        return supplierId;
     }
-    //TODO: INTEGRATE WITH SUPPLY MODULE
+    public Item(int supplierId,int id){
+        //TODO: INTEGRATE WITH SUPPLY MODULE
+    }
+
+    public int getBuyPrice() {
+        return buyPrice;
+    }
 }
