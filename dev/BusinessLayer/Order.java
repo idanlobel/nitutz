@@ -1,17 +1,15 @@
 package BusinessLayer;
 
 import javafx.util.Pair;
-import sun.applet.AppletAudioClip;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Order {
     private final Contract contract;
-    private final List<Pair<Item,Integer>> itemAmounts;
-    private final List<Pair<Item,Integer>> postDiscountPrices;
+    private final List<Pair<Product,Integer>> itemAmounts;
+    private final List<Pair<Product,Integer>> postDiscountPrices;
     private final ContactPerson contactPerson;
     private int totalPrice;
     private final LocalDateTime orderDate;
@@ -27,7 +25,7 @@ public class Order {
         this.orderDate = LocalDateTime.now();
         this.arrivalDate = arrivalDate;
     }
-    public void AddProduct(Item item,int amount,int price){
+    public void AddProduct(Product item, int amount, int price){
         itemAmounts.add(new Pair<>(item,amount));
         postDiscountPrices.add(new Pair<>(item,price));
         totalPrice+=price;

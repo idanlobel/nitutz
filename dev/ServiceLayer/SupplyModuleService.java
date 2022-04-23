@@ -1,6 +1,9 @@
 package ServiceLayer;
 
 import BusinessLayer.*;
+import BusinessLayer.Responses.IsError;
+import BusinessLayer.Responses.Response;
+import BusinessLayer.Responses.IsValue;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -13,21 +16,37 @@ public class SupplyModuleService {
         controller=new Controller();
     }
 
-    public Supplier AddSupplier(String name, Integer companyNumber, String bankNumber, List<ContactPerson> contactPeople){
+    public Response<Supplier> AddSupplier(String name, Integer companyNumber, String bankNumber, List<ContactPerson> contactPeople){
         try{
-            return controller.AddSupplier(name, companyNumber, bankNumber, contactPeople);
+            return new IsValue<Supplier>(controller.AddSupplier(name, companyNumber, bankNumber, contactPeople),"Supplier added");
         }
         catch (Exception e){
-            return null;
+            return new IsError(e.getMessage());
         }
     }
-    public ContactPerson AddContactPerson(Integer companyNumber,String name,String Email,String cellNumber){
-        return controller.AddContact(companyNumber,name,Email,cellNumber);
+    public Response<ContactPerson> AddContactPerson(Integer companyNumber,String name,String Email,String cellNumber){
+        try {
+            return new IsValue<ContactPerson>(controller.AddContact(companyNumber, name, Email, cellNumber),"Contact added");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
     }
-    public Contract SignContract(int companyNumber, List<Integer[]> idPairsList, HashMap<Integer,List<int[]>> discountsList, boolean[] deliveryDays){
-        return controller.SignContract(companyNumber,idPairsList,discountsList,deliveryDays);
+    public Response<Contract> SignContract(int companyNumber, List<Integer[]> idPairsList, HashMap<Integer,List<int[]>> discountsList, boolean[] deliveryDays){
+        try {
+            return new IsValue<Contract>(controller.SignContract(companyNumber,idPairsList,discountsList,deliveryDays),"Contract added");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
     }
-    public Order OrderProducts(int companyNumber, List<int[]> products,ContactPerson contactPerson, LocalDateTime arrivalDate){
-        return controller.OrderProducts(companyNumber,products,contactPerson,arrivalDate);
+    public Response<Order> OrderProducts(int companyNumber, List<int[]> products,ContactPerson contactPerson, LocalDateTime arrivalDate){
+
+        try {
+            return new IsValue<Order>(controller.OrderProducts(companyNumber,products,contactPerson,arrivalDate),"Ordering successful");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
     }
 }

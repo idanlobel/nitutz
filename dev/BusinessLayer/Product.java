@@ -1,12 +1,12 @@
 package BusinessLayer;
 
-public class Item {
+public class Product {
     private int supplierId;
     private int buyPrice;
     public int getId() {
         return supplierId;
     }
-    public Item(int supplierId,int id){
+    public Product(int supplierId, int id){
         //TODO: INTEGRATE WITH SUPPLY MODULE
     }
 

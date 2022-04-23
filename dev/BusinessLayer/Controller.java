@@ -7,12 +7,12 @@ public class Controller {
     private final Hashtable<Integer,Supplier> suppliers;
     private final Hashtable<Integer,Contract> contracts;
     private final List<Order> orderHistory;
-    private final Hashtable<Integer,Item> items; //TODO: GET ITEMS FRO STOCK MODULE
+    private final Hashtable<Integer, Product> items; //TODO: GET ITEMS FRO STOCK MODULE
     public Controller(){
         suppliers=new Hashtable<>();
         contracts=new Hashtable<>();
         orderHistory=new ArrayList<>();
-        items=new Hashtable<Integer,Item>();
+        items=new Hashtable<Integer, Product>();
     }
     public Supplier AddSupplier(String name, Integer companyNumber, String bankNumber, List<ContactPerson> contactPeople) {
         if(suppliers.containsKey(companyNumber))
@@ -34,9 +34,9 @@ public class Controller {
 
     public Contract SignContract(int companyNumber, List<Integer[]> idPairsList, HashMap<Integer,List<int[]>> discountsList, boolean[] deliveryDays) {
         Supplier supplier=suppliers.get(companyNumber);
-        ArrayList<Item> SupplierItems=new ArrayList<>();
+        ArrayList<Product> SupplierItems=new ArrayList<>();
         for(Integer[] idPair: idPairsList){
-            SupplierItems.add(new Item(idPair[0],idPair[1]));
+            SupplierItems.add(new Product(idPair[0],idPair[1]));
         }
         Contract contract=new Contract(supplier,SupplierItems,discountsList,deliveryDays);
         contracts.put(companyNumber,contract);
@@ -52,7 +52,7 @@ public class Controller {
             if(items.containsKey(productAndAmount[0]))
                 throw new IllegalArgumentException("Trying to order item not in contract");
             int id=productAndAmount[0],amount=productAndAmount[1];
-            Item item=items.get(id);
+            Product item=items.get(id);
             int discountPercent=1, maxDisAmount=0;
             List<int[]> discountsForItem=discounts.get(id);
             for(int[] discount: discountsForItem){
