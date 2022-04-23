@@ -137,7 +137,7 @@ public class Main {
                                 "And the shift manager is: " + serviceLayer.getShiftManagerInfo(loginInfo.getWorkerID(), (int) list1.get(0),
                                 (int) list1.get(1), (int) list1.get(2)));
                     break;
-                case 8: //viewWeeklySchedule TODO:: For now, if the Weekly Schedule is 'empty', it will show it to the HR as null
+                case 8: //viewWeeklySchedule TODO:: For now, if the Weekly Schedule will be shown only if being filled completely.
                     //TODO: FIX THIS - A LOT OF NULL POINTER EXCEPTIONS
                     //(We want to change that later on)
                     if(!isHR(loginInfo.isHr()))
@@ -308,7 +308,7 @@ public class Main {
         System.out.println("Please enter the day of the week in which the shift is on: " +
                 "1 to 5");
         int shiftDay = sc.nextInt();
-        if(!(shiftDay >= 0 && shiftDay <= 5))  {
+        if(!(shiftDay >= 1 && shiftDay <= 5))  {
             System.out.println("You've entered an illegal option, please start the last process again.");
             return null;
         }
