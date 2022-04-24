@@ -9,12 +9,22 @@ import java.util.Scanner;
 public class main {
     public static void main(String[] args) throws Exception {
         Stock_Manager stock_manager=new Stock_Manager();
-        stock_manager.Auto_start();
+
         System.out.println("welcome to my stock!!!");
+
 
         Scanner scanner=new Scanner(System.in);
         String current_order="";
         String[] order_in_array=new String[20];
+
+        System.out.println("if you want to load data please type yes");
+        current_order=scanner.nextLine();
+        if(current_order.equals("yes"))
+        {
+            stock_manager.Auto_start();
+            System.out.println("loaded data successfully");
+        }
+
         while(!current_order.equals("exit"))
         {
             System.out.println("please enter your command");
