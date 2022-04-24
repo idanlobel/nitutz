@@ -25,7 +25,7 @@ public class WorkerSL {
         for (String job : workerJobs){
             s+= job + " ,";
         }
-        return (s.substring(0, s.length() -1 ) + ".\n"); //removing the last ','
+        return (s.substring(0, s.length() -1 ) + "."); //removing the last ','
     }
     public String getName() {
         return name;

@@ -3,6 +3,7 @@ package PresentationLayer;
 import Service_Layer.*;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -148,8 +149,7 @@ public class Main {
                     WeeklyScheduleSL weeklySchedule = serviceLayer.viewWeeklySchedule(loginInfo.getWorkerID(), weeklyID);
                     if (weeklySchedule == null)
                         System.out.println("You've entered a wrong week ID (meaning this Weekly Schedule doesn't exist)");
-                    else System.out.println("The workers in the desired weekly schedule are: " +
-                            Arrays.deepToString(weeklySchedule.getShiftSLS()));
+                    else System.out.println(weeklySchedule.toString());
                     break;
                 case 9: //setShiftManagerToWeeklySchedule
                     if(!isHR(loginInfo.isHr()))
@@ -272,6 +272,33 @@ public class Main {
                     else System.out.println("The worker doesn't exist in the system or the worker doesn't have this job or the job isn't " +
                             "on the provided list of jobs" +
                             ", please make sure that you've entered everything correctly and try again.");
+                    break;
+
+                case 20:
+                    if(!isHR(loginInfo.isHr()))
+                        break;
+                    List<Object> listassign = assignOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
+                    if (listassign == null) break;
+
+                    if (serviceLayer.assignWorkerToJobInShift(loginInfo.getWorkerID(), (int) listassign.get(0),
+                            (int) listassign.get(1), (int) listassign.get(2), (int) listassign.get(3),(String)listassign.get(4)))
+                        System.out.println("The worker has been added to the desired job in the " +
+                                "specified weekly schedule successfully");
+                    else System.out.println("There has been an issue, please try again and check that you've" +
+                            " entered everything correctly.");
+                    break;
+                case 21:
+                    if(!isHR(loginInfo.isHr()))
+                        break;
+                    List<Object> listremove = assignOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
+                    if (listremove == null) break;
+
+                    if (serviceLayer.removeWorkerFromJobInShift(loginInfo.getWorkerID(), (int) listremove.get(0),
+                            (int) listremove.get(1), (int) listremove.get(2), (int) listremove.get(3),(String) listremove.get(4)))
+                        System.out.println("The worker has been removed from the desired job in the " +
+                                "specified weekly schedule successfully");
+                    else System.out.println("There has been an issue, please try again and check that you've" +
+                            " entered everything correctly.");
                     break;
                 case 99:
                     System.out.println("You've been successfully logged-out.");
@@ -420,6 +447,15 @@ public class Main {
         }
 
         return Arrays.asList(shiftWeek, shiftDay - 1, shiftType, wID);
+    }
+    private static List<Object> assignOrRemoveInWeeklySchedule(int hrID) {
+        List<Object> objects = new LinkedList<>();
+        objects.addAll(addOrRemoveInWeeklySchedule(hrID));
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Please enter the job name: ");
+        String job = sc.nextLine();
+        objects.add(job);
+        return objects;
     }
 
     private static List<Object> registerAWorker() {

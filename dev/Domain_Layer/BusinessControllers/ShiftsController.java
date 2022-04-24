@@ -56,6 +56,13 @@ public class ShiftsController {
     public boolean addWorkerToWeeklySchedule(int weekID,int day, int shift, Worker worker) {
         return getWeeklySchedule(weekID).getShift(day,shift).addWorkerToShift(worker);
     }
+
+    public boolean assignWorkerToJobInShift(int weekID, int day, int shift, Worker worker, String job){
+        return getWeeklySchedule(weekID).getShift(day,shift).assignWorkerToJob(worker,job);
+    }
+    public boolean removeWorkerFromJobInShift(int weekID, int day, int shift, Worker worker, String job){
+        return getWeeklySchedule(weekID).getShift(day,shift).removeWorkerFromJob(worker,job);
+    }
     public boolean removeWorkerFromWeeklySchedule(int weekID,int day, int shift, Worker worker) {
         return getWeeklySchedule(weekID).getShift(day,shift).removeWorkerFromShift(worker);
     }

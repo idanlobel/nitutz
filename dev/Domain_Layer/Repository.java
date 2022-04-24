@@ -29,7 +29,11 @@ public class Repository {
                 new Worker("Papka", 4, "Papka97",
                         "pupik@walla.co.il", new BankAccount(321312, 22),
                         new EmploymentConditions(2, new Date()),
-                        new LinkedList<String>(Arrays.asList("steward", "store keeper")))));
+                        new LinkedList<String>(Arrays.asList("steward", "store keeper"))),
+                new Worker("gorilla", 5, "gorrila97",
+                        "pupik@walla.co.il", new BankAccount(321313, 12),
+                        new EmploymentConditions(2, new Date()),
+                        new LinkedList<String>(Arrays.asList("driver", "store keeper")))));
         return workers;
         //for now this is the implementation
     }

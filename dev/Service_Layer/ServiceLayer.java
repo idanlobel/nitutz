@@ -5,6 +5,7 @@ import Domain_Layer.BusinessControllers.WorkerController;
 import Domain_Layer.BusinessObjects.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,6 +35,22 @@ public class ServiceLayer {
         }
         else return false;
     }
+    public boolean assignWorkerToJobInShift(int callerID,int weekID,int day, int shift, int workerID, String job) {
+        if (!workerController.isHR(callerID))return false;
+        Worker worker = workerController.getWorker(workerID);
+        if(worker != null) {
+            return shiftsController.assignWorkerToJobInShift(weekID, day, shift, worker,job);
+        }
+        return false;
+    }
+    public boolean removeWorkerFromJobInShift(int callerID,int weekID,int day, int shift, int workerID,String job) {
+        if (!workerController.isHR(callerID))return false;
+        Worker worker = workerController.getWorker(workerID);
+        if(worker != null) {
+            return shiftsController.removeWorkerFromJobInShift(weekID, day, shift, worker,job);
+        }
+        else return false;
+    }
     public boolean setShiftManagerToWeeklySchedule(int callerID,int weekID,int day, int shift, int workerID) {
         if (!workerController.isHR(callerID))return false;
         Worker worker = workerController.getWorker(workerID);
@@ -47,34 +64,45 @@ public class ServiceLayer {
         if (!workerController.isHR(callerID))
             return null;//TODO:: we actually need to throw exceptions or responses like we did last year
         Weekly_Schedule weekly_schedule = shiftsController.getWeeklySchedule(weekID);
-        if(weekly_schedule != null) {
+        if(weekly_schedule != null) {//if it was actually created at all
             ShiftSL[][] shiftSLS = new ShiftSL[5][2];
             Shift[][] shifts = weekly_schedule.getSchedule();
-            if (shifts != null) {
+            if (shifts != null) {//should not be null anyways
                 for (int i = 0; i < 5; i++) {
                     List<WorkerSL> workerSLS0 = new LinkedList<>();
+                    int managerID = -1;
+                    HashMap<String, List<Integer>> jobToWorkers = new HashMap<>();
                     if (shifts[i][0] != null) {
                         List<Worker> workers = shifts[i][0].getShiftWorkers();
+                        jobToWorkers = shifts[i][0].getJobToWorker();
                         if (workers != null) {
                             for (Worker worker : workers) {
                                 WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
                                 workerSLS0.add(workerSL);
                             }
                             if (shifts[i][0].getShift_manager() != null) {
-                                shiftSLS[i][0] = new ShiftSL(workerSLS0, shifts[i][0].getShift_manager().getId());
+                                managerID = shifts[i][0].getShift_manager().getId();
                             }
-                            List<WorkerSL> workerSLS1 = new LinkedList<>();
-                            List<Worker> workers1 = shifts[i][1].getShiftWorkers();
+                        }
+                    }
+                    shiftSLS[i][0] = new ShiftSL(workerSLS0, managerID,jobToWorkers);
+                    List<WorkerSL> workerSLS1 = new LinkedList<>();
+                    managerID = -1;
+                    HashMap<String, List<Integer>> jobToWorkers2 = new HashMap<>();
+                    if (shifts[i][1] != null){
+                        List<Worker> workers1 = shifts[i][1].getShiftWorkers();
+                        jobToWorkers2 = shifts[i][0].getJobToWorker();
+                        if (workers1!=null){
                             for (Worker worker : workers1) {
                                 WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
                                 workerSLS1.add(workerSL);
                             }
                             if (shifts[i][1].getShift_manager() != null) {
-                                shiftSLS[i][1] = new ShiftSL(workerSLS1, shifts[i][1].getShift_manager().getId());
+                                managerID = shifts[i][1].getShift_manager().getId();
                             }
-
                         }
                     }
+                    shiftSLS[i][1] = new ShiftSL(workerSLS1, managerID,jobToWorkers2);
                 }
                 return new WeeklyScheduleSL(shiftSLS);
             }
@@ -90,9 +118,8 @@ public class ServiceLayer {
                 WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
                 workerSLS.add(workerSL);
             }
-            return workerSLS;
         }
-        return null;
+        return workerSLS;
     }
     public String getShiftManagerInfo (int callerID,int weekID, int day, int shift){
         if (!workerController.isHR(callerID))return "There has been an issue";//TODO:: we actually need to throw exceptions or responses like we did last year

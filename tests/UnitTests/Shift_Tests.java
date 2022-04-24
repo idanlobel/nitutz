@@ -23,14 +23,26 @@ public class Shift_Tests {
         shift.addWorkerToShift(workerController.getWorker(1));
         shift.addWorkerToShift(workerController.getWorker(2));
         shift.addWorkerToShift(workerController.getWorker(4));
+        shift.addWorkerToShift(workerController.getWorker(5));
+        shift.assignWorkerToJob(workerController.getWorker(4),"store keeper");
+        shift.assignWorkerToJob(workerController.getWorker(5),"driver");
+        shift.assignWorkerToJob(workerController.getWorker(1),"cashier");
+        shift.assignWorkerToJob(workerController.getWorker(2),"steward");
+        shift.setShiftManager(workerController.getWorker(2));
         assertEquals(true, shift.isShiftIsReady());
     }
 
     @Test
     void isShiftIsReady_Failure() throws Exception {
         assertEquals(false, shift.isShiftIsReady());
+        shift.addWorkerToShift(workerController.getWorker(1));
         shift.addWorkerToShift(workerController.getWorker(2));
         shift.addWorkerToShift(workerController.getWorker(4));
+        shift.addWorkerToShift(workerController.getWorker(5));
+        shift.assignWorkerToJob(workerController.getWorker(4),"store keeper");
+        shift.assignWorkerToJob(workerController.getWorker(5),"driver");
+        shift.assignWorkerToJob(workerController.getWorker(1),"cashier");
+        shift.assignWorkerToJob(workerController.getWorker(2),"steward");
         assertEquals(false, shift.isShiftIsReady());
     }
 
