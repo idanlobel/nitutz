@@ -16,7 +16,7 @@ public class SupplyModuleService {
         controller=new Controller();
     }
 
-    public Response<Supplier> AddSupplier(String name, Integer companyNumber, String bankNumber, List<ContactPerson> contactPeople){
+    public Response<Supplier> AddSupplier(Integer companyNumber, String name,  String bankNumber, List<ContactPerson> contactPeople){
         try{
             return new IsValue<Supplier>(controller.AddSupplier(name, companyNumber, bankNumber, contactPeople),"Supplier added");
         }
@@ -40,7 +40,7 @@ public class SupplyModuleService {
             return new IsError(e.getMessage());
         }
     }
-    public Response<Order> OrderProducts(int companyNumber, List<int[]> products,ContactPerson contactPerson, LocalDateTime arrivalDate){
+    public Response<Order> OrderProducts(int companyNumber,ContactPerson contactPerson, LocalDateTime arrivalDate,List<int[]> products){
 
         try {
             return new IsValue<Order>(controller.OrderProducts(companyNumber,products,contactPerson,arrivalDate),"Ordering successful");
