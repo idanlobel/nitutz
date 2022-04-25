@@ -37,6 +37,8 @@ public class Controller {
     public Contract SignContract(int companyNumber, List<int[]> itemInfoList, HashMap<Integer,List<int[]>> discountsList, boolean[] deliveryDays) {
         if(!suppliers.containsKey(companyNumber))
             throw new IllegalArgumentException("USER ERROR: supplier with id "+companyNumber+" does not exist");
+        if(deliveryDays.length != 7)
+            throw new IllegalArgumentException("USER ERROR: Delivery days must be 7 days array");
         Supplier supplier=suppliers.get(companyNumber);
         ArrayList<Product> SupplierItems=new ArrayList<>();
         for(int[] itemInfo: itemInfoList){

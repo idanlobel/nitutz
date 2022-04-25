@@ -60,4 +60,8 @@ public class Order {
 
         return acc.toString();
     }
+
+    public int getTotalPrice() {
+        return totalPrice;
+    }
 }
