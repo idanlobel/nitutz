@@ -188,7 +188,8 @@ public class Main { //note: this code is assumed to be made as a placeholder til
         if(!response.isError())
             for(Order order:response.getValue())
                 System.out.println(order);
-        handleResponse(response);    }
+        handleResponse(response);
+    }
     public static void handleResponse(Response response){
         if(response.isError())
             System.out.println("ERROR! "+response.getMsg());

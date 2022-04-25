@@ -48,6 +48,8 @@ public class Controller {
     }
 
     public Order OrderProducts(int companyNumber, List<int[]> productsAndAmounts, String contactPerson, LocalDate arrivalTime) { //product[0]=supplierId, [1]=amount
+        if(!contracts.containsKey(companyNumber))
+            throw new IllegalArgumentException("USER ERROR: Supplier has not signed contract with us");
         Contract contract=contracts.get(companyNumber);
         HashMap<Integer,List<int[]>> discounts=contract.getDiscounts();
         Order order=new Order(orderIdTracker,contract,contactPerson,arrivalTime);
