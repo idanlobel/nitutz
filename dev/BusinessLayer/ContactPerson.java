@@ -10,13 +10,17 @@ public class ContactPerson {
         this.Email=Email;
         this.cellNumber=cellNumber;
     }
-    public String getName(){
+
+    public String getName() {
         return name;
     }
-    public String getEmail(){
-        return Email;
-    }
-    public String getCellNumber(){
-        return cellNumber;
+
+    @Override
+    public String toString() {
+        return "ContactPerson{" +
+                "name='" + name + '\'' +
+                ", Email='" + Email + '\'' +
+                ", cellNumber='" + cellNumber + '\'' +
+                '}';
     }
 }

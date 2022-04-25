@@ -1,23 +1,25 @@
 package BusinessLayer;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class Controller {
     private final Hashtable<Integer,Supplier> suppliers;
     private final Hashtable<Integer,Contract> contracts;
-    private final List<Order> orderHistory;
-    private final Hashtable<Integer, Product> items; //TODO: GET ITEMS FRO STOCK MODULE
+    private int orderIdTracker=0;
+    private final Hashtable<Integer,Order> orderHistory;
+    private final Hashtable<Integer, Product> items; //TODO: GET ITEMS FROM STOCK MODULE
     public Controller(){
         suppliers=new Hashtable<>();
         contracts=new Hashtable<>();
-        orderHistory=new ArrayList<>();
+        orderHistory=new Hashtable<>();
         items=new Hashtable<Integer, Product>();
     }
     public Supplier AddSupplier(String name, Integer companyNumber, String bankNumber, List<ContactPerson> contactPeople) {
         if(suppliers.containsKey(companyNumber))
             throw new IllegalArgumentException("Company number already exists in the system");
-        Supplier supplier = new Supplier(name,companyNumber,bankNumber,contactPeople);
+        Supplier supplier=new Supplier(name,companyNumber,bankNumber,contactPeople);
         suppliers.put(companyNumber,supplier);
         return supplier;
     }
@@ -32,29 +34,29 @@ public class Controller {
 
     }
 
-    public Contract SignContract(int companyNumber, List<Integer[]> idPairsList, HashMap<Integer,List<int[]>> discountsList, boolean[] deliveryDays) {
-        if(deliveryDays.length != 7)
-            throw new IllegalArgumentException("Delivery days array must be size 7");
+    public Contract SignContract(int companyNumber, List<int[]> itemInfoList, HashMap<Integer,List<int[]>> discountsList, boolean[] deliveryDays) {
+        if(!suppliers.containsKey(companyNumber))
+            throw new IllegalArgumentException("USER ERROR: supplier with id "+companyNumber+" does not exist");
         Supplier supplier=suppliers.get(companyNumber);
         ArrayList<Product> SupplierItems=new ArrayList<>();
-        for(Integer[] idPair: idPairsList){
-            SupplierItems.add(new Product(idPair[0],idPair[1]));
+        for(int[] itemInfo: itemInfoList){
+            SupplierItems.add(new Product(itemInfo[0],itemInfo[1],itemInfo[2]));
         }
         Contract contract=new Contract(supplier,SupplierItems,discountsList,deliveryDays);
         contracts.put(companyNumber,contract);
         return contract;
     }
 
-    public Order OrderProducts(int companyNumber, List<int[]> productsAndAmounts, ContactPerson contactPerson, LocalDateTime arrivalTime) { //product[0]=supplierId, [1]=amount
+    public Order OrderProducts(int companyNumber, List<int[]> productsAndAmounts, String contactPerson, LocalDate arrivalTime) { //product[0]=supplierId, [1]=amount
         Contract contract=contracts.get(companyNumber);
         HashMap<Integer,List<int[]>> discounts=contract.getDiscounts();
-        Order order=new Order(contract,contactPerson,arrivalTime);
+        Order order=new Order(orderIdTracker,contract,contactPerson,arrivalTime);
         for(int[] productAndAmount: productsAndAmounts){
-            int itemPrice=0;
-            if(!items.containsKey(productAndAmount[0]))
+            if(!contract.getProductsIds().contains(productAndAmount[0]))
                 throw new IllegalArgumentException("Trying to order item not in contract");
             int id=productAndAmount[0],amount=productAndAmount[1];
-            Product item=items.get(id);
+      //      Product product=items.get(id);
+            Product item=contract.getProduct(id);
             int discountPercent=1, maxDisAmount=0;
             List<int[]> discountsForItem=discounts.get(id);
             for(int[] discount: discountsForItem){
@@ -63,9 +65,43 @@ public class Controller {
                     discountPercent=discount[1];
                 }
             }
-            order.AddProduct(item,amount,item.getBuyPrice()*amount*discountPercent);
+            order.AddProduct(item,amount,item.getBuyPrice(),discountPercent);
         }
-        orderHistory.add(order);
+        orderHistory.put(orderIdTracker,order);
+        orderIdTracker++;
         return order;
+    }
+
+    public Order getOrder(int orderId) {
+        if(!orderHistory.containsKey(orderId))
+            throw new IllegalArgumentException("USER ERROR: Order with id "+orderId+" not in system");
+        else return orderHistory.get(orderId);
+    }
+    public List<Order> getOrderList(int companyNum){
+        ArrayList<Order> acc= new ArrayList<>();
+        for(Order order:orderHistory.values())
+            if(order.getSupplyCompanyNumber()==companyNum)
+                acc.add(order);
+        return acc;
+    }
+
+    public Contract getContract(int companyNum) {
+        if(!suppliers.containsKey(companyNum))
+            throw new IllegalArgumentException("USER ERROR: Supplier with company number "+companyNum+" not in system");
+        else if(!contracts.containsKey(companyNum))
+            throw new IllegalArgumentException("USER ERROR: Supplier "+companyNum+" has no contract");
+        else return contracts.get(companyNum);
+    }
+    public List<Contract> getContractList() {
+        return new ArrayList<>(contracts.values());
+    }
+    public Supplier getSupplier(int companyNum) {
+        if(!suppliers.containsKey(companyNum))
+            throw new IllegalArgumentException("USER ERROR: Supplier with company number "+companyNum+" not in system");
+        else return suppliers.get(companyNum);
+    }
+
+    public List<Supplier> getSupplierList() {
+        return new ArrayList<>(suppliers.values());
     }
 }
