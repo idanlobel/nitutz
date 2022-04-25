@@ -14,4 +14,13 @@ public class ContactPerson {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return "ContactPerson{" +
+                "name='" + name + '\'' +
+                ", Email='" + Email + '\'' +
+                ", cellNumber='" + cellNumber + '\'' +
+                '}';
+    }
 }

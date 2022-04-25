@@ -6,12 +6,11 @@ import BusinessLayer.Responses.Response;
 import BusinessLayer.Responses.IsValue;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
 public class SupplyModuleService {
-    private Controller controller;
+    private final Controller controller;
 
     public SupplyModuleService(){
         controller=new Controller();
@@ -65,6 +64,14 @@ public class SupplyModuleService {
             return new IsError(e.getMessage());
         }
     }
+    public Response<List<Contract>> getContractList() {
+
+        try {
+            return new IsValue<List<Contract>>(controller.getContractList(), "contract fetch successful");
+        } catch (Exception e) {
+            return new IsError(e.getMessage());
+        }
+    }
     public Response<Order> OrderProducts(int companyNumber, String contactPersonName, LocalDate arrivalDate, List<int[]> products){
 
         try {
@@ -78,6 +85,14 @@ public class SupplyModuleService {
 
         try {
             return new IsValue<Order>(controller.getOrder(orderId), "order fetch successful");
+        } catch (Exception e) {
+            return new IsError(e.getMessage());
+        }
+    }
+    public Response<List<Order>> getSupplierOrders(int companyNumber) {
+
+        try {
+            return new IsValue<List<Order>>(controller.getOrderList(companyNumber), "order fetch successful");
         } catch (Exception e) {
             return new IsError(e.getMessage());
         }

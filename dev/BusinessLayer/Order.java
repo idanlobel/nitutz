@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Order {
     private final int id;
+    private final int supplyCompanyNumber;
     private final Contract contract;
     private final HashMap<Product,int[]> itemInfos; //[0]=amount,[1]=initial price [2]=discount
     private final ContactPerson contactPerson;
@@ -18,6 +19,7 @@ public class Order {
 
 
     public Order(int id,Contract contract, String contactPerson, LocalDate arrivalDate) {
+        this.supplyCompanyNumber= contract.getSupplier().getCompanyNumber();
         this.id=id;
         this.contract = contract;
         this.itemInfos = new HashMap<>();
@@ -35,6 +37,10 @@ public class Order {
             throw new IllegalArgumentException("User Error: Item "+product.getId()+ " price can not be 0");
         itemInfos.put(product,new int[]{amount,initPrice,discount});
         totalPrice+=initPrice*amount*(discount/100);
+    }
+
+    public int getSupplyCompanyNumber() {
+        return supplyCompanyNumber;
     }
 
     @Override
