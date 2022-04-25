@@ -45,4 +45,12 @@ public class Supplier {
                 ", bankNumber='" + bankNumber + '\'' +
                 ", contactList=" + contactList+"\n";
     }
+
+    public String getBankNumber() {
+        return bankNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

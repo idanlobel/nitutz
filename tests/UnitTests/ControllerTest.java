@@ -8,7 +8,9 @@ import BusinessLayer.Supplier;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +34,6 @@ public class ControllerTest {
         assertEquals("Osem", supplier.getName());
         assertEquals(1110, supplier.getCompanyNumber());
         assertEquals("5120", supplier.getBankNumber());
-        assertEquals("Yoav", supplier.getContactList().get(0).getName());
     }
     //2
     @Test
@@ -78,7 +79,7 @@ public class ControllerTest {
     @Test
     void sign_Contract_Success() throws Exception {
         boolean[] deliveyDays = {false,false,false,false,true,false,false};
-        List<Integer[]> itemList = new ArrayList<>();
+        List<int[]> itemList = new ArrayList<>();
         List<ContactPerson> cpList = new ArrayList<ContactPerson>();
         ContactPerson cp1 = new ContactPerson("Yoav", "yoav@mail.com", "0500000000");
         cpList.add(cp1);
@@ -91,7 +92,7 @@ public class ControllerTest {
     @Test
     void sign_Contract_Fail() throws Exception {
         boolean[] deliveyDays = {false,false,false,false,true,false};
-        List<Integer[]> itemList = new ArrayList<>();
+        List<int[]> itemList = new ArrayList<>();
         List<ContactPerson> cpList = new ArrayList<ContactPerson>();
         ContactPerson cp1 = new ContactPerson("Yoav", "yoav@mail.com", "0500000000");
         cpList.add(cp1);
@@ -103,15 +104,15 @@ public class ControllerTest {
     @Test
     void order_Product_Success() throws Exception {
         boolean[] deliveyDays = {false,false,false,false,true,false,false};
-        List<Integer[]> itemList = new ArrayList<>();
+        List<int[]> itemList = new ArrayList<>();
         List<ContactPerson> cpList = new ArrayList<ContactPerson>();
         ContactPerson cp1 = new ContactPerson("Yoav", "yoav@mail.com", "0500000000");
         cpList.add(cp1);
         controller.AddSupplier("Tnuva", 1111, "5121", cpList);
         Contract contract = controller.SignContract(1111, itemList, null, deliveyDays);
-        LocalDateTime localDateTime = LocalDateTime.parse("2022-07-03T09:00:00");
+        LocalDate localDate = LocalDate.parse("03-04-22", DateTimeFormatter.ofPattern("dd-MM-yy"));
         List<int[]> productList = new ArrayList<>();
-        Order order = controller.OrderProducts(1111, productList, cp1, localDateTime);
+        Order order = controller.OrderProducts(1111, productList, "Yoav", localDate);
         assertEquals(0, order.getTotalPrice());
     }
 
@@ -119,17 +120,17 @@ public class ControllerTest {
     @Test
     void order_Product_Fail_Illegal_Item() throws Exception {
         boolean[] deliveyDays = {false,false,false,false,true,false,false};
-        List<Integer[]> itemList = new ArrayList<>();
+        List<int[]> itemList = new ArrayList<>();
         List<ContactPerson> cpList = new ArrayList<ContactPerson>();
         ContactPerson cp1 = new ContactPerson("Yoav", "yoav@mail.com", "0500000000");
         cpList.add(cp1);
         controller.AddSupplier("Tnuva", 1111, "5121", cpList);
         controller.SignContract(1111, itemList, null, deliveyDays);
-        LocalDateTime localDateTime = LocalDateTime.parse("2022-07-03T09:00:00");
+        LocalDate localDate = LocalDate.parse("03-04-22", DateTimeFormatter.ofPattern("dd-MM-yy"));
         List<int[]> productList = new ArrayList<>();
         int[] a = {1000, 50};
         productList.add(a);
-        assertThrows(IllegalArgumentException.class,() -> controller.OrderProducts(1111, productList, cp1, localDateTime));
+        assertThrows(IllegalArgumentException.class,() -> controller.OrderProducts(1111, productList, "Yoav", localDate));
     }
 
     //10
@@ -139,9 +140,9 @@ public class ControllerTest {
         ContactPerson cp1 = new ContactPerson("Yoav", "yoav@mail.com", "0500000000");
         cpList.add(cp1);
         controller.AddSupplier("Tnuva", 1111, "5121", cpList);
-        LocalDateTime localDateTime = LocalDateTime.parse("2022-07-03T09:00:00");
+        LocalDate localDate = LocalDate.parse("03-04-22", DateTimeFormatter.ofPattern("dd-MM-yy"));
         List<int[]> productList = new ArrayList<>();
-        assertThrows(NullPointerException.class,() -> controller.OrderProducts(1111, productList, cp1, localDateTime));
+        assertThrows(IllegalArgumentException.class,() -> controller.OrderProducts(1111, productList, "Yoav", localDate));
     }
 
     @AfterEach

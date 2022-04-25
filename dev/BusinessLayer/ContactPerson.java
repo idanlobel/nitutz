@@ -23,4 +23,12 @@ public class ContactPerson {
                 ", cellNumber='" + cellNumber + '\'' +
                 '}';
     }
+
+    public String getCellNumber() {
+        return cellNumber;
+    }
+
+    public String getEmail() {
+        return Email;
+    }
 }
