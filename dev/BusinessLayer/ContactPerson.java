@@ -10,4 +10,8 @@ public class ContactPerson {
         this.Email=Email;
         this.cellNumber=cellNumber;
     }
+
+    public String getName() {
+        return name;
+    }
 }
