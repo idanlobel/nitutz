@@ -18,6 +18,18 @@ public class Supplier {
         this.bankNumber=bankNumber;
         this.contactList=contactList;
     }
+    public String getName(){
+        return name;
+    }
+    public int getCompanyNumber(){
+        return  companyNumber;
+    }
+    public String getBankNumber(){
+        return  bankNumber;
+    }
+    public List<ContactPerson> getContactList(){
+        return  contactList;
+    }
     public void addContact(ContactPerson contactPerson){
      contactList.add(contactPerson);
     }

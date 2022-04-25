@@ -28,4 +28,12 @@ public class Contract {
     public HashMap<Integer,List<int[]>> getDiscounts() {
         return discounts;
     }
+
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
 }

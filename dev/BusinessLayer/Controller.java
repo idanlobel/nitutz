@@ -17,7 +17,7 @@ public class Controller {
     public Supplier AddSupplier(String name, Integer companyNumber, String bankNumber, List<ContactPerson> contactPeople) {
         if(suppliers.containsKey(companyNumber))
             throw new IllegalArgumentException("Company number already exists in the system");
-        Supplier supplier=new Supplier(name,companyNumber,bankNumber,contactPeople);
+        Supplier supplier = new Supplier(name,companyNumber,bankNumber,contactPeople);
         suppliers.put(companyNumber,supplier);
         return supplier;
     }
@@ -33,6 +33,8 @@ public class Controller {
     }
 
     public Contract SignContract(int companyNumber, List<Integer[]> idPairsList, HashMap<Integer,List<int[]>> discountsList, boolean[] deliveryDays) {
+        if(deliveryDays.length != 7)
+            throw new IllegalArgumentException("Delivery days array must be size 7");
         Supplier supplier=suppliers.get(companyNumber);
         ArrayList<Product> SupplierItems=new ArrayList<>();
         for(Integer[] idPair: idPairsList){
@@ -49,7 +51,7 @@ public class Controller {
         Order order=new Order(contract,contactPerson,arrivalTime);
         for(int[] productAndAmount: productsAndAmounts){
             int itemPrice=0;
-            if(items.containsKey(productAndAmount[0]))
+            if(!items.containsKey(productAndAmount[0]))
                 throw new IllegalArgumentException("Trying to order item not in contract");
             int id=productAndAmount[0],amount=productAndAmount[1];
             Product item=items.get(id);

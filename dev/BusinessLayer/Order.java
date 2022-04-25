@@ -31,4 +31,8 @@ public class Order {
         totalPrice+=price;
 
     }
+
+    public int getTotalPrice() {
+        return totalPrice;
+    }
 }
