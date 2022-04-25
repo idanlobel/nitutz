@@ -36,7 +36,7 @@ public class Order {
         if(initPrice==0)
             throw new IllegalArgumentException("User Error: Item "+product.getId()+ " price can not be 0");
         itemInfos.put(product,new int[]{amount,initPrice,discount});
-        totalPrice+=initPrice*amount*(discount/100);
+        totalPrice+=initPrice*amount*((double)discount/100);
     }
 
     public int getSupplyCompanyNumber() {
