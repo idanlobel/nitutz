@@ -1,4 +1,4 @@
-package businessLogic.test;
+package src.businessLogic.test;
 
 import businessLogic.ContactPerson;
 
