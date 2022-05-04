@@ -34,85 +34,155 @@ public class ShiftsController {
     // Later we can implement it by using a GUI interface.
     public Worker_Schedule getWorkerSchedule(int workerID){
         if(!workers_Schedules.containsKey(workerID)) return null; //This worker doesn't have a worker schedule -
-        // shouldn't happen at all (He should always have, but better safe rather than sorry).
+        // TODO:: shouldn't happen at all (He should always have!) - (but better safe rather than sorry).
         return workers_Schedules.get(workerID);
     }
-    public Weekly_Schedule getWeeklySchedule(int weekID){
-        if(!weekly_Schedules.containsKey(weekID)) return null;
-        return weekly_Schedules.get(weekID);
+    public Weekly_Schedule getWeeklySchedule(int weekID) throws Exception {
+        try {
+            if (!weekly_Schedules.containsKey(weekID)) throw new Exception("There's no such weekly schedule");
+            else return weekly_Schedules.get(weekID);
+        }
+        catch(Exception e){
+            throw new Exception(e);
+        }
     }
-    public boolean editWorkerSchedule(int workerID, boolean present, int day, int shiftType){
-        if ((day>5 || day<0) || (shiftType !=0&&shiftType!=1))return false;
-        if(!workers_Schedules.containsKey(workerID)) return false;
-        if(WorkerController.getInstance().isHR(workerID) && shiftType == 1 && present == true) return  false; //The HR can only work in
-                                                                                                             // morning shifts
-        getWorkerSchedule(workerID).editShiftPresence(present,day,shiftType);
-        //repository: Update in the database
-        return true;
+    public boolean editWorkerSchedule(int workerID, boolean present, int day, int shiftType) throws Exception {
+        try {
+            if ((day > 5 || day < 0) || (shiftType != 0 && shiftType != 1))
+                throw new Exception("Please make sure you've entered legal values for day and shift type");
+            if (!workers_Schedules.containsKey(workerID))
+                throw new Exception("There's no such working schedule for the specified worker");
+            if (WorkerController.getInstance().isHR(workerID) && shiftType == 1 && present == true)
+                throw new Exception("The HR can only work in morning shifts");//The HR can only work in
+            // morning shifts
+            getWorkerSchedule(workerID).editShiftPresence(present, day, shiftType);
+            //repository: Update in the database
+            return true;
+        }
+        catch (Exception e){
+            throw new Exception(e);
+        }
     }
 
     //TODO:: For now we can't implement this method because we don't know which shifts the Business_Layer.HR would like to add -
     // Later we can implement it by using a GUI interface.
-    public boolean addWorkerToWeeklySchedule(int weekID,int day, int shift, Worker worker) {
-        return getWeeklySchedule(weekID).getShift(day,shift).addWorkerToShift(worker);
+    public boolean addWorkerToWeeklySchedule(int weekID,int day, int shift, Worker worker) throws Exception {
+        try {
+            return getWeeklySchedule(weekID).getShift(day, shift).addWorkerToShift(worker);
+        }
+        catch (Exception e){
+            throw new Exception(e);
+        }
     }
 
-    public boolean assignWorkerToJobInShift(int weekID, int day, int shift, Worker worker, String job){
-        return getWeeklySchedule(weekID).getShift(day,shift).assignWorkerToJob(worker,job);
-    }
-    public boolean removeWorkerFromJobInShift(int weekID, int day, int shift, Worker worker, String job){
-        return getWeeklySchedule(weekID).getShift(day,shift).removeWorkerFromJob(worker,job);
-    }
-    public boolean removeWorkerFromWeeklySchedule(int weekID,int day, int shift, Worker worker) {
-        return getWeeklySchedule(weekID).getShift(day,shift).removeWorkerFromShift(worker);
-    }
-    public boolean setShiftManagerToWeeklySchedule(int weekID,int day, int shift, Worker worker) {
-        getWeeklySchedule(weekID).getShift(day,shift).setShiftManager(worker); return true;
-    }
-    public List<Worker> showShiftWorkers(int weekID, int day, int shift){
-        Weekly_Schedule weekly_schedule = getWeeklySchedule(weekID);
-        if(weekly_schedule != null){
-            Shift sft = weekly_schedule.getShift(day,shift);
-            return sft.getShiftWorkers();
+    public boolean assignWorkerToJobInShift(int weekID, int day, int shift, Worker worker, String job) throws Exception {
+        try {
+            return getWeeklySchedule(weekID).getShift(day, shift).assignWorkerToJob(worker, job);
         }
-        return null;
-    }
-    public Worker getShiftManager(int weekID, int day, int shift){
-        Weekly_Schedule weekly_schedule = getWeeklySchedule(weekID);
-        if(weekly_schedule != null){
-            Shift sft = weekly_schedule.getShift(day,shift);
-            return sft.getShift_manager();
+        catch (Exception e){
+            throw new Exception(e);
         }
-        return null;
+    }
+    public boolean removeWorkerFromJobInShift(int weekID, int day, int shift, Worker worker, String job) throws Exception {
+        try {
+            return getWeeklySchedule(weekID).getShift(day, shift).removeWorkerFromJob(worker, job);
+        }
+        catch (Exception e){
+            throw new Exception(e);
+        }
+    }
+    public boolean removeWorkerFromWeeklySchedule(int weekID,int day, int shift, Worker worker) throws Exception {
+        try {
+            return getWeeklySchedule(weekID).getShift(day, shift).removeWorkerFromShift(worker);
+        }
+        catch (Exception e){
+            throw new Exception(e);
+        }
+    }
+    public boolean setShiftManagerToWeeklySchedule(int weekID,int day, int shift, Worker worker) throws Exception {
+        try {
+            getWeeklySchedule(weekID).getShift(day, shift).setShiftManager(worker);
+            return true;
+        }
+        catch (Exception e){
+            throw new Exception(e);
+        }
+    }
+    public List<Worker> showShiftWorkers(int weekID, int day, int shift) throws Exception {
+        try {
+            Weekly_Schedule weekly_schedule = getWeeklySchedule(weekID);
+            if (weekly_schedule != null) {
+                Shift sft = weekly_schedule.getShift(day, shift);
+                return sft.getShiftWorkers();
+            }
+            return null;
+        }
+        catch (Exception e){
+            throw new Exception(e);
+        }
+    }
+    public Worker getShiftManager(int weekID, int day, int shift) throws Exception {
+        try {
+            Weekly_Schedule weekly_schedule = getWeeklySchedule(weekID);
+            if (weekly_schedule != null) {
+                Shift sft = weekly_schedule.getShift(day, shift);
+                return sft.getShift_manager();
+            }
+            throw new Exception("There's No such shift");
+        }
+        catch(Exception e){
+            throw new Exception(e);
+        }
     }
     public boolean createWeeklySchedule(int weekID) {
         if(weekly_Schedules.containsKey(weekID)) return false;
         weekly_Schedules.put(weekID,new Weekly_Schedule());
         return true;
     }
-    public boolean addTransaction(int weekID, int day, int shift, int transactionID, int workerID){
-        Transaction transaction = new Transaction(transactionID, workerID);
-        return getWeeklySchedule(weekID).getShift(day,shift).addTransaction(transaction, workerID);
-    }
-    public boolean removeTransaction(int weekID, int day, int shift, int transactionID, int workerID){
-       return getWeeklySchedule(weekID).getShift(day,shift).removeTransaction(transactionID, workerID);
-    }
-
-    public boolean isShiftIsReady (int weekID, int day, int shift){
-        Weekly_Schedule weekly_schedule = getWeeklySchedule(weekID);
-        if(weekly_schedule != null){
-            Shift sft = weekly_schedule.getShift(day,shift);
-            return sft.isShiftIsReady();
+    public boolean addTransaction(int weekID, int day, int shift, int transactionID, int workerID) throws Exception {
+        try {
+            Transaction transaction = new Transaction(transactionID, workerID);
+            return getWeeklySchedule(weekID).getShift(day, shift).addTransaction(transaction, workerID);
         }
-        return false;
+        catch(Exception e){
+            throw new Exception(e);
+        }
     }
 
-    public boolean isWeeklyScheduleReady (int weekID) {
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 2; j++) {
-                if (!isShiftIsReady(weekID, i, j)) return false;
+    public boolean removeTransaction(int weekID, int day, int shift, int transactionID, int workerID) throws Exception {
+       try {
+           return getWeeklySchedule(weekID).getShift(day, shift).removeTransaction(transactionID, workerID);
+       }
+       catch(Exception e){
+           throw new Exception(e);
+       }
+    }
+
+    public boolean isShiftIsReady (int weekID, int day, int shift) throws Exception {
+        try {
+            Weekly_Schedule weekly_schedule = getWeeklySchedule(weekID);
+            if (weekly_schedule != null) {
+                Shift sft = weekly_schedule.getShift(day, shift);
+                return sft.isShiftIsReady();
             }
+            return false;
         }
-        return true;
+        catch(Exception e){
+            throw new Exception(e);
+        }
+    }
+
+    public boolean isWeeklyScheduleReady (int weekID) throws Exception {
+        try {
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 2; j++) {
+                    if (!isShiftIsReady(weekID, i, j)) return false;
+                }
+            }
+            return true;
+        }
+        catch(Exception e){
+            throw new Exception(e);
+        }
     }
 }

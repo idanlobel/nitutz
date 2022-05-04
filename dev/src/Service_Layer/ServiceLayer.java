@@ -2,7 +2,6 @@ package src.Service_Layer;
 
 import src.Domain_Layer.BusinessControllers.ShiftsController;
 import src.Domain_Layer.BusinessControllers.WorkerController;
-import src.Domain_Layer.BusinessObjects.*;
 import src.Domain_Layer.BusinessObjects.Shift;
 import src.Domain_Layer.BusinessObjects.Weekly_Schedule;
 import src.Domain_Layer.BusinessObjects.Worker;
@@ -23,114 +22,153 @@ public class ServiceLayer {
 
     //all of these are HR methods
     public boolean addWorkerToWeeklySchedule(int callerID,int weekID,int day, int shift, int workerID) {
-        if (!workerController.isHR(callerID))return false;
-        Worker worker = workerController.getWorker(workerID);
-        if(worker != null) {
-            return shiftsController.addWorkerToWeeklySchedule(weekID, day, shift, worker);
+        try {
+            if (!workerController.isHR(callerID)) return false; //TODO:: change it later - deal with Response here.
+            Worker worker = workerController.getWorker(workerID);
+            if (worker != null) {
+                return shiftsController.addWorkerToWeeklySchedule(weekID, day, shift, worker);
+            }
+            return false; //TODO:: change it later - deal with Response here.
         }
-        return false;
+        catch (Exception e){
+            return false; //TODO:: change it later - deal with Response here.
+        }
     }
     public boolean removeWorkerFromWeeklySchedule(int callerID,int weekID,int day, int shift, int workerID) {
-        if (!workerController.isHR(callerID))return false;
-        Worker worker = workerController.getWorker(workerID);
-        if(worker != null) {
-            return shiftsController.removeWorkerFromWeeklySchedule(weekID, day, shift, worker);
+        try {
+            if (!workerController.isHR(callerID)) return false; //TODO:: change it later - deal with Response here.
+            Worker worker = workerController.getWorker(workerID);
+            if (worker != null) {
+                return shiftsController.removeWorkerFromWeeklySchedule(weekID, day, shift, worker);
+            } else return false; //TODO:: change it later - deal with Response here.
         }
-        else return false;
+        catch (Exception e){
+            return false; //TODO:: change it later - deal with Response here.
+        }
     }
     public boolean assignWorkerToJobInShift(int callerID,int weekID,int day, int shift, int workerID, String job) {
-        if (!workerController.isHR(callerID))return false;
-        Worker worker = workerController.getWorker(workerID);
-        if(worker != null) {
-            return shiftsController.assignWorkerToJobInShift(weekID, day, shift, worker,job);
+        try {
+            if (!workerController.isHR(callerID)) return false; //TODO:: change it later - deal with Response here.
+            Worker worker = workerController.getWorker(workerID);
+            if (worker != null) {
+                return shiftsController.assignWorkerToJobInShift(weekID, day, shift, worker, job);
+            }
+            return false; //TODO:: change it later - deal with Response here.
         }
-        return false;
+        catch (Exception e){
+            return false; //TODO:: change it later - deal with Response here.
+        }
     }
     public boolean removeWorkerFromJobInShift(int callerID,int weekID,int day, int shift, int workerID,String job) {
-        if (!workerController.isHR(callerID))return false;
-        Worker worker = workerController.getWorker(workerID);
-        if(worker != null) {
-            return shiftsController.removeWorkerFromJobInShift(weekID, day, shift, worker,job);
+        try {
+            if (!workerController.isHR(callerID)) return false; //TODO:: change it later - deal with Response here.
+            Worker worker = workerController.getWorker(workerID);
+            if (worker != null) {
+                return shiftsController.removeWorkerFromJobInShift(weekID, day, shift, worker, job);
+            } else return false; //TODO:: change it later - deal with Response here.
         }
-        else return false;
+        catch (Exception e){
+            return false; //TODO:: change it later - deal with Response here.
+        }
     }
     public boolean setShiftManagerToWeeklySchedule(int callerID,int weekID,int day, int shift, int workerID) {
-        if (!workerController.isHR(callerID))return false;
-        Worker worker = workerController.getWorker(workerID);
-        if(worker != null) {
-            return shiftsController.setShiftManagerToWeeklySchedule(weekID, day, shift, worker);
+        try {
+            if (!workerController.isHR(callerID)) return false; //TODO:: change it later - deal with Response here.
+            Worker worker = workerController.getWorker(workerID);
+            if (worker != null) {
+                return shiftsController.setShiftManagerToWeeklySchedule(weekID, day, shift, worker);
+            } else return false; //TODO:: change it later - deal with Response here.
         }
-        else return false;
+        catch (Exception e){
+            return false; //TODO:: change it later - deal with Response here.
+        }
     }
-    public WeeklyScheduleSL viewWeeklySchedule(int callerID, int weekID) {
+    public WeeklyScheduleSL viewWeeklySchedule(int callerID, int weekID){
         //TODO: FIX THIS - A LOT OF NULL POINTER EXCEPTIONS
-        if (!workerController.isHR(callerID))
-            return null;//TODO:: we actually need to throw exceptions or responses like we did last year
-        Weekly_Schedule weekly_schedule = shiftsController.getWeeklySchedule(weekID);
-        if(weekly_schedule != null) {//if it was actually created at all
-            ShiftSL[][] shiftSLS = new ShiftSL[5][2];
-            Shift[][] shifts = weekly_schedule.getSchedule();
-            if (shifts != null) {//should not be null anyways
-                for (int i = 0; i < 5; i++) {
-                    List<WorkerSL> workerSLS0 = new LinkedList<>();
-                    int managerID = -1;
-                    HashMap<String, List<Integer>> jobToWorkers = new HashMap<>();
-                    if (shifts[i][0] != null) {
-                        List<Worker> workers = shifts[i][0].getShiftWorkers();
-                        jobToWorkers = shifts[i][0].getJobToWorker();
-                        if (workers != null) {
-                            for (Worker worker : workers) {
-                                WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
-                                workerSLS0.add(workerSL);
-                            }
-                            if (shifts[i][0].getShift_manager() != null) {
-                                managerID = shifts[i][0].getShift_manager().getId();
-                            }
-                        }
-                    }
-                    shiftSLS[i][0] = new ShiftSL(workerSLS0, managerID,jobToWorkers);
-                    List<WorkerSL> workerSLS1 = new LinkedList<>();
-                    managerID = -1;
-                    HashMap<String, List<Integer>> jobToWorkers2 = new HashMap<>();
-                    if (shifts[i][1] != null){
-                        List<Worker> workers1 = shifts[i][1].getShiftWorkers();
-                        jobToWorkers2 = shifts[i][0].getJobToWorker();
-                        if (workers1!=null){
-                            for (Worker worker : workers1) {
-                                WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
-                                workerSLS1.add(workerSL);
-                            }
-                            if (shifts[i][1].getShift_manager() != null) {
-                                managerID = shifts[i][1].getShift_manager().getId();
-                            }
-                        }
-                    }
-                    shiftSLS[i][1] = new ShiftSL(workerSLS1, managerID,jobToWorkers2);
-                }
-                return new WeeklyScheduleSL(shiftSLS);
-            }
-        }
-        return null;
+       try {
+           if (!workerController.isHR(callerID))
+               return null;//TODO:: we actually need to throw exceptions or responses like we did last year
+           Weekly_Schedule weekly_schedule = shiftsController.getWeeklySchedule(weekID);
+           if (weekly_schedule != null) {//if it was actually created at all
+               ShiftSL[][] shiftSLS = new ShiftSL[5][2];
+               Shift[][] shifts = weekly_schedule.getSchedule();
+               if (shifts != null) {//should not be null anyway
+                   for (int i = 0; i < 5; i++) {
+                       List<WorkerSL> workerSLS0 = new LinkedList<>();
+                       int managerID = -1;
+                       HashMap<String, List<Integer>> jobToWorkers = new HashMap<>();
+                       if (shifts[i][0] != null) {
+                           List<Worker> workers = shifts[i][0].getShiftWorkers();
+                           jobToWorkers = shifts[i][0].getJobToWorker();
+                           if (workers != null) {
+                               for (Worker worker : workers) {
+                                   WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
+                                   workerSLS0.add(workerSL);
+                               }
+                               if (shifts[i][0].getShift_manager() != null) {
+                                   managerID = shifts[i][0].getShift_manager().getId();
+                               }
+                           }
+                       }
+                       shiftSLS[i][0] = new ShiftSL(workerSLS0, managerID, jobToWorkers);
+                       List<WorkerSL> workerSLS1 = new LinkedList<>();
+                       managerID = -1;
+                       HashMap<String, List<Integer>> jobToWorkers2 = new HashMap<>();
+                       if (shifts[i][1] != null) {
+                           List<Worker> workers1 = shifts[i][1].getShiftWorkers();
+                           jobToWorkers2 = shifts[i][0].getJobToWorker();
+                           if (workers1 != null) {
+                               for (Worker worker : workers1) {
+                                   WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
+                                   workerSLS1.add(workerSL);
+                               }
+                               if (shifts[i][1].getShift_manager() != null) {
+                                   managerID = shifts[i][1].getShift_manager().getId();
+                               }
+                           }
+                       }
+                       shiftSLS[i][1] = new ShiftSL(workerSLS1, managerID, jobToWorkers2);
+                   }
+                   return new WeeklyScheduleSL(shiftSLS);
+               }
+           }
+           return null; //TODO:: change it later - deal with Response here.
+       }
+       catch (Exception e){
+           return null; //TODO:: change it later - deal with Response here.
+       }
     }
     public List<WorkerSL> showShiftWorkers(int callerID,int weekID, int day, int shift){
-        if (!workerController.isHR(callerID))return null;//TODO:: we actually need to throw exceptions or responses like we did last year
-        List<WorkerSL> workerSLS = new LinkedList<>();
-        List<Worker> workers = shiftsController.showShiftWorkers(weekID,day,shift);
-        if(workers != null) {
-            for (Worker worker : workers) {
-                WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
-                workerSLS.add(workerSL);
+        try {
+            if (!workerController.isHR(callerID))
+                return null;//TODO:: change it later - deal with Response here.
+            List<WorkerSL> workerSLS = new LinkedList<>();
+            List<Worker> workers = shiftsController.showShiftWorkers(weekID, day, shift);
+            if (workers != null) {
+                for (Worker worker : workers) {
+                    WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
+                    workerSLS.add(workerSL);
+                }
             }
+            return workerSLS;
         }
-        return workerSLS;
+        catch (Exception e){
+            return null; //TODO:: change it later - deal with Response here.
+        }
     }
     public String getShiftManagerInfo (int callerID,int weekID, int day, int shift){
-        if (!workerController.isHR(callerID))return "There has been an issue";//TODO:: we actually need to throw exceptions or responses like we did last year
-        Worker worker = shiftsController.getShiftManager(weekID, day, shift);
-        if(worker != null){
-            return worker.getName() + ": " + worker.getId();
+        try {
+            if (!workerController.isHR(callerID))
+                return "Only an HR can perform this action.";//TODO:: we actually need to throw exceptions or responses like we did last year
+            Worker worker = shiftsController.getShiftManager(weekID, day, shift);
+            if (worker != null) {
+                return worker.getName() + ": " + worker.getId();
+            }
+            return "There's currently no shift manager.";
         }
-        return "There's currently no shift manager.";
+        catch(Exception e){
+            return e.getMessage(); //TODO:: change it later - deal with Response here.
+        }
     }
     public boolean createWeeklySchedule(int callerID,int weekID) {
         if (!workerController.isHR(callerID))return false;
@@ -184,15 +222,30 @@ public class ServiceLayer {
 
     //these are shiftManager methods
     public boolean addTransaction(int weekID, int day, int shift, int transactionID, int workerID){
-        return shiftsController.addTransaction(weekID,day,shift,transactionID, workerID);
+        try {
+            return shiftsController.addTransaction(weekID, day, shift, transactionID, workerID);
+        }
+        catch(Exception e){
+            return false; //TODO:: change it later - deal with Response here.
+        }
     }
     public boolean removeTransaction(int callerID, int weekID, int day, int shift, int transactionID){
-        return shiftsController.removeTransaction(weekID,day,shift,transactionID, callerID);
+        try {
+            return shiftsController.removeTransaction(weekID, day, shift, transactionID, callerID);
+        }
+        catch (Exception e){
+            return false; //TODO:: change it later - deal with Response here.
+        }
     }
 
     //these are worker Methods
     public boolean editWorkerSchedule(int workerID, boolean present, int day, int shiftType){
-        return shiftsController.editWorkerSchedule(workerID,present,day,shiftType);
+        try {
+            return shiftsController.editWorkerSchedule(workerID, present, day, shiftType);
+        }
+        catch(Exception e){
+            return false; //TODO:: change it later - deal with Response here.
+        }
     }
     //the following method can be used by the HR as well:
     public WorkerScheduleSL viewWorkerSchedule(int workerID){
@@ -200,16 +253,26 @@ public class ServiceLayer {
         if(worker_schedule != null) {
             return new WorkerScheduleSL(worker_schedule.getSchedule());
         }
-        return null;//TODO:: Need to change that.
+        return null;//TODO:: change it later - deal with Response here.
     }
 
     public boolean isShiftReady(int callerID, int weekID, int day, int shift){
-        if(!workerController.isHR(callerID))return false;
-        return shiftsController.isShiftIsReady(weekID, day, shift);
+        try {
+            if (!workerController.isHR(callerID)) return false; //TODO:: change it later - deal with Response here.
+            return shiftsController.isShiftIsReady(weekID, day, shift);
+        }
+        catch(Exception e){
+            return false; //TODO:: change it later - deal with Response here.
+        }
     }
 
     public boolean isWeeklyScheduleReady(int callerID, int weekID){
-        if(!workerController.isHR(callerID))return false;
-        return shiftsController.isWeeklyScheduleReady(weekID);
+        try {
+            if (!workerController.isHR(callerID)) return false; //TODO:: change it later - deal with Response here.
+            return shiftsController.isWeeklyScheduleReady(weekID);
+        }
+        catch(Exception e){
+            return false; //TODO:: change it later - deal with Response here.
+        }
     }
 }

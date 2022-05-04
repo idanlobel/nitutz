@@ -13,11 +13,13 @@ public class Weekly_Schedule {
         if (schedule[day][shiftType]==null) schedule[day][shiftType] = new Shift();
         return schedule[day][shiftType];
     }
-    public Shift[][] getSchedule() {
+    public Shift[][] getSchedule() throws Exception {
         if(schedule != null) {
             return schedule;
         }
-        return null;
+        else {
+            throw new Exception("There's no such schedule");
+        }
     }
 
     public boolean isWeeklyScheduleReady(){

@@ -37,11 +37,17 @@ public class Shift {
         jobToWorker = new HashMap<>();
     }
 
-    public List<Worker> getShiftWorkers(){
-        return workers;
+    public List<Worker> getShiftWorkers() throws Exception {
+        if(workers!= null) {
+            return workers;
+        }
+        throw new Exception("There's currently no workers in this shift");
     }
-    public Shift_Manager getShift_manager(){
-        return  shift_manager;
+    public Shift_Manager getShift_manager() throws Exception {
+        if(shift_manager != null) {
+            return shift_manager;
+        }
+        throw new Exception("There's currently no shift manager for this shift");
     }
     public void setShiftManager(Worker worker){
         shift_manager = new Shift_Manager(worker.name, worker.id, worker.getPassword(), worker.email_address, worker.bankAccount,
@@ -108,93 +114,126 @@ public class Shift {
         else shiftIsReady = false;
     }
 
-    public boolean addWorkerToShift(Worker worker) {
+    public boolean addWorkerToShift(Worker worker) throws Exception {
         if(!workers.contains(worker)) {
             workers.add(worker);
             return true;
         }
-        return false;
+       throw new Exception("The worker is already in this shift");
     }
 
-    public boolean assignWorkerToJob(Worker worker, String job){
-        if (!workers.contains(worker))return false;
-        if (!worker.hasJob(job)) return false;
-        for (String job2:jobToWorker.keySet()) {
-            if (jobToWorker.get(job2).contains(worker.getId())) {
-                for (int i =0; i<jobToWorker.get(job2).size(); i++){
-                    if (jobToWorker.get(job2).get(i)== worker.getId())jobToWorker.get(job2).remove(i);
-                }
-                removeFromMustJobs_Counter(job2);
-                if (jobToWorker.get(job2).isEmpty())jobToWorker.remove(job2);
-            }
-        }
-        if (!jobToWorker.containsKey(job))jobToWorker.put(job,new LinkedList<>());
-        jobToWorker.get(job).add(worker.getId());
-        addToMustJobs_Counter(job);
-        return true;
-    }
-
-    public boolean removeWorkerFromJob(Worker worker, String job){
-        if (!workers.contains(worker))return false;
-        if (!jobToWorker.containsKey(job))return false;
-        if(!jobToWorker.get(job).contains(worker.getId()))return false;
-        for (int i =0; i<jobToWorker.get(job).size(); i++){
-            if (jobToWorker.get(job).get(i)== worker.getId())jobToWorker.get(job).remove(i);
-        }
-        if (jobToWorker.get(job).isEmpty())jobToWorker.remove(job);
-        removeFromMustJobs_Counter(job);
-        return true;
-    }
-
-    public boolean removeWorkerFromShift(Worker worker) {
-        if(workers.contains(worker)) {
-            workers.remove(worker);
-            for (String job:jobToWorker.keySet()) {
-                if (jobToWorker.get(job).contains(worker.getId())){
-                    jobToWorker.get(job).remove(worker.getId());
-                    if (jobToWorker.get(job).isEmpty())jobToWorker.remove(job);
-                    removeFromMustJobs_Counter(job);
-                    break;
+    public boolean assignWorkerToJob(Worker worker, String job) throws Exception {
+        try {
+            if (!workers.contains(worker)) throw new Exception("There's no such worker in this shift");
+            if (!worker.hasJob(job))throw new Exception("There worker can't work in the specified job (he doesn't have it)");
+            for (String job2 : jobToWorker.keySet()) {
+                if (jobToWorker.get(job2).contains(worker.getId())) {
+                    for (int i = 0; i < jobToWorker.get(job2).size(); i++) {
+                        if (jobToWorker.get(job2).get(i) == worker.getId()) jobToWorker.get(job2).remove(i);
+                    }
+                    removeFromMustJobs_Counter(job2);
+                    if (jobToWorker.get(job2).isEmpty()) jobToWorker.remove(job2);
                 }
             }
-            if(shift_manager != null && shift_manager.getId() == worker.getId())
-                shift_manager = null;
+            if (!jobToWorker.containsKey(job)) jobToWorker.put(job, new LinkedList<>());
+            jobToWorker.get(job).add(worker.getId());
+            addToMustJobs_Counter(job);
             return true;
         }
-        else return false;
-    }
-    public boolean removeTransaction(int transactionID, int workerID){
-        if ((shift_manager == null || shift_manager.getId()!=workerID) && !WorkerController.getInstance().isHR(workerID)) return false;
-        if(shift_transactions != null) {
-            for (Transaction tran : shift_transactions)
-                if (tran.getTransactionID() == transactionID && tran.getWorkerID() == workerID) {
-                    shift_transactions.remove(tran);
-                    return true;
-                }
+        catch(Exception e){
+            throw new Exception(e);
         }
-        return false;
     }
-    public boolean addTransaction(Transaction transaction, int workerID){
-        if(shift_transactions == null){
-            shift_transactions = new LinkedList<>();
-        }
 
-        if(((shift_manager != null && shift_manager.getId() == workerID) || WorkerController.getInstance().isHR(workerID)) &&
-                !hasTransaction(transaction.getTransactionID())) {
-            this.shift_transactions.add(transaction);
+    public boolean removeWorkerFromJob(Worker worker, String job) throws Exception {
+        try {
+            if (!workers.contains(worker)) throw new Exception("There's no such worker in this shift");
+            if (!jobToWorker.containsKey(job)) throw new Exception("There's no such job in this shift");
+            if (!jobToWorker.get(job).contains(worker.getId())) throw new Exception("There's no such job for this worker");
+            for (int i = 0; i < jobToWorker.get(job).size(); i++) {
+                if (jobToWorker.get(job).get(i) == worker.getId()) jobToWorker.get(job).remove(i);
+            }
+            if (jobToWorker.get(job).isEmpty()) jobToWorker.remove(job);
+            removeFromMustJobs_Counter(job);
             return true;
         }
-        else {
-            for (Worker w : workers) {
-                if (w.getId() == workerID) {
-                    if (!w.workerJobs.contains("cashier") || hasTransaction(transaction.getTransactionID())) return false;
-                    else {
-                       this.shift_transactions.add(transaction);
-                       return true;
+        catch (Exception e){
+            throw new Exception(e);
+        }
+    }
+
+    public boolean removeWorkerFromShift(Worker worker) throws Exception {
+        try {
+            if (workers.contains(worker)) {
+                workers.remove(worker);
+                for (String job : jobToWorker.keySet()) {
+                    if (jobToWorker.get(job).contains(worker.getId())) {
+                        jobToWorker.get(job).remove(worker.getId());
+                        if (jobToWorker.get(job).isEmpty()) jobToWorker.remove(job);
+                        removeFromMustJobs_Counter(job);
+                        break;
                     }
                 }
+                if (shift_manager != null && shift_manager.getId() == worker.getId())
+                    shift_manager = null;
+                return true;
             }
-            return false; //The worker isn't in this shift.
+            else throw new Exception("There's no such worker in this shift");
+        }
+        catch(Exception e){
+            throw new Exception(e);
+        }
+    }
+    public boolean removeTransaction(int transactionID, int workerID) throws Exception {
+        try {
+            if ((shift_manager == null || shift_manager.getId() != workerID) && !WorkerController.getInstance().isHR(workerID))
+                throw new Exception("You're not authorized to perform this action. Only the shift manager of this shift " +
+                        "or the HR manager can perform this action.");
+            if (shift_transactions != null) {
+                for (Transaction tran : shift_transactions)
+                    if (tran.getTransactionID() == transactionID && tran.getWorkerID() == workerID) {
+                        shift_transactions.remove(tran);
+                        return true;
+                    }
+                throw new Exception("The entered details are incorrect, there's no such transaction. Please make sure that you've " +
+                        "entered everything correctly.");
+            }
+            throw new Exception("There are no transactions in this shift.");
+        }
+        catch(Exception e){
+            throw new Exception(e);
+        }
+    }
+    public boolean addTransaction(Transaction transaction, int workerID) throws Exception {
+        try {
+            if (shift_transactions == null) {
+                shift_transactions = new LinkedList<>();
+            }
+
+            if (((shift_manager != null && shift_manager.getId() == workerID) || WorkerController.getInstance().isHR(workerID)) &&
+                    !hasTransaction(transaction.getTransactionID())) {
+                this.shift_transactions.add(transaction);
+                return true;
+            } else {
+                for (Worker w : workers) {
+                    if (w.getId() == workerID) {
+                        if (w.workerJobs.contains("cashier")) {
+                            if (hasTransaction(transaction.getTransactionID())) {
+                                throw new Exception("There's already such transaction with that transaction id.");
+                            }
+                            else {
+                                this.shift_transactions.add(transaction);
+                                return true;
+                            }
+                        }
+                    }
+                }
+                throw new Exception("You're not authorized to perform this action. Only the shift manager of this shift " +
+                        "or the HR manager or a cashier in this shift can perform this action.");
+            }
+        }
+        catch(Exception e){
+            throw new Exception(e);
         }
     }
 
