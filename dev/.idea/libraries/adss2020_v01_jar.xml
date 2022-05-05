@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="adss2020_v01_jar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/out/artifacts/adss2020_v01_jar/adss2020_v01.jar!/" />
+      <root url="jar://$PROJECT_DIR$/out/artifacts/adss2020_v01_jar/adss_group_j.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

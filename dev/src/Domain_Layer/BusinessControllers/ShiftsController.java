@@ -32,10 +32,20 @@ public class ShiftsController {
 
     //TODO:: For now we can't implement this method because we don't know what the user would like to edit -
     // Later we can implement it by using a GUI interface.
-    public Worker_Schedule getWorkerSchedule(int workerID){
-        if(!workers_Schedules.containsKey(workerID)) return null; //This worker doesn't have a worker schedule -
+    public Worker_Schedule getWorkerSchedule(int workerID) throws Exception {
+        if(!workers_Schedules.containsKey(workerID)) throw new Exception("This worker doesn't have a worker schedule"); //This worker doesn't have a worker schedule -
         // TODO:: shouldn't happen at all (He should always have!) - (but better safe rather than sorry).
         return workers_Schedules.get(workerID);
+    }
+    public boolean addWorkerSchedule(int workerID){
+        if (workers_Schedules.containsKey(workerID))return false;
+        workers_Schedules.put(workerID,new Worker_Schedule());
+        return true;
+    }
+    public boolean removeWorkerSchedule(int workerID){
+        if (!workers_Schedules.containsKey(workerID))return false;
+        workers_Schedules.remove(workerID);
+        return true;
     }
     public Weekly_Schedule getWeeklySchedule(int weekID) throws Exception {
         try {
@@ -134,8 +144,8 @@ public class ShiftsController {
             throw new Exception(e);
         }
     }
-    public boolean createWeeklySchedule(int weekID) {
-        if(weekly_Schedules.containsKey(weekID)) return false;
+    public boolean createWeeklySchedule(int weekID) throws Exception {
+        if(weekly_Schedules.containsKey(weekID)) throw new Exception("this week already exists");
         weekly_Schedules.put(weekID,new Weekly_Schedule());
         return true;
     }

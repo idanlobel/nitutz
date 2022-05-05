@@ -75,7 +75,7 @@ public class Worker {
         for (String job : jobs){
             s+= job + " ,";
         }
-        return (s.substring(0, s.length()) + "."); //removing the last ',' and adding a '.'
+        return (s.substring(0, s.length()-1) + "."); //removing the last ',' and adding a '.'
     }
     //check if the job already exists
     protected boolean hasJob(String job){

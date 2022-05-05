@@ -171,53 +171,92 @@ public class ServiceLayer {
         }
     }
     public boolean createWeeklySchedule(int callerID,int weekID) {
-        if (!workerController.isHR(callerID))return false;
-        return shiftsController.createWeeklySchedule(weekID);
+        try {
+            if (!workerController.isHR(callerID))return false;
+            return shiftsController.createWeeklySchedule(weekID);
+        }catch (Exception e){
+            return false;
+        }
+
     }
     public boolean addJobs(int callerID, String job){
-        if(!workerController.isHR(callerID))return false;
-        return workerController.addJob(job);
+        try {
+            if(!workerController.isHR(callerID))return false;
+            return workerController.addJob(job);
+        }catch (Exception e){
+            return false;
+        }
     }
 
     public List<WorkerSL> showAllWorkers(int callerID){
-        if (!workerController.isHR(callerID))return null; //TODO:: we actually need to throw exceptions or responses like we did last year
-        List<WorkerSL> workerSLS = new LinkedList<>();
-        List<Worker> workers = workerController.getWorkers();
-        if(workers != null) {
-            for (Worker worker : workers) {
-                WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
-                workerSLS.add(workerSL);
+        try {
+            if (!workerController.isHR(callerID))return null; //TODO:: we actually need to throw exceptions or responses like we did last year
+            List<WorkerSL> workerSLS = new LinkedList<>();
+            List<Worker> workers = workerController.getWorkers();
+            if(workers != null) {
+                for (Worker worker : workers) {
+                    WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
+                    workerSLS.add(workerSL);
+                }
+                return workerSLS;
             }
-            return workerSLS;
+            return null;
+        }catch (Exception e){
+            return null;
         }
-        return null;
+
     }
 
     public boolean registerAWorker(int callerID, String name, int id, String password, String email_address, int bankID,
                                    int branch, int salary){
-        if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
-        return workerController.addWorker(name, id, password, email_address, bankID, branch, salary);
+        try{
+            if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
+            return workerController.addWorker(name, id, password, email_address, bankID, branch, salary);
+        }catch (Exception e){
+            return false;
+        }
+
     }
 
     public boolean removeAWorker(int callerID, int workerID){
-        if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
-        return workerController.deleteWorker(workerID);
+        try{
+            if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
+            return workerController.deleteWorker(workerID);
+        }catch (Exception e){
+            return false;
+        }
+
     }
 
     public boolean editAWorker(/*int callerID, */ String name, String password, String email_address, int bankID,
                                    int branch, int salary, int workerID){
+        try{
+            return workerController.editWorker(name, password, email_address, bankID, branch, salary, workerID);
+
+        }catch (Exception e){
+            return false;
+        }
         //if (!workerController.isHR(callerID)) throw Exception(); //TODO:: we actually need to throw exceptions or responses like we did last year
-        return workerController.editWorker(name, password, email_address, bankID, branch, salary, workerID);
     }
 
     public boolean addJobForAWorker(int callerID, int workerID, String job){
-        if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
-        return workerController.addJobForAWorker(workerID, job);
+        try{
+            if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
+            return workerController.addJobForAWorker(workerID, job);
+        }catch (Exception e){
+            return false;
+        }
+
     }
 
     public boolean removeJobFromAWorker(int callerID, int workerID, String job){
-        if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
-        return workerController.removeJobFromAWorker(workerID, job);
+        try{
+            if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
+            return workerController.removeJobFromAWorker(workerID, job);
+        }catch (Exception e){
+            return false;
+        }
+
     }
 
     //these are shiftManager methods
@@ -249,11 +288,16 @@ public class ServiceLayer {
     }
     //the following method can be used by the HR as well:
     public WorkerScheduleSL viewWorkerSchedule(int workerID){
-        Worker_Schedule worker_schedule = shiftsController.getWorkerSchedule(workerID);
-        if(worker_schedule != null) {
-            return new WorkerScheduleSL(worker_schedule.getSchedule());
+        try {
+            Worker_Schedule worker_schedule = shiftsController.getWorkerSchedule(workerID);
+            if(worker_schedule != null) {
+                return new WorkerScheduleSL(worker_schedule.getSchedule());
+            }
+            return null;//TODO:: change it later - deal with Response here.
+        }catch (Exception e){
+            return null;
         }
-        return null;//TODO:: change it later - deal with Response here.
+
     }
 
     public boolean isShiftReady(int callerID, int weekID, int day, int shift){

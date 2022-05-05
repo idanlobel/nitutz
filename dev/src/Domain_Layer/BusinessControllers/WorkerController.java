@@ -48,7 +48,7 @@ public class WorkerController {
         return workers;
     }
 
-    public boolean addWorker(String name, int id, String password, String email_address, int bankID, int branch, int salary) {
+    public boolean addWorker(String name, int id, String password, String email_address, int bankID, int branch, int salary) throws Exception {
        /* if (repository.addWorker(worker)) {
             workers.add(worker);
             return true;
@@ -58,30 +58,33 @@ public class WorkerController {
         if(worker == null) {
             workers.add(new Worker(name, id, password, email_address, new BankAccount(bankID, branch),
                     new EmploymentConditions(salary, new Date()), new LinkedList<>()));
-            if(!ShiftsController.getInstance().workers_Schedules.containsKey(id))
-                ShiftsController.getInstance().workers_Schedules.put(id, new Worker_Schedule());
+            if(ShiftsController.getInstance().getWorkerSchedule(id)==null)
+                ShiftsController.getInstance().addWorkerSchedule(id);
             return true;
         }
-        return false;
+        throw new Exception("This worker id already exists!");
     }
 
-    public boolean deleteWorker(int workerID) {
+    public boolean deleteWorker(int workerID) throws Exception {
        /* for (Worker w : workers) {
             if (w.getId() == workerID) {
                 return repository.deleteWorker(w);
             }
         }
         return false; */
-        if(hr.getId() == workerID) return false; //Can't remove an HR from the system!
+        if(hr.getId() == workerID) throw new Exception("Can't remove HR!");
         for (Worker w : WorkerController.getInstance().getWorkers()) {
             if (w.getId() == workerID) {
                 workers.remove(w);
-                if(ShiftsController.getInstance().workers_Schedules.containsKey(workerID))
-                    ShiftsController.getInstance().workers_Schedules.remove(workerID);
-                return true;
+                if(ShiftsController.getInstance().getWorkerSchedule(workerID)!=null){
+                    if(ShiftsController.getInstance().removeWorkerSchedule(workerID))
+                        return true;
+                    throw new Exception("This worker doesn't exists!");
+                }
+
             }
         }
-        return false; //worker doesn't exist in the system
+        throw new Exception("This worker doesn't exists!");
     }
 
     public Worker getWorker(int workerID) {
@@ -106,8 +109,9 @@ public class WorkerController {
         return this.hr.getId() == id;
     }
 
-    public boolean addJob(String job) {
-        return hr.addJob(job);
+    public boolean addJob(String job) throws Exception {
+        if (!hr.addJob(job)) throw new Exception("job already exists");
+        return true;
     }
 
 
@@ -122,7 +126,7 @@ public class WorkerController {
         return null;
     }
 
-    public boolean editWorker(String name, String password, String email_address, int bankID, int branch, int salary, int workerID) {
+    public boolean editWorker(String name, String password, String email_address, int bankID, int branch, int salary, int workerID) throws Exception {
         Worker worker = getWorker(workerID);
         if(worker != null) {
             if (!name.equals("")) worker.setName(name);
@@ -133,24 +137,30 @@ public class WorkerController {
             if (salary != 0) worker.getEmploymentConditions().setSalary(salary);
             return true;
         }
-        return false;
+        throw new Exception("This worker doesn't exists!");
     }
 
-    public boolean addJobForAWorker(int workerID, String job) {
+    public boolean addJobForAWorker(int workerID, String job) throws Exception {
         Worker worker = getWorker(workerID);
-        if(worker != null && Worker.getJobs().contains(job.toLowerCase()) && !worker.getWorkerJobs().contains(job.toLowerCase())) {
-            worker.getWorkerJobs().add(job.toLowerCase());
-            return true;
+        if(worker != null) {
+            if(Worker.getJobs().contains(job.toLowerCase()) && !worker.getWorkerJobs().contains(job.toLowerCase())){
+                worker.getWorkerJobs().add(job.toLowerCase());
+                return true;
+            }
+            throw new Exception("This job is problematic");
         }
-        return false;
+        throw new Exception("This worker doesn't exists!");
     }
 
-    public boolean removeJobFromAWorker(int workerID, String job) {
+    public boolean removeJobFromAWorker(int workerID, String job) throws Exception {
         Worker worker = getWorker(workerID);
-        if(worker != null && worker.getWorkerJobs().contains(job.toLowerCase())) {
-            worker.getWorkerJobs().remove(job.toLowerCase());
-            return true;
+        if(worker != null) {
+            if (worker.getWorkerJobs().contains(job.toLowerCase())){
+                worker.getWorkerJobs().remove(job.toLowerCase());
+                return true;
+            }
+            throw new Exception("This job is problematic");
         }
-        return false;
+        throw new Exception("This worker doesn't exists!");
     }
 }
