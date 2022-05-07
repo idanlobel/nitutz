@@ -1,6 +1,7 @@
 package src.transportationsModule.Service;
 
 import src.EmpModule.EMPLOYEEFACADE;
+import src.transportationsModule.BusinessLogic.IdGenerator;
 import src.transportationsModule.BusinessLogic.controllers.TransportsFacade;
 
 import java.util.LinkedList;
@@ -15,7 +16,7 @@ public class TransportService {
     Scanner scanner;
     EMPLOYEEFACADE employeefacade;
     TransportsFacade transportsFacade;
-    //Service.IdGenerator idgenarator;
+    IdGenerator idgenarator;
 
     public TransportService(Scanner scanner, TransportsFacade transportsFacade) {
         ; //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -28,10 +29,10 @@ public class TransportService {
 
     public void createTransport(){
         TransportSDTO transportSDTO = new TransportSDTO();
-        transportSDTO.id = "idgenarator.getId()";
+        transportSDTO.id = idgenarator.getId();
         transportSDTO.date = askInput("enter the transport date . for example 02/05/2022 ");
         transportSDTO.departureTime = askInput("enter the departure time. for example 13:20 ");
-        transportSDTO.driverId = askInput("choose the transport driver id from your drivers crew: " + employeefacade.showDriversDetails() );
+        transportSDTO.driverId = askInput("choose the transport driver id from your drivers crew: " + transportsFacade.showDriversDetailsAvailable(transportSDTO.departureTime, transportSDTO.date));
         transportSDTO.truckLicensePlateId = askInput("choose the truck from your truck: " + transportsFacade.viewTrucks());//getTrucksByLicenseType(); //driverService.getDriversLicenceTypeByDriveId(transportDTO.driverid) )
         transportSDTO.source = askInput(2, "choose the source name and region from site list: " + transportsFacade.viewAllSites());
         int numberOfDest=Integer.parseInt( askInput("choose number of destinations: "));

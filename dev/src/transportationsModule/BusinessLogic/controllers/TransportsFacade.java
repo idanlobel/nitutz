@@ -13,15 +13,22 @@ public class TransportsFacade {
     TransportsController transportsController;
     TrucksController trucksController;
     SitesController sitesController;
+    EMPLOYEEFACADE employeefacade;
     //DriversController driversController;
     
     public TransportsFacade() {
         transportsController = new TransportsController();
         trucksController = new TrucksController();
         sitesController = new SitesController();
-
+        // TODO: 07/05/2022  
+        employeefacade = new EMPLOYEEFACADE();
 
     }
+
+    public void setEmployeefacade(EMPLOYEEFACADE employeefacade) {
+        this.employeefacade = employeefacade;
+    }
+    
 
     /**
      * create a new transportation form a transport DTO object .
@@ -60,14 +67,8 @@ public class TransportsFacade {
         return trucksController.viewTrucks();
     }
 
-    /**
-     * serves the emp' module to schedule storeKeeper workers and driver workers
-     * @param dateOfSunday
-     * @return all shifts dates and time that a transportations gonna be in doing.
-     */
-    public String viewNextWeekTransportationArrivings(String dateOfSunday){
-        return null;
+    public String showDriversDetailsAvailable(String departureTime, String date) {
+        return employeefacade.showDriversDetails();
     }
-
-
+    
 }
