@@ -1,20 +1,19 @@
 package busniess_layer;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class Stock {
     private List<Products> products_list;
     private List<Sale> sales_list;
+    private  List<Order> orders_list;
 
 
     public Stock() {
 
         this.products_list = new ArrayList<>();
         this.sales_list = new ArrayList<>();
+        this.orders_list=new ArrayList<>();
     }
 
 
@@ -32,6 +31,7 @@ public class Stock {
     }
 
     //orders products with required quantity
+    //order  id
     public void Order(long products_catalog_number, int quantity, Double cost, String expiry, String name, String manufactorer, String category,String sub_cat,String sub_sub_cat) {
         boolean added = false;
         for (Products products : this.products_list) {
@@ -47,6 +47,11 @@ public class Stock {
         }
 
     }
+    public void add_to_orders(String day,long products_catalog_number, int quantity, Double cost,  String name, String manufactorer, String category,String sub_cat,String sub_sub_cat)
+    {
+        this.orders_list.add(new Order(day,products_catalog_number,quantity,cost,name,manufactorer,category,sub_cat,sub_sub_cat));
+    }
+
 
     public void Sale(long products_catalog_number, String startdate, String endate, String reason, double percentage) throws Exception {
 
@@ -285,4 +290,63 @@ public class Stock {
         return found;
     }
 
+    public String shortage_order() {
+        String answer="";
+
+        int quantity_to_order=0;
+        for(Products p:this.products_list)
+        {
+            if(p.getMin_quantity()>p.getQuantity())
+            {
+                quantity_to_order= p.getMin_quantity()-p.getQuantity()+1;
+
+                Order(p.getCatalog_number(),quantity_to_order,p.getProduct_list().get(0).getcostprice(), LocalDate.parse(LocalDate.now().plusDays(7).toString()).toString(),p.getName(),p.getManufactorer(),p.getMain_category(),p.getSub_category(),p.getSub_sub_category());
+                answer+= "shortage order was executed of item:  " + p.getName()+"  quantity:  "+quantity_to_order+"\n";
+
+            }
+        }
+        if(answer.equals(""))
+        {
+            answer+="nothing is below minimum quantity, so nothing was ordered";
+        }
+        return  answer;
+    }
+
+    public String periodic_order() {
+        String answer="";
+
+
+        for(Order o:this.orders_list)
+        {
+            if(LocalDate.now().getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
+            {
+
+
+                Order(o.getCatalog_number(),o.getQuantity(),o.getCost(), LocalDate.parse(LocalDate.now().plusDays(7).toString()).toString(),o.getName(),o.getManufactorer(),o.getCategory(),o.getSub_cat(),o.getSub_sub_cat());
+                answer+= "periodic order was executed of item:  " + o.getName()+"  quantity:  "+o.getQuantity()+"\n";
+
+            }
+        }
+
+        return  answer;
+    }
+
+    public void update_periodic_order(int id, int quantity) throws Exception {
+
+        boolean found=false;
+        for (Order o:this.orders_list)
+        {
+            if(o.getID()==id)
+            {
+                o.set_quantity(quantity);
+                found=true;
+                break;
+            }
+        }
+        if(!found)
+            throw new Exception("no order with this id : "+id);
+
+
+
+    }
 }

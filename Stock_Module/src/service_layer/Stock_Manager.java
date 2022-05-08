@@ -9,6 +9,7 @@ public class Stock_Manager {
     private Stock mystock;
 
 
+
     public Stock_Manager()
     {
         mystock=new Stock();
@@ -29,6 +30,12 @@ public void Auto_start() throws Exception {
     {
 
         mystock.Order(Long.parseLong(product_catalog_number),Integer.parseInt(quantity),Double.parseDouble(cost),expiry,name,manufactorer,category,sub_cat,sub_sub_cat);
+    }
+
+    public void create_order(String day,String product_catalog_number, String quantity, String cost,String name, String manufactorer, String category, String sub_cat, String sub_sub_cat)
+    {
+
+        mystock.add_to_orders(day,Long.parseLong(product_catalog_number),Integer.parseInt(quantity),Double.parseDouble(cost),name,manufactorer,category,sub_cat,sub_sub_cat);
     }
 
     public void make_sale(String products_catalog_number, String startdate,String enddate , String reason, String percentage) throws Exception {
@@ -89,6 +96,16 @@ public void Auto_start() throws Exception {
     }
 
 
+    public String check_shortage_order() {
+        return mystock.shortage_order();
+    }
 
+    public String check_periodic_order() {
+        return mystock.periodic_order();
+    }
 
+    public void update_periodic_order(String id, String new_quantity) throws Exception {
+         mystock.update_periodic_order(Integer.parseInt(id),Integer.parseInt(new_quantity));
+
+    }
 }

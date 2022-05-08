@@ -10,12 +10,13 @@ public class main {
     public static void main(String[] args) throws Exception {
         Stock_Manager stock_manager=new Stock_Manager();
 
+        System.out.println(LocalDate.now().getDayOfWeek().toString().toLowerCase(Locale.ROOT));
         System.out.println("welcome to my stock!!!");
 
 
         Scanner scanner=new Scanner(System.in);
         String current_order="";
-        String[] order_in_array=new String[20];
+        String[] order_in_array=new String[200];
 
         System.out.println("if you want to load data please type yes");
         current_order=scanner.nextLine();
@@ -25,18 +26,46 @@ public class main {
             System.out.println("loaded data successfully");
         }
 
+
         while(!current_order.equals("exit"))
         {
+
+            System.out.println(stock_manager.check_shortage_order());
+            System.out.println(stock_manager.check_periodic_order());
+
             System.out.println("please enter your command");
              current_order=scanner.nextLine();
             order_in_array=current_order.split(" ");
-            if(order_in_array[0].equals("order")|order_in_array[0].equals("Order"))
+
+            if(order_in_array[0].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[1].toLowerCase(Locale.ROOT).equals("order"))
             {
 
 
-                stock_manager.make_order(order_in_array[1],order_in_array[2],order_in_array[3],order_in_array[4],order_in_array[5],order_in_array[6],order_in_array[7],order_in_array[8],order_in_array[9]);
-                System.out.println("order done successfully");
+                stock_manager.create_order(order_in_array[2],order_in_array[3],order_in_array[4],order_in_array[5],order_in_array[6],order_in_array[7],order_in_array[8],order_in_array[9],order_in_array[10]);
+                System.out.println("created new periodic order done successfully");
             }
+
+
+            if(order_in_array[0].toLowerCase(Locale.ROOT).equals("update") & order_in_array[1].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[2].toLowerCase(Locale.ROOT).equals("order"))
+            {
+
+
+                try {
+                    stock_manager.update_periodic_order(order_in_array[3],order_in_array[4]);
+                    System.out.println("updated  periodic order done successfully");
+                }
+                catch (Exception e)
+                {
+                    System.out.println(e.toString());
+                }
+
+
+
+            }
+
+
+
+
             if(order_in_array[0].equals("sale")|order_in_array[0].equals("Sale"))
             {
                 if(order_in_array[1].toLowerCase(Locale.ROOT).equals("by") &(order_in_array[2].toLowerCase(Locale.ROOT).equals("category")))
