@@ -70,4 +70,9 @@ public class Order {
     {
         this.quantity=new_quantitiy;
     }
+
+    public void setDay_of_week(String day)
+    {
+        this.day_of_week=day;
+    }
 }

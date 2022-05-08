@@ -331,22 +331,76 @@ public class Stock {
         return  answer;
     }
 
-    public void update_periodic_order(int id, int quantity) throws Exception {
+    public void update_periodic_order_quantity(int id, int quantity) throws Exception {
 
         boolean found=false;
         for (Order o:this.orders_list)
         {
             if(o.getID()==id)
             {
-                o.set_quantity(quantity);
-                found=true;
-                break;
+                if(LocalDate.parse(LocalDate.now().plusDays(6).toString()).getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
+                {
+                    throw new Exception("sorry can't update periodic order day before");
+                }
+                else {
+                    o.set_quantity(quantity);
+                    found = true;
+                    break;
+                }
             }
         }
         if(!found)
             throw new Exception("no order with this id : "+id);
 
 
+
+    }
+
+
+    public void update_periodic_order_day(int id, String day) throws Exception {
+
+        boolean found=false;
+        for (Order o:this.orders_list)
+        {
+            if(o.getID()==id)
+            {
+                if(LocalDate.parse(LocalDate.now().plusDays(6).toString()).getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
+                {
+                    throw new Exception("sorry can't update periodic order day before");
+                }
+                else {
+                    o.setDay_of_week(day);
+                    found = true;
+                    break;
+                }
+            }
+        }
+        if(!found)
+            throw new Exception("no order with this id : "+id);
+
+
+
+    }
+
+    public void remove_periodic_order(int id) throws Exception {
+       int index=-1;
+        for (Order o:this.orders_list)
+        {
+            if(o.getID()==id)
+            {
+                if(LocalDate.parse(LocalDate.now().plusDays(6).toString()).getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
+                {
+                    throw new Exception("sorry can't remove periodic order day before");
+                }
+                else {
+                   index=orders_list.indexOf(o);
+                   break;
+                }
+            }
+        }
+        if(index==-1)
+            throw new Exception("no order with this id : "+id);
+        orders_list.remove(index);
 
     }
 }

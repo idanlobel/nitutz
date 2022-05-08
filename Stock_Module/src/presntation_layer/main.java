@@ -46,13 +46,49 @@ public class main {
             }
 
 
-            if(order_in_array[0].toLowerCase(Locale.ROOT).equals("update") & order_in_array[1].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[2].toLowerCase(Locale.ROOT).equals("order"))
+            if(order_in_array[0].toLowerCase(Locale.ROOT).equals("update") & order_in_array[1].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[2].toLowerCase(Locale.ROOT).equals("order") & order_in_array[3].toLowerCase(Locale.ROOT).equals("quantity"))
             {
 
 
                 try {
-                    stock_manager.update_periodic_order(order_in_array[3],order_in_array[4]);
-                    System.out.println("updated  periodic order done successfully");
+                    stock_manager.update_periodic_order_quantity(order_in_array[4],order_in_array[5]);
+                    System.out.println("updated  periodic order quantity done successfully");
+                }
+                catch (Exception e)
+                {
+                    System.out.println(e.toString());
+                }
+
+
+
+            }
+
+
+            if(order_in_array[0].toLowerCase(Locale.ROOT).equals("update") & order_in_array[1].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[2].toLowerCase(Locale.ROOT).equals("order") & order_in_array[3].toLowerCase(Locale.ROOT).equals("day"))
+            {
+
+
+                try {
+                    stock_manager.update_periodic_order_day(order_in_array[4],order_in_array[5]);
+                    System.out.println("updated  periodic order day done successfully");
+                }
+                catch (Exception e)
+                {
+                    System.out.println(e.toString());
+                }
+
+
+
+            }
+
+
+            if(order_in_array[0].toLowerCase(Locale.ROOT).equals("remove") & order_in_array[1].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[2].toLowerCase(Locale.ROOT).equals("order") )
+            {
+
+
+                try {
+                    stock_manager.remove_periodic_order(order_in_array[3]);
+                    System.out.println("removed periodic order done successfully");
                 }
                 catch (Exception e)
                 {

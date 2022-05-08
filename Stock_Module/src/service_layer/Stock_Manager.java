@@ -104,8 +104,16 @@ public void Auto_start() throws Exception {
         return mystock.periodic_order();
     }
 
-    public void update_periodic_order(String id, String new_quantity) throws Exception {
-         mystock.update_periodic_order(Integer.parseInt(id),Integer.parseInt(new_quantity));
+    public void update_periodic_order_quantity(String id, String new_quantity) throws Exception {
+         mystock.update_periodic_order_quantity(Integer.parseInt(id),Integer.parseInt(new_quantity));
 
+    }
+
+    public void update_periodic_order_day(String id, String day) throws Exception {
+        mystock.update_periodic_order_day(Integer.parseInt(id),day);
+    }
+
+    public void remove_periodic_order(String id) throws Exception {
+        mystock.remove_periodic_order(Integer.parseInt(id));
     }
 }
