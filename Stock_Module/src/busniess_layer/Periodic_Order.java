@@ -1,6 +1,6 @@
 package busniess_layer;
 
-public class Order {
+public class Periodic_Order {
     private int ID;
     private String day_of_week;
     private long catalog_number;
@@ -12,7 +12,7 @@ public class Order {
     private String sub_cat;
     private String sub_sub_cat;
 
-    public Order(String day_of_week,long catalog_number, int quantity, double cost,String name, String manufactorer ,String category, String sub_cat,String sub_sub_cat)
+    public Periodic_Order(String day_of_week, long catalog_number, int quantity, double cost, String name, String manufactorer , String category, String sub_cat, String sub_sub_cat)
     {
         this.ID=ID_Generator.getInstance().Get_ID();
         this.day_of_week=day_of_week;

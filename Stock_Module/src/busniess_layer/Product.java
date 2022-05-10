@@ -81,6 +81,14 @@ public class Product {
     {
         this.broken=true;
     }
+    public String getDelivery_date()
+    {
+        return delivery_date;
+    }
+    public String getSell_date()
+    {
+        return sell_date;
+    }
 
 
 

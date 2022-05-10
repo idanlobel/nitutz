@@ -3,10 +3,7 @@ package busniess_layer;
 import busniess_layer.Product;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 
 public class Products {
     private List<Product> product_list;
@@ -32,7 +29,7 @@ public class Products {
         this.product_list=new ArrayList<>();
         this.catalog_number=catalog_number;
         this.name=name;
-        this.update_quantity(quantity,cost_price,expiry);
+       this.update_quantity(quantity,cost_price,expiry);
         this.storage_quantity=quantity;
         this.shelf_quantity=0;
         this.quantity=shelf_quantity+storage_quantity;
@@ -64,14 +61,20 @@ public class Products {
 
 
 
-    public void update_quantity(int number,double cost_price,String expiry)
+    public List<Product> update_quantity(int number,double cost_price,String expiry)
     {
+        List<Product> new_items=new ArrayList<>();
         for(int i=0;i<number;i++)
         {
-            this.product_list.add(new Product(this.name,LocalDate.now().toString(),cost_price,current_sell_price,expiry,ID_Generator.getInstance().Get_ID()));
+            Product new_product=new Product (this.name,LocalDate.now().toString(),cost_price,current_sell_price,expiry,ID_Generator.getInstance().Get_ID());
+            new_items.add(new_product);
+            this.product_list.add(new_product);
+
         }
+
         this.storage_quantity=this.storage_quantity+number;
         this.quantity=this.shelf_quantity+storage_quantity;
+        return new_items;
 
     }
 

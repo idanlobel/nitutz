@@ -184,5 +184,12 @@ public class Report {
 
     }
 
+    public int getId()
+    {
+        return id;
+    }
 
+    public Subject getSubject() {
+        return subject;
+    }
 }

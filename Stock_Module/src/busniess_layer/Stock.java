@@ -1,12 +1,15 @@
 package busniess_layer;
 
+import Data_layer.DAL_controller;
+
 import java.time.LocalDate;
 import java.util.*;
 
 public class Stock {
     private List<Products> products_list;
     private List<Sale> sales_list;
-    private  List<Order> orders_list;
+    private  List<Periodic_Order> orders_list;
+    private DAL_controller dal_controller;
 
 
     public Stock() {
@@ -14,6 +17,7 @@ public class Stock {
         this.products_list = new ArrayList<>();
         this.sales_list = new ArrayList<>();
         this.orders_list=new ArrayList<>();
+        dal_controller=new DAL_controller();
     }
 
 
@@ -36,20 +40,35 @@ public class Stock {
         boolean added = false;
         for (Products products : this.products_list) {
             if (products.getCatalog_number()== products_catalog_number) {
-                products.update_quantity(quantity, cost, expiry);
+                List<Product> new_items=products.update_quantity(quantity, cost, expiry);
                 added = true;
+                for(Product p : new_items)
+                {
+                    dal_controller.insert_product(p.get_id(),p.getName(),p.getLocation().toString(),p.getcostprice(),p.getsoldprice(),p.getDelivery_date(),p.isBroken(),p.getDelivery_date(),p.getSell_date(),p.isSold());
+                }
             }
         }
         if (!added) {
             //maybe we should ask the client if there is a default price for selling , for exmaple : cost * 1.5
             Products products = new Products(products_catalog_number, name, quantity, cost, cost * 1.5, expiry, manufactorer, category,sub_cat,sub_sub_cat);
             products_list.add(products);
+            dal_controller.insert_products(products_catalog_number,name,quantity,products.getsellprice(),manufactorer,category,sub_cat,sub_sub_cat, products.getMin_quantity());
+            List<Product> new_items=products.getProduct_list();
+            for(Product p: new_items)
+            {
+                dal_controller.insert_product(p.get_id(),p.getName(),p.getLocation().toString(),p.getcostprice(),p.getsoldprice(),p.getDelivery_date(),p.isBroken(),p.getDelivery_date(),p.getSell_date(),p.isSold());
+            }
+
+
         }
 
     }
     public void add_to_orders(String day,long products_catalog_number, int quantity, Double cost,  String name, String manufactorer, String category,String sub_cat,String sub_sub_cat)
     {
-        this.orders_list.add(new Order(day,products_catalog_number,quantity,cost,name,manufactorer,category,sub_cat,sub_sub_cat));
+        Periodic_Order order=new Periodic_Order(day,products_catalog_number,quantity,cost,name,manufactorer,category,sub_cat,sub_sub_cat);
+        this.orders_list.add(order);
+        dal_controller.insert_periodic_order(order.getID(),day,products_catalog_number,quantity,manufactorer,category,sub_cat,sub_sub_cat,name,cost);
+
     }
 
 
@@ -62,6 +81,7 @@ public class Stock {
                     Sale new_sale = new Sale(percentage, ID_Generator.getInstance().Get_ID(), LocalDate.now().toString(), endate, reason);
                     new_sale.Add_Products(products);
                     this.sales_list.add(new_sale);
+                    dal_controller.insert_sale(new_sale.getId(),new_sale.getpercentage(),new_sale.getStart_date(),new_sale.getEnd_date(),new_sale.getReason());
             }
 
         }
@@ -69,6 +89,8 @@ public class Stock {
 
     }
 
+
+    //@@@@@@@@@@@@@@ here add update sale
     public void Add_to_sale(long products_catalog_number,int sales_id) throws Exception {
         for(Products p:this.products_list)
         {
@@ -84,6 +106,7 @@ public class Stock {
 
     public void sale_by_category(String startdate, String endate, String reason, double percentage,String category,String sub_category,String sub_sub_category) throws Exception {
         Sale new_sale=new Sale(percentage, ID_Generator.getInstance().Get_ID(), startdate,endate,reason);
+        this.dal_controller.insert_sale(new_sale.getId(),percentage,startdate,endate,reason);
         boolean sub_is_null=false;
         boolean sub_sub_is_null=false;
         if(sub_category.equals("null"))
@@ -123,6 +146,8 @@ public class Stock {
         this.sales_list.add(new_sale);
     }
 
+
+    //@@@@@@@ here add remove sale
     public void remove_sale(int sale_id) {
         for (Sale sale : this.sales_list) {
             if (sale.getId() == sale_id) {
@@ -213,6 +238,7 @@ public class Stock {
     {
         Report r=new Report(Report.Subject.stock_report, ID_Generator.getInstance().Get_ID(),this.products_list,null,null);
         r.Fill_Me();
+        dal_controller.insert_report(r.getId(),r.getSubject().toString());
         return r;
     }
 
@@ -220,6 +246,7 @@ public class Stock {
     {
         Report r=new Report(Report.Subject.prices_report, ID_Generator.getInstance().Get_ID(),null,null,get_every_product());
         r.Fill_Me();
+        dal_controller.insert_report(r.getId(),r.getSubject().toString());
         return r;
     }
 
@@ -228,6 +255,7 @@ public class Stock {
     {
         Report r=new Report(Report.Subject.sales_report, ID_Generator.getInstance().Get_ID(),this.products_list,this.sales_list,null);
         r.Fill_Me();
+        dal_controller.insert_report(r.getId(),r.getSubject().toString());
         return r;
     }
 
@@ -235,6 +263,7 @@ public class Stock {
     {
         Report r=new Report(Report.Subject.defective_items_report, ID_Generator.getInstance().Get_ID(),null,null,get_every_product());
         r.Fill_Me();
+        dal_controller.insert_report(r.getId(),r.getSubject().toString());
         return r;
     }
 
@@ -260,7 +289,9 @@ public class Stock {
 
     public Report make_sorted_by_expiration_report()
     {
-        return new Report(Report.Subject.sortedby_expiry_report,ID_Generator.getInstance().Get_ID(), null,null,this.sorted_by_expiration());
+        Report r=new Report(Report.Subject.sortedby_expiry_report,ID_Generator.getInstance().Get_ID(), null,null,this.sorted_by_expiration());
+                dal_controller.insert_report(r.getId(),r.getSubject().toString());
+        return r;
     }
 
     public List<Product> get_every_product()
@@ -316,15 +347,12 @@ public class Stock {
         String answer="";
 
 
-        for(Order o:this.orders_list)
+        for(Periodic_Order o:this.orders_list)
         {
             if(LocalDate.now().getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
             {
-
-
                 Order(o.getCatalog_number(),o.getQuantity(),o.getCost(), LocalDate.parse(LocalDate.now().plusDays(7).toString()).toString(),o.getName(),o.getManufactorer(),o.getCategory(),o.getSub_cat(),o.getSub_sub_cat());
                 answer+= "periodic order was executed of item:  " + o.getName()+"  quantity:  "+o.getQuantity()+"\n";
-
             }
         }
 
@@ -334,11 +362,11 @@ public class Stock {
     public void update_periodic_order_quantity(int id, int quantity) throws Exception {
 
         boolean found=false;
-        for (Order o:this.orders_list)
+        for (Periodic_Order o:this.orders_list)
         {
             if(o.getID()==id)
             {
-                if(LocalDate.parse(LocalDate.now().plusDays(6).toString()).getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
+                if(LocalDate.now().plusDays(6).getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
                 {
                     throw new Exception("sorry can't update periodic order day before");
                 }
@@ -356,11 +384,11 @@ public class Stock {
 
     }
 
-
+//@@@@@@@@@@@@@@@22 update perdioci table needed
     public void update_periodic_order_day(int id, String day) throws Exception {
 
         boolean found=false;
-        for (Order o:this.orders_list)
+        for (Periodic_Order o:this.orders_list)
         {
             if(o.getID()==id)
             {
@@ -381,10 +409,10 @@ public class Stock {
 
 
     }
-
+    //@@@@@@@@@@@@@@@22 remove from perdioci table needed
     public void remove_periodic_order(int id) throws Exception {
        int index=-1;
-        for (Order o:this.orders_list)
+        for (Periodic_Order o:this.orders_list)
         {
             if(o.getID()==id)
             {
