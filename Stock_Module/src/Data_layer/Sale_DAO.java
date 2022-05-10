@@ -62,7 +62,7 @@ public class Sale_DAO {
         String sql = "INSERT INTO Sale(id, percentage, start_date, end_date, reason) VALUES(?,?,?,?,?)";
 
         try{
-            Connection conn = this.connect();
+            Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
             pstmt.setDouble(2, percentage);
@@ -81,7 +81,7 @@ public class Sale_DAO {
     {
         String sql = "DELETE FROM "+table_name+" WHERE id = ?";
         try{
-            Connection conn = this.connect();
+            Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1,id);
             pstmt.executeUpdate();

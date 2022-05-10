@@ -68,7 +68,7 @@ public class Periodic_Order_DAO {
         String sql = "INSERT INTO Periodic_Order(id, day_of_week, catalog_number, quantity, manufactorer, category, sub_category, sub_sub_category, name, cost) VALUES(?,?,?,?,?,?,?,?,?,?)";
 
         try{
-            Connection conn = this.connect();
+            Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
             pstmt.setString(2, day_of_week);
@@ -84,7 +84,7 @@ public class Periodic_Order_DAO {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+
         }
     }
 
@@ -92,7 +92,7 @@ public class Periodic_Order_DAO {
     {
         String sql = "DELETE FROM "+table_name+" WHERE id = ?";
         try{
-            Connection conn = this.connect();
+            Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1,id);
             pstmt.executeUpdate();
@@ -105,7 +105,7 @@ public class Periodic_Order_DAO {
     {
         String sql="UPDATE "+table_name+" SET quantity=? WHERE id=?";
         try{
-            Connection conn = this.connect();
+            Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1,quantity);
             pstmt.setInt(2,id);
@@ -119,7 +119,7 @@ public class Periodic_Order_DAO {
     public void update_periodic_order_day(int id, String day) {
         String sql="UPDATE "+table_name+" SET day=? WHERE id=?";
         try{
-            Connection conn = this.connect();
+            Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1,day);
             pstmt.setInt(2,id);

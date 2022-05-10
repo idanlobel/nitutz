@@ -29,8 +29,8 @@ public class Products {
         this.product_list=new ArrayList<>();
         this.catalog_number=catalog_number;
         this.name=name;
-       this.update_quantity(quantity,cost_price,expiry);
-        this.storage_quantity=quantity;
+
+        this.storage_quantity=0;
         this.shelf_quantity=0;
         this.quantity=shelf_quantity+storage_quantity;
         this.manufactorer=manufactorer;
@@ -43,6 +43,7 @@ public class Products {
         this.sub_category=sub_category;
         this.sub_sub_category=sub_sub_category;
         this.sales_history=new ArrayList<>();
+        this.update_quantity(quantity,cost_price,expiry);
 
 
     }

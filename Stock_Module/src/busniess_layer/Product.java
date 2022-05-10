@@ -31,6 +31,7 @@ public class Product {
         this.broken=false;
         this.sold=false;
         this.ID=id;
+
     }
 
     public void set_sell_price(double new_sell_price)

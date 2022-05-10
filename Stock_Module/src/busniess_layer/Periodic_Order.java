@@ -11,6 +11,7 @@ public class Periodic_Order {
     private String category;
     private String sub_cat;
     private String sub_sub_cat;
+    private boolean ordered;
 
     public Periodic_Order(String day_of_week, long catalog_number, int quantity, double cost, String name, String manufactorer , String category, String sub_cat, String sub_sub_cat)
     {
@@ -24,6 +25,7 @@ public class Periodic_Order {
         this.category=category;
         this.sub_cat=sub_cat;
         this.sub_sub_cat=sub_sub_cat;
+        ordered=false;
     }
 
     public String getDay_of_week()
@@ -74,5 +76,19 @@ public class Periodic_Order {
     public void setDay_of_week(String day)
     {
         this.day_of_week=day;
+    }
+    public void set_ordered_to_true()
+    {
+        this.ordered=true;
+    }
+
+    public void reset()
+    {
+        this.ordered=false;
+    }
+
+    public boolean has_ordered()
+    {
+        return this.ordered;
     }
 }

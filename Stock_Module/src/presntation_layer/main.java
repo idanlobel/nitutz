@@ -10,7 +10,7 @@ public class main {
     public static void main(String[] args) throws Exception {
         Stock_Manager stock_manager=new Stock_Manager();
 
-        System.out.println(LocalDate.now().getDayOfWeek().toString().toLowerCase(Locale.ROOT));
+        System.out.println(LocalDate.parse(LocalDate.now().plusDays(7).toString()).toString());
         System.out.println("welcome to my stock!!!");
 
 
@@ -37,7 +37,7 @@ public class main {
              current_order=scanner.nextLine();
             order_in_array=current_order.split(" ");
 
-            if(order_in_array.length>3 && order_in_array[0].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[1].toLowerCase(Locale.ROOT).equals("order"))
+            if(order_in_array.length>2 && order_in_array[0].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[1].toLowerCase(Locale.ROOT).equals("order"))
             {
 
 
@@ -46,7 +46,7 @@ public class main {
             }
 
 
-            if(order_in_array[0].toLowerCase(Locale.ROOT).equals("update") & order_in_array[1].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[2].toLowerCase(Locale.ROOT).equals("order") & order_in_array[3].toLowerCase(Locale.ROOT).equals("quantity"))
+            if(order_in_array.length>4 && order_in_array[0].toLowerCase(Locale.ROOT).equals("update") & order_in_array[1].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[2].toLowerCase(Locale.ROOT).equals("order") & order_in_array[3].toLowerCase(Locale.ROOT).equals("quantity"))
             {
 
 
@@ -64,7 +64,7 @@ public class main {
             }
 
 
-            if(order_in_array[0].toLowerCase(Locale.ROOT).equals("update") & order_in_array[1].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[2].toLowerCase(Locale.ROOT).equals("order") & order_in_array[3].toLowerCase(Locale.ROOT).equals("day"))
+            if(order_in_array.length>4 && order_in_array[0].toLowerCase(Locale.ROOT).equals("update") & order_in_array[1].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[2].toLowerCase(Locale.ROOT).equals("order") & order_in_array[3].toLowerCase(Locale.ROOT).equals("day"))
             {
 
 
@@ -82,7 +82,7 @@ public class main {
             }
 
 
-            if(order_in_array[0].toLowerCase(Locale.ROOT).equals("remove") & order_in_array[1].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[2].toLowerCase(Locale.ROOT).equals("order") )
+            if(order_in_array.length>3 && order_in_array[0].toLowerCase(Locale.ROOT).equals("remove") & order_in_array[1].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[2].toLowerCase(Locale.ROOT).equals("order") )
             {
 
 

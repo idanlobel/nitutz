@@ -41,10 +41,12 @@ public class Stock {
         for (Products products : this.products_list) {
             if (products.getCatalog_number()== products_catalog_number) {
                 List<Product> new_items=products.update_quantity(quantity, cost, expiry);
+                //update products table quantitiy
+                dal_controller.update_products_quantity(products.getQuantity(), products.getShelf_quantity(), products.getCatalog_number());
                 added = true;
                 for(Product p : new_items)
                 {
-                    dal_controller.insert_product(p.get_id(),p.getName(),p.getLocation().toString(),p.getcostprice(),p.getsoldprice(),p.getDelivery_date(),p.isBroken(),p.getDelivery_date(),p.getSell_date(),p.isSold());
+                    dal_controller.insert_product(p.get_id(),p.getName(),p.getLocation().toString(),p.getcostprice(),p.getsoldprice(),p.getExpire_date().toString(),p.isBroken(),p.getDelivery_date(),p.getSell_date(),p.isSold());
                 }
             }
         }
@@ -56,7 +58,7 @@ public class Stock {
             List<Product> new_items=products.getProduct_list();
             for(Product p: new_items)
             {
-                dal_controller.insert_product(p.get_id(),p.getName(),p.getLocation().toString(),p.getcostprice(),p.getsoldprice(),p.getDelivery_date(),p.isBroken(),p.getDelivery_date(),p.getSell_date(),p.isSold());
+                dal_controller.insert_product(p.get_id(),p.getName(),p.getLocation().toString(),p.getcostprice(),p.getsoldprice(),p.getExpire_date().toString(),p.isBroken(),p.getDelivery_date(),p.getSell_date(),p.isSold());
             }
 
 
@@ -354,8 +356,15 @@ public class Stock {
         {
             if(LocalDate.now().getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
             {
-                Order(o.getCatalog_number(),o.getQuantity(),o.getCost(), LocalDate.parse(LocalDate.now().plusDays(7).toString()).toString(),o.getName(),o.getManufactorer(),o.getCategory(),o.getSub_cat(),o.getSub_sub_cat());
-                answer+= "periodic order was executed of item:  " + o.getName()+"  quantity:  "+o.getQuantity()+"\n";
+                if(!o.has_ordered()) {
+                    Order(o.getCatalog_number(), o.getQuantity(), o.getCost(), LocalDate.parse(LocalDate.now().plusDays(7).toString()).toString(), o.getName(), o.getManufactorer(), o.getCategory(), o.getSub_cat(), o.getSub_sub_cat());
+                    answer += "periodic order was executed of item:  " + o.getName() + "  quantity:  " + o.getQuantity() + "\n";
+                    o.set_ordered_to_true();
+                }
+            }
+            if(LocalDate.now().plusDays(6).getDayOfWeek().equals(o.getDay_of_week()))
+            {
+                o.reset();
             }
         }
 

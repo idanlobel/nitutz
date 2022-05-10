@@ -67,15 +67,15 @@ public class Product_DAO {
         String sql = "INSERT INTO Product(id, name, location, cost_price, sell_price, broken, expire_date, delivery_date, sell_date, sold) VALUES(?,?,?,?,?,?,?,?,?,?)";
 
         try{
-            Connection conn = this.connect();
+            Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
             pstmt.setString(2, name);
             pstmt.setString(3,location);
             pstmt.setDouble(4,cost_price);
             pstmt.setDouble(5,sell_price);
-            pstmt.setString(6,expire);
-            pstmt.setBoolean(7,broken);
+            pstmt.setBoolean(6,broken);
+            pstmt.setString(7,expire);
 
             pstmt.setString(8,delivery_date);
             pstmt.setString(9,sold_date);
@@ -90,7 +90,7 @@ public class Product_DAO {
     {
         String sql = "DELETE FROM "+table_name+" WHERE id = ?";
         try{
-            Connection conn = this.connect();
+            Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
            pstmt.setInt(1,id);
             pstmt.executeUpdate();
@@ -103,7 +103,7 @@ public class Product_DAO {
     {
         String sql="UPDATE "+table_name+" SET broken=? WHERE id=?";
         try{
-            Connection conn = this.connect();
+            Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setBoolean(1,state);
             pstmt.setInt(2,id);
@@ -113,5 +113,6 @@ public class Product_DAO {
 
         }
     }
+
 
 }

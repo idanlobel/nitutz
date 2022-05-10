@@ -112,4 +112,9 @@ public  class DAL_controller {
     public void update_periodic_order_day(int id, String day) {
         this.periodic_order_table.update_periodic_order_day(id,day);
     }
+
+    public void update_products_quantity(int quantity,int shelf_quantity,long catalog_num)
+    {
+        this.products_table.update_products_quantity(quantity,shelf_quantity,catalog_num);
+    }
 }

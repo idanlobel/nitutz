@@ -73,7 +73,7 @@ public class Products_DAO {
         String sql = "INSERT INTO Products(catalog_number, quantity, shelf_quantity, storage_quantity, manufacturer, main_category, sub_category, sub_sub_category, sold_quantity, min_quantity, name, current_sell_price, overall_sale_percentage) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try{
-            Connection conn = this.connect();
+            Connection conn =   DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setLong(1, catalog_number);
             pstmt.setInt(2, quantity);
@@ -98,7 +98,7 @@ public class Products_DAO {
     {
         String sql = "DELETE FROM "+table_name+" WHERE id = ?";
         try{
-            Connection conn = this.connect();
+            Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setLong(1,catalog_number);
             pstmt.executeUpdate();
@@ -106,5 +106,20 @@ public class Products_DAO {
             System.out.println(e.getMessage());
         }
     }
+
+    public void update_products_quantity(int quantity,int shelf_quantity,long catalog_number) {
+        String sql="UPDATE "+table_name+" SET quantity=?,shelf_quantity=? WHERE catalog_number=?";
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1,quantity);
+            pstmt.setInt(2,shelf_quantity);
+            pstmt.setLong(3,catalog_number);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 
 }

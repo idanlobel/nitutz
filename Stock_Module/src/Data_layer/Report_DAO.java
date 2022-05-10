@@ -30,7 +30,7 @@ public class Report_DAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+
             }
         }
         return conn;
@@ -59,7 +59,7 @@ public class Report_DAO {
         String sql = "INSERT INTO Report(id, subject) VALUES(?,?)";
 
         try{
-            Connection conn = this.connect();
+            Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
             pstmt.setString(2, subject);
@@ -67,7 +67,7 @@ public class Report_DAO {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+
         }
     }
 
@@ -75,12 +75,12 @@ public class Report_DAO {
     {
         String sql = "DELETE FROM "+table_name+" WHERE id = ?";
         try{
-            Connection conn = this.connect();
+            Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1,id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+
         }
     }
 }
