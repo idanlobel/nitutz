@@ -37,7 +37,7 @@ public class main {
              current_order=scanner.nextLine();
             order_in_array=current_order.split(" ");
 
-            if(order_in_array[0].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[1].toLowerCase(Locale.ROOT).equals("order"))
+            if(order_in_array.length>3 && order_in_array[0].toLowerCase(Locale.ROOT).equals("periodic") & order_in_array[1].toLowerCase(Locale.ROOT).equals("order"))
             {
 
 

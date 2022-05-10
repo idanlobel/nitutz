@@ -42,7 +42,7 @@ public class Report_DAO {
 
         String sql = "CREATE TABLE IF NOT EXISTS Report (\n"
                 + " id integer PRIMARY KEY,\n"
-                + " subject text,\n"
+                + " subject text\n"
                 + ");";
 
         try{

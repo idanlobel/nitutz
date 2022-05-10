@@ -10,6 +10,7 @@ public class Products_DAO {
     public Products_DAO(String connection_string)
     {
         this.connection_string=connection_string;
+        connect();
         create_table(connection_string);
     }
 
@@ -19,10 +20,13 @@ public class Products_DAO {
 
 
             // create a connection to the database
+            Class.forName("org.sqlite.JDBC");
             conn = DriverManager.getConnection(connection_string);
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         } finally {
             try {
                 if (conn != null) {
@@ -52,7 +56,7 @@ public class Products_DAO {
                 + " min_quantity integer,\n"
                 + " name text,\n"
                 + " current_sell_price double,\n"
-                + " overall_sale_percentage double,\n"
+                + " overall_sale_percentage double\n"
                 + ");";
 
         try{

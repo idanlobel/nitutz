@@ -51,7 +51,7 @@ public class Periodic_Order_DAO {
                 + " sub_category text,\n"
                 + " sub_sub_category text,\n"
                 + " name text,\n"
-                + " cost double,\n"
+                + " cost double\n"
                 + ");";
 
         try{

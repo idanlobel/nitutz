@@ -30,7 +30,7 @@ public class Sale_DAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                
+
             }
         }
         return conn;
@@ -40,12 +40,12 @@ public class Sale_DAO {
     private void create_table(String connection_string) {
 
 
-        String sql = "CREATE TABLE IF NOT EXISTS Product (\n"
+        String sql = "CREATE TABLE IF NOT EXISTS Sale (\n"
                 + " id integer PRIMARY KEY,\n"
                 + " percentage double,\n"
                 + " start_date text,\n"
                 + " end_date text,\n"
-                + " reason text,\n"
+                + " reason text\n"
                 + ");";
 
         try{

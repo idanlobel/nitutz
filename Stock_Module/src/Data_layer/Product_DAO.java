@@ -50,7 +50,7 @@ public class Product_DAO {
                 + " expire_date text,\n"
                 + " delivery_date text,\n"
                 + " sell_date text,\n"
-                + " sold boolean,\n"
+                + " sold boolean\n"
                 + ");";
 
         try{

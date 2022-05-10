@@ -84,9 +84,9 @@ public  class DAL_controller {
         this.sale_table.delete_sale(id);
     }
 
-    public void remove_products(int id)
+    public void remove_products(long catalog_number)
     {
-        this.products_table.delete_products(id);
+        this.products_table.delete_products(catalog_number);
     }
 
     public void remove_periodic_order(int id)

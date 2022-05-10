@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DataExportManager">
@@ -73,10 +73,10 @@
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
-          <database-version value="3.3" />
-          <driver-source value="BUILTIN" />
-          <driver-library value="" />
-          <driver value="" />
+          <database-version value="3.0" />
+          <driver-source value="EXTERNAL" />
+          <driver-library value="C:\Users\bayan\Downloads\sqlite-jdbc-3.7.2.jar\sqlite-jdbc-3.7.2.jar" />
+          <driver value="org.sqlite.JDBC" />
           <url-type value="FILE" />
           <host value="" />
           <port value="" />
