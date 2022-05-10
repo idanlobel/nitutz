@@ -84,26 +84,27 @@ public class TransportForm {
     public void update(String id, String toChangeField, String newVal) {
         switch (toChangeField) {
 
-            case "number": {
-                number = newVal;
+            case "id": {
+                id = newVal;
                 break;
             }
-            case "licenseType": {
-                licenseType = LicenseType.valueOf(newVal);
+            case "date": {
+                date = newVal;
                 break;
             }
-            case "model": {
-                model = newVal;
+            case "departureTime": {
+                departureTime = newVal;
                 break;
             }
-            case "weight": {
-                weight = newVal;
+            case "driverId": {
+                driverId = newVal;
                 break;
             }
-            case "maxWeight": {
-                maxWeight = newVal;
-                break;
-            }
+//todo add support to
+//        this.source = source;
+//        this.destinations = destinations;
+//        this.truckLicenceNumber =truckLicenceNumber;
+//        transportProductsDocuments = new ArrayList<>();
         }
 
     }
