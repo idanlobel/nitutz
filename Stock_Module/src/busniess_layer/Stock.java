@@ -8,7 +8,7 @@ import java.util.*;
 public class Stock {
     private List<Products> products_list;
     private List<Sale> sales_list;
-    private  List<Periodic_Order> orders_list;
+    private  List<Periodic_Order> periodic_orders_list;
     private DAL_controller dal_controller;
 
 
@@ -16,7 +16,7 @@ public class Stock {
 
         this.products_list = new ArrayList<>();
         this.sales_list = new ArrayList<>();
-        this.orders_list=new ArrayList<>();
+        this.periodic_orders_list=new ArrayList<>();
         dal_controller=new DAL_controller();
     }
 
@@ -66,7 +66,7 @@ public class Stock {
     public void add_to_orders(String day,long products_catalog_number, int quantity, Double cost,  String name, String manufactorer, String category,String sub_cat,String sub_sub_cat)
     {
         Periodic_Order order=new Periodic_Order(day,products_catalog_number,quantity,cost,name,manufactorer,category,sub_cat,sub_sub_cat);
-        this.orders_list.add(order);
+        this.periodic_orders_list.add(order);
         dal_controller.insert_periodic_order(order.getID(),day,products_catalog_number,quantity,manufactorer,category,sub_cat,sub_sub_cat,name,cost);
 
     }
@@ -90,7 +90,7 @@ public class Stock {
     }
 
 
-    //@@@@@@@@@@@@@@ here add update sale
+    //@@@@@@@@@@@@@@ here add update to sales_history_table
     public void Add_to_sale(long products_catalog_number,int sales_id) throws Exception {
         for(Products p:this.products_list)
         {
@@ -147,11 +147,12 @@ public class Stock {
     }
 
 
-    //@@@@@@@ here add remove sale
+
     public void remove_sale(int sale_id) {
         for (Sale sale : this.sales_list) {
             if (sale.getId() == sale_id) {
                 sale.sale_is_over();
+                dal_controller.remove_sale(sale_id);
 
             }
 
@@ -308,6 +309,7 @@ public class Stock {
         return everyproductinstore;
     }
 
+    
     public boolean set_product_broken(int id,int catalog_number)
     {
         boolean found=false;
@@ -316,6 +318,7 @@ public class Stock {
             if(p.getCatalog_number()==catalog_number)
             {
                 found=p.set_broken_item(id);
+                dal_controller.update_product_broken_state(id,true);
             }
         }
         return found;
@@ -347,7 +350,7 @@ public class Stock {
         String answer="";
 
 
-        for(Periodic_Order o:this.orders_list)
+        for(Periodic_Order o:this.periodic_orders_list)
         {
             if(LocalDate.now().getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
             {
@@ -362,7 +365,7 @@ public class Stock {
     public void update_periodic_order_quantity(int id, int quantity) throws Exception {
 
         boolean found=false;
-        for (Periodic_Order o:this.orders_list)
+        for (Periodic_Order o:this.periodic_orders_list)
         {
             if(o.getID()==id)
             {
@@ -388,7 +391,7 @@ public class Stock {
     public void update_periodic_order_day(int id, String day) throws Exception {
 
         boolean found=false;
-        for (Periodic_Order o:this.orders_list)
+        for (Periodic_Order o:this.periodic_orders_list)
         {
             if(o.getID()==id)
             {
@@ -409,10 +412,10 @@ public class Stock {
 
 
     }
-    //@@@@@@@@@@@@@@@22 remove from perdioci table needed
+
     public void remove_periodic_order(int id) throws Exception {
        int index=-1;
-        for (Periodic_Order o:this.orders_list)
+        for (Periodic_Order o:this.periodic_orders_list)
         {
             if(o.getID()==id)
             {
@@ -421,14 +424,18 @@ public class Stock {
                     throw new Exception("sorry can't remove periodic order day before");
                 }
                 else {
-                   index=orders_list.indexOf(o);
+                   index=periodic_orders_list.indexOf(o);
                    break;
                 }
             }
         }
         if(index==-1)
             throw new Exception("no order with this id : "+id);
-        orders_list.remove(index);
+        else {
+            periodic_orders_list.remove(index);
+            dal_controller.remove_periodic_order(id);
+        }
+
 
     }
 }

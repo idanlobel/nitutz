@@ -5,7 +5,7 @@ import java.sql.*;
 public class Periodic_Order_DAO {
 
 
-    private String table_name="Order";
+    private String table_name="Periodic_Order";
     private String connection_string;
 
 
@@ -41,7 +41,7 @@ public class Periodic_Order_DAO {
     private void create_table(String connection_string) {
 
 
-        String sql = "CREATE TABLE IF NOT EXISTS Order (\n"
+        String sql = "CREATE TABLE IF NOT EXISTS Periodic_Order (\n"
                 + " id integer PRIMARY KEY,\n"
                 + " day_of_week text,\n"
                 + " catalog_number long,\n"
@@ -65,7 +65,7 @@ public class Periodic_Order_DAO {
     }
 
     public void insert(int id, String day_of_week, long catalog_number,int quantity,String manufactorer,String category,String sub_category,String sub_sub_category,String name,Double cost) {
-        String sql = "INSERT INTO Order(id, day_of_week, catalog_number, quantity, manufactorer, category, sub_category, sub_sub_category, name, cost) VALUES(?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Periodic_Order(id, day_of_week, catalog_number, quantity, manufactorer, category, sub_category, sub_sub_category, name, cost) VALUES(?,?,?,?,?,?,?,?,?,?)";
 
         try{
             Connection conn = this.connect();
@@ -82,6 +82,19 @@ public class Periodic_Order_DAO {
             pstmt.setDouble(10,cost);
 
 
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void delete_periodic_order(int id)
+    {
+        String sql = "DELETE FROM "+table_name+" WHERE id = ?";
+        try{
+            Connection conn = this.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1,id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

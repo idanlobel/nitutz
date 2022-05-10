@@ -8,7 +8,7 @@ public  class DAL_controller {
     private Product_DAO product_table;
     private Report_DAO report_table;
     private Sale_DAO sale_table;
-    private Periodic_Order_DAO periodic_order;
+    private Periodic_Order_DAO periodic_order_table;
 
 
     public DAL_controller()
@@ -21,7 +21,7 @@ public  class DAL_controller {
         this.product_table=new Product_DAO(connection_string);
         this.report_table=new Report_DAO(connection_string);
         sale_table=new Sale_DAO(connection_string);
-        periodic_order=new Periodic_Order_DAO(connection_string);
+        periodic_order_table=new Periodic_Order_DAO(connection_string);
     }
 
 
@@ -67,10 +67,40 @@ public  class DAL_controller {
 
 
     public void insert_periodic_order(int id, String day, long products_catalog_number, int quantity, String manufactorer, String category, String sub_cat, String sub_sub_cat, String name, Double cost) {
-        this.periodic_order.insert(id,day,products_catalog_number,quantity,manufactorer,category,sub_cat,sub_sub_cat,name,cost);
+        this.periodic_order_table.insert(id,day,products_catalog_number,quantity,manufactorer,category,sub_cat,sub_sub_cat,name,cost);
     }
 
     public void insert_report(int id, String subject) {
         this.report_table.insert(id,subject);
+    }
+
+    public void remove_product(int id)
+    {
+        this.product_table.delete_product(id);
+    }
+
+    public void remove_sale(int id)
+    {
+        this.sale_table.delete_sale(id);
+    }
+
+    public void remove_products(int id)
+    {
+        this.products_table.delete_products(id);
+    }
+
+    public void remove_periodic_order(int id)
+    {
+        this.periodic_order_table.delete_periodic_order(id);
+    }
+
+    public void remove_report(int id)
+    {
+        this.report_table.delete_report(id);
+    }
+
+    public void update_product_broken_state(int id,boolean broken_state)
+    {
+        this.product_table.update_product_broken_state(id,broken_state);
     }
 }

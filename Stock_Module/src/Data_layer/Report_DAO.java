@@ -70,4 +70,17 @@ public class Report_DAO {
             System.out.println(e.getMessage());
         }
     }
+
+    public void delete_report(int id)
+    {
+        String sql = "DELETE FROM "+table_name+" WHERE id = ?";
+        try{
+            Connection conn = this.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1,id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

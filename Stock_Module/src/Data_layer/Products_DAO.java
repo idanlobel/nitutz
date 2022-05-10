@@ -90,4 +90,17 @@ public class Products_DAO {
         }
     }
 
+    public void delete_products(long catalog_number)
+    {
+        String sql = "DELETE FROM "+table_name+" WHERE id = ?";
+        try{
+            Connection conn = this.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1,catalog_number);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }

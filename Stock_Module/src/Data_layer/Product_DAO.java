@@ -58,7 +58,7 @@ public class Product_DAO {
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+
         }
 
     }
@@ -83,7 +83,34 @@ public class Product_DAO {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+
+        }
+    }
+    public void delete_product(int id)
+    {
+        String sql = "DELETE FROM "+table_name+" WHERE id = ?";
+        try{
+            Connection conn = this.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+           pstmt.setInt(1,id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+
+        }
+    }
+
+    public void update_product_broken_state(int id,boolean state)
+    {
+        String sql="UPDATE "+table_name+" SET broken=? WHERE id=?";
+        try{
+            Connection conn = this.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setBoolean(1,state);
+            pstmt.setInt(2,id);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+
         }
     }
 
