@@ -101,4 +101,32 @@ public class Periodic_Order_DAO {
         }
     }
 
+    public void update_periodic_order_quantity(int id,int quantity)
+    {
+        String sql="UPDATE "+table_name+" SET quantity=? WHERE id=?";
+        try{
+            Connection conn = this.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1,quantity);
+            pstmt.setInt(2,id);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+
+        }
+    }
+
+    public void update_periodic_order_day(int id, String day) {
+        String sql="UPDATE "+table_name+" SET day=? WHERE id=?";
+        try{
+            Connection conn = this.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1,day);
+            pstmt.setInt(2,id);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+
+        }
+    }
 }

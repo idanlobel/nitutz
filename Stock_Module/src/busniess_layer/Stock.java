@@ -309,7 +309,7 @@ public class Stock {
         return everyproductinstore;
     }
 
-    
+
     public boolean set_product_broken(int id,int catalog_number)
     {
         boolean found=false;
@@ -376,6 +376,7 @@ public class Stock {
                 else {
                     o.set_quantity(quantity);
                     found = true;
+                    dal_controller.update_periodic_order_quantity(id,quantity);
                     break;
                 }
             }
@@ -387,7 +388,7 @@ public class Stock {
 
     }
 
-//@@@@@@@@@@@@@@@22 update perdioci table needed
+
     public void update_periodic_order_day(int id, String day) throws Exception {
 
         boolean found=false;
@@ -402,6 +403,7 @@ public class Stock {
                 else {
                     o.setDay_of_week(day);
                     found = true;
+                    dal_controller.update_periodic_order_day(id,day);
                     break;
                 }
             }
@@ -425,6 +427,7 @@ public class Stock {
                 }
                 else {
                    index=periodic_orders_list.indexOf(o);
+
                    break;
                 }
             }

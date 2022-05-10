@@ -30,7 +30,7 @@ public class Sale_DAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+                
             }
         }
         return conn;
@@ -53,7 +53,7 @@ public class Sale_DAO {
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+
         }
 
     }
@@ -73,7 +73,7 @@ public class Sale_DAO {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+
         }
     }
 
@@ -86,7 +86,7 @@ public class Sale_DAO {
             pstmt.setInt(1,id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+
         }
     }
 

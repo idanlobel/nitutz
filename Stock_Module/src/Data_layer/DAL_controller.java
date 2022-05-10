@@ -103,4 +103,13 @@ public  class DAL_controller {
     {
         this.product_table.update_product_broken_state(id,broken_state);
     }
+
+    public void update_periodic_order_quantity(int id,int quantity)
+    {
+        this.periodic_order_table.update_periodic_order_quantity(id,quantity);
+    }
+
+    public void update_periodic_order_day(int id, String day) {
+        this.periodic_order_table.update_periodic_order_day(id,day);
+    }
 }
