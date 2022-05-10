@@ -179,4 +179,19 @@ public class Products {
         }
         return found;
     }
+    public void update_quantity_after_removing_items()
+    {
+        this.storage_quantity=this.product_list.size();
+        this.quantity=this.shelf_quantity+this.storage_quantity;
+    }
+
+    public void remove_product(List<Product> items_to_remove) {
+        for(Product p:items_to_remove)
+        {
+            if(this.product_list.contains(p))
+            {
+                this.product_list.remove(p);
+            }
+        }
+    }
 }

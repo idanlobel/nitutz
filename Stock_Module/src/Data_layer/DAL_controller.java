@@ -117,4 +117,12 @@ public  class DAL_controller {
     {
         this.products_table.update_products_quantity(quantity,shelf_quantity,catalog_num);
     }
+
+    public void update_products_sell_price(long products_catalog_number, Double new_sell_price) {
+        this.products_table.update_products_sell_price(products_catalog_number,new_sell_price);
+    }
+
+    public void update_product_sell_price(int id, Double new_sell_price) {
+        this.product_table.update_product_sell_price(id,new_sell_price);
+    }
 }

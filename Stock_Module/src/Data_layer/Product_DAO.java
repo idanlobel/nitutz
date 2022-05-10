@@ -115,4 +115,17 @@ public class Product_DAO {
     }
 
 
+    public void update_product_sell_price(int id, Double new_sell_price) {
+        String sql="UPDATE "+table_name+" SET sell_price=? WHERE id=?";
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setDouble(1,new_sell_price);
+            pstmt.setInt(2,id);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+
+        }
+    }
 }

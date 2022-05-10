@@ -84,9 +84,16 @@ public class Stock {
                     new_sale.Add_Products(products);
                     this.sales_list.add(new_sale);
                     dal_controller.insert_sale(new_sale.getId(),new_sale.getpercentage(),new_sale.getStart_date(),new_sale.getEnd_date(),new_sale.getReason());
+                    dal_controller.update_products_sell_price(products_catalog_number, products.getsellprice());
+                List<Product> all_item=products.getProduct_list();
+                for(Product product:all_item)
+                {
+                    dal_controller.update_product_sell_price(product.get_id(),products.getsellprice());
+                }
             }
 
         }
+
 
 
     }
@@ -101,6 +108,12 @@ public class Stock {
                 for(Sale sale:this.sales_list)
                 {
                     sale.Add_Products(p);
+                    dal_controller.update_products_sell_price(p.getCatalog_number(), p.getsellprice());
+                    List<Product> all_item=p.getProduct_list();
+                    for(Product product:all_item)
+                    {
+                        dal_controller.update_product_sell_price(product.get_id(),p.getsellprice());
+                    }
                 }
             }
         }
@@ -120,6 +133,12 @@ public class Stock {
             if(!sub_is_null & !sub_sub_is_null) {
                 if (p.getMain_category().equals(category) & p.getSub_category().equals(sub_category) & p.getSub_sub_category().equals(sub_sub_category)) {
                     new_sale.Add_Products(p);
+                    dal_controller.update_products_sell_price(p.getCatalog_number(), p.getsellprice());
+                    List<Product> all_item=p.getProduct_list();
+                    for(Product product:all_item)
+                    {
+                        dal_controller.update_product_sell_price(product.get_id(),p.getsellprice());
+                    }
                 }
             }
 
@@ -127,6 +146,12 @@ public class Stock {
             if(!sub_is_null & sub_sub_is_null) {
                 if (p.getMain_category().equals(category) & p.getSub_category().equals(sub_category) ) {
                     new_sale.Add_Products(p);
+                    dal_controller.update_products_sell_price(p.getCatalog_number(), p.getsellprice());
+                    List<Product> all_item=p.getProduct_list();
+                    for(Product product:all_item)
+                    {
+                        dal_controller.update_product_sell_price(product.get_id(),p.getsellprice());
+                    }
                 }
             }
 
@@ -134,12 +159,24 @@ public class Stock {
             if(sub_is_null & !sub_sub_is_null) {
                 if (p.getMain_category().equals(category)  & p.getSub_sub_category().equals(sub_sub_category)) {
                     new_sale.Add_Products(p);
+                    dal_controller.update_products_sell_price(p.getCatalog_number(), p.getsellprice());
+                    List<Product> all_item=p.getProduct_list();
+                    for(Product product:all_item)
+                    {
+                        dal_controller.update_product_sell_price(product.get_id(),p.getsellprice());
+                    }
                 }
             }
 
             if(sub_is_null & sub_sub_is_null) {
                 if (p.getMain_category().equals(category) ) {
                     new_sale.Add_Products(p);
+                    dal_controller.update_products_sell_price(p.getCatalog_number(), p.getsellprice());
+                    List<Product> all_item=p.getProduct_list();
+                    for(Product product:all_item)
+                    {
+                        dal_controller.update_product_sell_price(product.get_id(),p.getsellprice());
+                    }
                 }
             }
 
@@ -153,8 +190,20 @@ public class Stock {
     public void remove_sale(int sale_id) {
         for (Sale sale : this.sales_list) {
             if (sale.getId() == sale_id) {
+                List<Products> prodcuts_in_sale=sale.getProducts_in_sale();
+
                 sale.sale_is_over();
+                for(Products p : prodcuts_in_sale)
+                {
+                    dal_controller.update_products_sell_price(p.getCatalog_number(), p.getsellprice());
+                    List<Product> all_item=p.getProduct_list();
+                    for(Product product:all_item)
+                    {
+                        dal_controller.update_product_sell_price(product.get_id(),p.getsellprice());
+                    }
+                }
                 dal_controller.remove_sale(sale_id);
+
 
             }
 
@@ -448,6 +497,50 @@ public class Stock {
             dal_controller.remove_periodic_order(id);
         }
 
+
+    }
+
+    public void remove_defective_and_expired_products()
+    {
+      List<Product> all_items_in_store=  get_every_product();
+     // List<Integer> all_ids_to_remove=new ArrayList<>();
+        List<Product> items_to_remove=new ArrayList<>();
+      for(Product p :all_items_in_store)
+      {
+          if(p.isBroken() || p.getExpire_date().isBefore(LocalDate.now()))
+          {
+              //all_ids_to_remove.add(p.get_id());
+              items_to_remove.add(p);
+          }
+      }
+
+
+//      for(Integer id:all_ids_to_remove)
+//      {
+//          for(Products p:products_list)
+//          {
+//              for(Product product:p.getProduct_list())
+//              {
+//                  if(product.get_id()==id)
+//                  {
+//                items_to_remove.add(product);
+//                  }
+//              }
+//          }
+//
+//      }
+      for(Products p:products_list)
+      {
+         p.remove_product(items_to_remove);
+         p.update_quantity_after_removing_items();
+         dal_controller.update_products_quantity(p.getQuantity(),p.getShelf_quantity(),p.getCatalog_number());
+
+
+      }
+      for(Product p:items_to_remove)
+      {
+          dal_controller.remove_product(p.get_id());
+      }
 
     }
 }

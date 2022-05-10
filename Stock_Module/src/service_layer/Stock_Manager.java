@@ -116,4 +116,12 @@ public void Auto_start() throws Exception {
     public void remove_periodic_order(String id) throws Exception {
         mystock.remove_periodic_order(Integer.parseInt(id));
     }
+
+    public void remove_sale(String id) throws Exception {
+        mystock.remove_sale(Integer.parseInt(id));
+    }
+
+    public void remove_broken_items() {
+        mystock.remove_defective_and_expired_products();
+    }
 }

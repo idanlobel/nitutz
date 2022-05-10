@@ -71,6 +71,10 @@ public class Sale {
     {
         return this.reason;
     }
+    public List<Products> getProducts_in_sale()
+    {
+        return products_in_sale;
+    }
 
 
 }

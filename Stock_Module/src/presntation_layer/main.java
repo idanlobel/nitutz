@@ -10,7 +10,7 @@ public class main {
     public static void main(String[] args) throws Exception {
         Stock_Manager stock_manager=new Stock_Manager();
 
-        System.out.println(LocalDate.parse(LocalDate.now().plusDays(7).toString()).toString());
+
         System.out.println("welcome to my stock!!!");
 
 
@@ -89,6 +89,23 @@ public class main {
                 try {
                     stock_manager.remove_periodic_order(order_in_array[3]);
                     System.out.println("removed periodic order done successfully");
+                }
+                catch (Exception e)
+                {
+                    System.out.println(e.toString());
+                }
+
+
+
+            }
+
+            if(order_in_array.length>2 && order_in_array[0].toLowerCase(Locale.ROOT).equals("remove") & order_in_array[1].toLowerCase(Locale.ROOT).equals("sale") )
+            {
+
+
+                try {
+                    stock_manager.remove_sale(order_in_array[2]);
+                    System.out.println("sale with id : "+order_in_array[2]+" is over!");
                 }
                 catch (Exception e)
                 {
@@ -190,6 +207,12 @@ public class main {
                 {
                     System.out.println("failed to set item to broken state, item is missing");
                 }
+            }
+
+            if(order_in_array.length>2 && order_in_array[0].toLowerCase(Locale.ROOT).equals("remove") & order_in_array[1].toLowerCase(Locale.ROOT).equals("broken") & order_in_array[2].toLowerCase(Locale.ROOT).equals("items"))
+            {
+                stock_manager.remove_broken_items();
+                System.out.println("successfully removed broken and expired items");
             }
 
 

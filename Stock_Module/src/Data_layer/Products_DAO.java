@@ -122,4 +122,17 @@ public class Products_DAO {
     }
 
 
+    public void update_products_sell_price(long products_catalog_number, Double new_sell_price) {
+        String sql="UPDATE "+table_name+" SET current_sell_price=? WHERE catalog_number=?";
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setDouble(1,new_sell_price);
+
+            pstmt.setLong(2,products_catalog_number);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
