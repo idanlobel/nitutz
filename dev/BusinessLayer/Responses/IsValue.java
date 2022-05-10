@@ -1,6 +1,6 @@
 package BusinessLayer.Responses;
 
-public class IsValue<T> extends Response{
+public class IsValue<T> extends Response<T>{
     private final T object;
     public IsValue(T object, String msg) {
         super(msg);

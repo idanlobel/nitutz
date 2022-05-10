@@ -1,6 +1,5 @@
 package BusinessLayer;
 
-import javafx.util.Pair;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.List;
 public class Order {
     private final int id;
     private final int supplyCompanyNumber;
-    private final Contract contract;
+  //  private final Contract contract;
     private final HashMap<Product,int[]> itemInfos; //[0]=amount,[1]=initial price [2]=discount
     private final ContactPerson contactPerson;
     private int totalPrice;
@@ -21,14 +20,14 @@ public class Order {
     public Order(int id,Contract contract, String contactPerson, LocalDate arrivalDate) {
         this.supplyCompanyNumber= contract.getSupplier().getCompanyNumber();
         this.id=id;
-        this.contract = contract;
+        //   this.contract = contract;
         this.itemInfos = new HashMap<>();
         this.contactPerson = contract.getSupplier().getContact(contactPerson);
         this.totalPrice = 0;
         this.orderDate = LocalDate.now();
         this.arrivalDate = arrivalDate;
     }
-    public void AddProduct(Product product, int amount, int initPrice,int discount){
+    public void AddProduct(SupplierProduct product, int amount, int initPrice,int discount){
         if(itemInfos.containsKey(product))
             throw new IllegalArgumentException("User Error: Duplicate "+product.getId()+" in order"); // TODO: replace with name after integration
         if(amount==0)
@@ -46,7 +45,7 @@ public class Order {
     @Override
     public String toString() {
         StringBuilder acc= new StringBuilder();
-        acc.append("Order number ").append(id).append("\nSupplier name:").append(contract).append("\nContact Person: ").append(contactPerson.getName()).append("\nTotal Price: ").append(totalPrice).append("\nOrder Date: ").append(orderDate).append("\nArrival Date: ").append(arrivalDate);
+        acc.append("Order number ").append(id).append("\nContact Person: ").append(contactPerson.getName()).append("\nTotal Price: ").append(totalPrice).append("\nOrder Date: ").append(orderDate).append("\nArrival Date: ").append(arrivalDate);
         acc.append("\n----------Item List---------=\n");
         int count=1;
         for(Product product: itemInfos.keySet()){

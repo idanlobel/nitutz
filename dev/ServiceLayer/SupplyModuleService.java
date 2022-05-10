@@ -18,7 +18,8 @@ public class SupplyModuleService {
 
     public Response<Supplier> AddSupplier(Integer companyNumber, String name,  String bankNumber, List<ContactPerson> contactPeople){
         try{
-            return new IsValue<Supplier>(controller.AddSupplier(name, companyNumber, bankNumber, contactPeople),"Supplier added");
+         //   return new IsValue<Supplier>(controller.AddSupplier(name, companyNumber, bankNumber, contactPeople),"Supplier added");
+            return null;
         }
         catch (Exception e){
             return new IsError(e.getMessage());
@@ -72,6 +73,7 @@ public class SupplyModuleService {
             return new IsError(e.getMessage());
         }
     }
+    //TODO: DELETE
     public Response<Order> OrderProducts(int companyNumber, String contactPersonName, LocalDate arrivalDate, List<int[]> products){
 
         try {
@@ -81,10 +83,27 @@ public class SupplyModuleService {
             return new IsError(e.getMessage());
         }
     }
+    public Response OrderProduct(int id,int amount){
+
+        try {
+            controller.OrderProduct(id,amount);
+            return new IsValue(null,"Ordering successful");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
     public Response<Order> getOrder(int orderId) {
 
         try {
             return new IsValue<Order>(controller.getOrder(orderId), "order fetch successful");
+        } catch (Exception e) {
+            return new IsError(e.getMessage());
+        }
+    }
+    public Response<List<Order>> FetchOrders(){
+        try {
+            return new IsValue<List<Order>>(controller.FetchOrders(), "order fetch successful");
         } catch (Exception e) {
             return new IsError(e.getMessage());
         }

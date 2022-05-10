@@ -1,4 +1,4 @@
-package PrentationLayer;
+package PresentationLayer;
 
 import BusinessLayer.ContactPerson;
 import BusinessLayer.Contract;

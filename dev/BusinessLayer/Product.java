@@ -1,24 +1,19 @@
 package BusinessLayer;
 
 public class Product {
-    private int supplierId;
-    private int buyPrice;
+    private int id;
+    public Product(int id){
+        this.id=id;
+
+    }
+
     public int getId() {
-        return supplierId;
-    }
-    public Product(int supplierId,int price, int id){
-        buyPrice=price;
-        this.supplierId=supplierId;
-
+        return id;
     }
 
-    public int getBuyPrice() {
-        return buyPrice;
-    }
 
     @Override
     public String toString() {
-        return "supplierId=" + supplierId +
-                ", buyPrice=" + buyPrice;
+        return "ID=" + id;
     }
 }

@@ -1,25 +1,26 @@
 package BusinessLayer;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class Controller {
     private final Hashtable<Integer,Supplier> suppliers;
     private final Hashtable<Integer,Contract> contracts;
+    private final HashMap<Integer,Order> toDeliverOrders;
     private int orderIdTracker=0;
     private final Hashtable<Integer,Order> orderHistory;
-    private final Hashtable<Integer, Product> items; //TODO: GET ITEMS FROM STOCK MODULE
+    private final Hashtable<Integer, Product> products; //TODO: GET ITEMS FROM STOCK MODULE
     public Controller(){
+        toDeliverOrders=new HashMap<>();
         suppliers=new Hashtable<>();
         contracts=new Hashtable<>();
         orderHistory=new Hashtable<>();
-        items=new Hashtable<Integer, Product>();
+        products=new Hashtable<Integer, Product>();
     }
-    public Supplier AddSupplier(String name, Integer companyNumber, String bankNumber, List<ContactPerson> contactPeople) {
+    public Supplier AddSupplier(String name, Integer companyNumber, String bankNumber, List<ContactPerson> contactPeople,String orderingCP) {
         if(suppliers.containsKey(companyNumber))
             throw new IllegalArgumentException("Company number already exists in the system");
-        Supplier supplier=new Supplier(name,companyNumber,bankNumber,contactPeople);
+        Supplier supplier=new Supplier(name,companyNumber,bankNumber,contactPeople,orderingCP);
         suppliers.put(companyNumber,supplier);
         return supplier;
     }
@@ -40,9 +41,9 @@ public class Controller {
         if(deliveryDays.length != 7)
             throw new IllegalArgumentException("USER ERROR: Delivery days must be 7 days array");
         Supplier supplier=suppliers.get(companyNumber);
-        ArrayList<Product> SupplierItems=new ArrayList<>();
+        ArrayList<SupplierProduct> SupplierItems=new ArrayList<>();
         for(int[] itemInfo: itemInfoList){
-            SupplierItems.add(new Product(itemInfo[0],itemInfo[1],itemInfo[2]));
+            SupplierItems.add(new SupplierProduct(itemInfo[0],itemInfo[1],itemInfo[2]));
         }
         Contract contract=new Contract(supplier,SupplierItems,discountsList,deliveryDays);
         contracts.put(companyNumber,contract);
@@ -60,7 +61,7 @@ public class Controller {
                 throw new IllegalArgumentException("Trying to order item not in contract");
             int id=productAndAmount[0],amount=productAndAmount[1];
       //      Product product=items.get(id);
-            Product item=contract.getProduct(id);
+            SupplierProduct item=contract.getProduct(id);
             int discountPercent=1, maxDisAmount=0;
             List<int[]> discountsForItem=discounts.get(id);
             for(int[] discount: discountsForItem){
@@ -69,7 +70,7 @@ public class Controller {
                     discountPercent=discount[1];
                 }
             }
-            order.AddProduct(item,amount,item.getBuyPrice(),discountPercent);
+            order.AddProduct(item,amount,item.getPrice(),discountPercent);
         }
         orderHistory.put(orderIdTracker,order);
         orderIdTracker++;
@@ -107,5 +108,48 @@ public class Controller {
 
     public List<Supplier> getSupplierList() {
         return new ArrayList<>(suppliers.values());
+    }
+
+    public List<Order> FetchOrders() {
+        for(Integer id:toDeliverOrders.keySet()){
+           orderHistory.put(id,toDeliverOrders.get(id));
+        }
+        ArrayList<Order> tmp= new ArrayList<>(toDeliverOrders.values());
+        toDeliverOrders.clear();
+        return tmp;
+    }
+
+    public void OrderProduct(int id, int amount) {
+        Product product=products.get(id);
+        int chosenSupp=-1,bestPrice=-1,discount=100;
+        for(Contract contract: contracts.values()){
+            if(contract.ContainsProduct(id)){
+                chosenSupp=contract.getSupplier().getCompanyNumber();
+                discount=contract.getDiscount(id,amount);
+                int price=contract.getProduct(product.getId()).getPrice()*amount*discount;
+                if(bestPrice==-1 || price<bestPrice)
+                    bestPrice=price;
+            }
+        }
+        Order order;
+        SupplierProduct supplierProduct=contracts.get(chosenSupp).getProduct(id);
+        if(!toDeliverOrders.containsKey(chosenSupp)) {
+            order = new Order(orderIdTracker, contracts.get(chosenSupp),
+                    contracts.get(chosenSupp).getSupplier().getOrderingCP().getName(), getArrivalDate(contracts.get(id).getDeliveryDays()));
+            toDeliverOrders.put(chosenSupp, order);
+            order.AddProduct(supplierProduct, amount, supplierProduct.getPrice(), discount);
+        }
+        else{
+            toDeliverOrders.get(chosenSupp).AddProduct(supplierProduct,amount,supplierProduct.getPrice(),discount);
+        }
+    }
+    public static LocalDate getArrivalDate(boolean[] days){
+        int currWeekDay=LocalDate.now().getDayOfWeek().getValue(),daysTillDel=0;
+        for(int i=currWeekDay+1;i<=7;i=i+1%7){
+            daysTillDel++;
+            if(days[i])
+                return LocalDate.now().plusDays(daysTillDel);
+        }
+        throw new RuntimeException("Logic Error in Controller => getArrivalDate");
     }
 }

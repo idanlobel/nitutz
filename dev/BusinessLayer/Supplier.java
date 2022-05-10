@@ -8,8 +8,9 @@ public class Supplier {
     private final Integer companyNumber;
     private final String bankNumber;
     private final HashMap<String, ContactPerson> contactList;
+    private String orderingCP;
 
-    public Supplier(String name, Integer companyNumber, String bankNumber, List<ContactPerson> contactList) {
+    public Supplier(String name, Integer companyNumber, String bankNumber, List<ContactPerson> contactList,String orderingCP) {
         if (companyNumber == null | name == null | bankNumber == null | contactList == null)
             throw new IllegalArgumentException("System Error: one of the supplier parameter is null");
         if (name.trim().length() == 0)
@@ -22,6 +23,9 @@ public class Supplier {
         this.contactList = new HashMap<>();
         for (ContactPerson contactPerson : contactList)
             this.contactList.put(contactPerson.getName(), contactPerson);
+        if(!this.contactList.containsKey(orderingCP))
+            throw new IllegalArgumentException("USER ERROR: ordering CP not in contract list");
+        this.orderingCP=orderingCP;
     }
 
     public void addContact(ContactPerson contactPerson) {
@@ -44,6 +48,9 @@ public class Supplier {
                 ", companyNumber=" + companyNumber +
                 ", bankNumber='" + bankNumber + '\'' +
                 ", contactList=" + contactList+"\n";
+    }
+    public ContactPerson getOrderingCP(){
+        return contactList.get(orderingCP);
     }
 
     public String getBankNumber() {
