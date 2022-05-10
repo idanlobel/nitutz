@@ -68,7 +68,19 @@ public class TransportsFacade {
     }
 
     public String showDriversDetailsAvailable(String departureTime, String date) {
-        return employeefacade.showDriversDetails();
+        return employeefacade.showDriversDetails();//get all drivers לפי המשמרת
     }
-    
+
+    public List<String> showTransportByDate(String date) {
+        return transportsController.getFormsByDate(date);
+    }
+
+    public String getTransportById(String id) {
+        return transportsController.getFormsById(id).toString();
+    }
+
+    public void updateForm(String id, String toChangeField, String newVal) {
+        transportsController.updateForm(id, toChangeField, newVal);
+
+    }
 }

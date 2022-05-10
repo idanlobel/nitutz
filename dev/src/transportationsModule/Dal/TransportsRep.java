@@ -2,6 +2,8 @@ package src.transportationsModule.Dal;
 
 import src.transportationsModule.BusinessLogic.TransportForm;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class TransportsRep {
@@ -13,7 +15,7 @@ public class TransportsRep {
     //Map<,> trucksIdentityMap
 
     public TransportsRep() {
-
+        transportFormsCache = new LinkedList<>();
     }
 
     public List<TransportForm> getTransportFormsCache() {
@@ -21,8 +23,9 @@ public class TransportsRep {
     }
 
     public void addTransportForm(TransportForm transportForm){
-
+    //todo add to DB
         System.out.println(transportForm.getId() + " added to transports cache");
+        transportFormsCache.add(transportForm);
     }
 
     public TransportForm getTransportForm(){
@@ -30,4 +33,23 @@ public class TransportsRep {
     }
 
 
+    public List<String> getTransportFormsbyDate(String date) {
+        //todo change to pull db
+        List<String> formsIds=new ArrayList<>();
+        for (TransportForm tf: transportFormsCache) {
+            if(tf.getDate().equals(date))
+                formsIds.add(tf.getId());
+        }
+        return  formsIds;
+    }
+
+    public TransportForm getTransportFormById(String id) {
+        //todo change to pull db
+
+        for (TransportForm tf: transportFormsCache) {
+            if(tf.getId().equals(id))
+                return tf;
+        }
+        return null;
+    }
 }

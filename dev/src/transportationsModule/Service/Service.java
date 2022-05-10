@@ -50,8 +50,8 @@ public class Service {
         System.out.println();
 
         while(true){
-            String action = askInput("hello " + userName + ", please choose action from the following options and press enter: "
-                    + "createForm , updateForm , addSite ,addDriver ,addTruck , updateSite , updateTruck , update truck");
+            String action = askInput("hello " + userName + ", please choose action from the following options and press enter:\n"
+                    + "createForm , updateForm , addSite ,addDriver ,addTruck , updateSite , updateTruck , update truck , showFormByDate");
 
             switch (action){
 
@@ -65,7 +65,9 @@ public class Service {
 
                 case "createForm": { transportService.createTransport(); break;}
 
-                //case "updateForm": {  transportService.updateTransport(); break;}
+                case "showFormByDate": { transportService.showTransportForm(); break;}
+
+                case "updateForm": {  transportService.updateTransport(); break;}
 
             }
         }

@@ -15,6 +15,34 @@ public class TransportForm {
     String truckLicenceNumber;
     List<TransportProductsDocument> transportProductsDocuments;
 
+    public String getDate() {
+        return date;
+    }
+
+    public String getDepartureTime() {
+        return departureTime;
+    }
+
+    public String getDriverId() {
+        return driverId;
+    }
+
+    public String[] getSource() {
+        return source;
+    }
+
+    public List<String[]> getDestinations() {
+        return destinations;
+    }
+
+    public String getTruckLicenceNumber() {
+        return truckLicenceNumber;
+    }
+
+    public List<TransportProductsDocument> getTransportProductsDocuments() {
+        return transportProductsDocuments;
+    }
+
     public TransportForm(String id, String date, String departureTime, String driverId, String[] source, List<String[]> destinations, String truckLicenceNumber) {
         this.id = id;
         this.date = date;
@@ -51,5 +79,32 @@ public class TransportForm {
 
     public void addDocument(String id, String[] destinationId, Dictionary<String, Integer> products) {
         transportProductsDocuments.add(new TransportProductsDocument(id,destinationId,products));
+    }
+
+    public void update(String id, String toChangeField, String newVal) {
+        switch (toChangeField) {
+
+            case "number": {
+                number = newVal;
+                break;
+            }
+            case "licenseType": {
+                licenseType = LicenseType.valueOf(newVal);
+                break;
+            }
+            case "model": {
+                model = newVal;
+                break;
+            }
+            case "weight": {
+                weight = newVal;
+                break;
+            }
+            case "maxWeight": {
+                maxWeight = newVal;
+                break;
+            }
+        }
+
     }
 }

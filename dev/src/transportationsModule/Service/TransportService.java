@@ -24,6 +24,7 @@ public class TransportService {
         // TODO: 06/05/2022   get employee facade throught emp' module
         employeefacade = new EMPLOYEEFACADE();
         this.transportsFacade = transportsFacade;
+        idgenarator = new IdGenerator();
 
     }
 
@@ -32,6 +33,7 @@ public class TransportService {
         transportSDTO.id = idgenarator.getId();
         transportSDTO.date = askInput("enter the transport date . for example 02/05/2022 ");
         transportSDTO.departureTime = askInput("enter the departure time. for example 13:20 ");
+        //get מחסנאים שעובדים באותו משמרת
         transportSDTO.driverId = askInput("choose the transport driver id from your drivers crew: " + transportsFacade.showDriversDetailsAvailable(transportSDTO.departureTime, transportSDTO.date));
         transportSDTO.truckLicensePlateId = askInput("choose the truck from your truck: " + transportsFacade.viewTrucks());//getTrucksByLicenseType(); //driverService.getDriversLicenceTypeByDriveId(transportDTO.driverid) )
         transportSDTO.source = askInput(2, "choose the source name and region from site list: " + transportsFacade.viewAllSites());
@@ -103,5 +105,38 @@ public class TransportService {
     }
 
 
+    public void showTransportForm() {
 
+        String date = askInput("enter date to pull all Transport Form:");
+
+
+        //transportForm.truck????
+        //\no good. needs Service objects???? tranportForm.source = siteService. askInput("choose the transport source from following: " + siteService.getSitesNames().toString())
+        List<String> transports = transportsFacade.showTransportByDate(date);
+        System.out.println(transports.toString());
+
+    }
+
+    public void updateTransport() {
+        String toMore = "Y";
+        String id = askInput("enter Transport Form Id to update:");
+        String transport = transportsFacade.getTransportById(id);
+
+        System.out.println(transport);
+
+        //transportForm.truck????
+        //\no good. needs Service objects???? tranportForm.source = siteService. askInput("choose the transport source from following: " + siteService.getSitesNames().toString())
+        while (toMore.equals("Y")) {
+            String toChangeField = askInput("enter the field you want to change:");
+            String newVal = askInput("enter the new val:");
+
+            transportsFacade.updateForm(id, toChangeField, newVal);
+
+            toMore = askInput("do you want to change more? Y/N");
+        }
+        System.out.println("Updated:");
+        System.out.println(transport);
+
+
+    }
 }

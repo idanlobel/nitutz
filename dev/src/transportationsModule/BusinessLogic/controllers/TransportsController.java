@@ -19,6 +19,10 @@ public class TransportsController {
         transportsRep = new TransportsRep();
     }
 
+    public void updateForm(String id, String toChangeField, String newVal) {
+        getFormsById(id).update(id,toChangeField,newVal);
+    }
+
     public void createTransport(TransportSDTO transportSDTO){
         // TODO: 06/05/2022
         //
@@ -30,15 +34,22 @@ public class TransportsController {
         transportsRep.addTransportForm(transportForm1);
     }
 
-    public List<String> getForms(){
-        List<String> formsIds=new ArrayList<>();
-        for (TransportForm tf: transportsRep.getTransportFormsCache()) {
-            formsIds.add(tf.getId());
-        }
-        return formsIds;
+//    public List<String> getForms(){
+//        List<String> formsIds=new ArrayList<>();
+//        for (TransportForm tf: transportsRep.getTransportFormsCache()) {
+//            formsIds.add(tf.getId());
+//        }
+//        return formsIds;
+//    }
+
+    public List<String> getFormsByDate(String date){
+
+        return transportsRep.getTransportFormsbyDate(date);
     }
 
-    public void updateForm(String transportForm){
-    }
 
+    public TransportForm getFormsById(String id) {
+        return transportsRep.getTransportFormById(id);
+
+    }
 }
