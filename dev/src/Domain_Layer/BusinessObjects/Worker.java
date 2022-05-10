@@ -8,16 +8,8 @@ public class Worker {
     private String password;
     String email_address;
     BankAccount bankAccount;
-
     EmploymentConditions employmentConditions;
-    static LinkedList<String> jobs = new LinkedList(Arrays.asList("cashier", "trucking", "store keeper", "steward", "director of procurement and logistics",
-            "driver"));
     LinkedList<String> workerJobs;
-
-    public static LinkedList<String> getJobs() {
-        return jobs;
-    }
-
 
     //Create a new worker
     public Worker(String name, int id, String password, String email_address, BankAccount bankAccount,
@@ -62,27 +54,19 @@ public class Worker {
     public void setEmploymentConditions(EmploymentConditions employmentConditions) {
         this.employmentConditions = employmentConditions;
     }
-
     public String getPassword() {
         return password;
     }
-
     public boolean passwordsMatch(String password){
         return this.password.equals(password);
     }
     public String toString(){
         String s =  "Name " + name + ", ID: " + id + ", Jobs: ";
-        for (String job : jobs){
+        for (String job : workerJobs){
             s+= job + " ,";
         }
         return (s.substring(0, s.length()-1) + "."); //removing the last ',' and adding a '.'
     }
-    //check if the job already exists
-    protected boolean hasJob(String job){
-        job = job.toLowerCase();
-        return jobs.contains(job);
-    }
-
     public String getName() {
         return name;
     }

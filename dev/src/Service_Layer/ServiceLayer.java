@@ -23,12 +23,8 @@ public class ServiceLayer {
     //all of these are HR methods
     public boolean addWorkerToWeeklySchedule(int callerID,int weekID,int day, int shift, int workerID) {
         try {
-            if (!workerController.isHR(callerID)) return false; //TODO:: change it later - deal with Response here.
             Worker worker = workerController.getWorker(workerID);
-            if (worker != null) {
-                return shiftsController.addWorkerToWeeklySchedule(weekID, day, shift, worker);
-            }
-            return false; //TODO:: change it later - deal with Response here.
+            return shiftsController.addWorkerToWeeklySchedule(weekID, day, shift, worker, callerID);
         }
         catch (Exception e){
             return false; //TODO:: change it later - deal with Response here.
@@ -36,11 +32,9 @@ public class ServiceLayer {
     }
     public boolean removeWorkerFromWeeklySchedule(int callerID,int weekID,int day, int shift, int workerID) {
         try {
-            if (!workerController.isHR(callerID)) return false; //TODO:: change it later - deal with Response here.
             Worker worker = workerController.getWorker(workerID);
-            if (worker != null) {
-                return shiftsController.removeWorkerFromWeeklySchedule(weekID, day, shift, worker);
-            } else return false; //TODO:: change it later - deal with Response here.
+            return shiftsController.removeWorkerFromWeeklySchedule(weekID, day, shift, worker,callerID);
+            //TODO:: change it later - deal with Response here.
         }
         catch (Exception e){
             return false; //TODO:: change it later - deal with Response here.
@@ -48,12 +42,8 @@ public class ServiceLayer {
     }
     public boolean assignWorkerToJobInShift(int callerID,int weekID,int day, int shift, int workerID, String job) {
         try {
-            if (!workerController.isHR(callerID)) return false; //TODO:: change it later - deal with Response here.
             Worker worker = workerController.getWorker(workerID);
-            if (worker != null) {
-                return shiftsController.assignWorkerToJobInShift(weekID, day, shift, worker, job);
-            }
-            return false; //TODO:: change it later - deal with Response here.
+            return shiftsController.assignWorkerToJobInShift(weekID, day, shift, worker, job,callerID);
         }
         catch (Exception e){
             return false; //TODO:: change it later - deal with Response here.
@@ -61,11 +51,8 @@ public class ServiceLayer {
     }
     public boolean removeWorkerFromJobInShift(int callerID,int weekID,int day, int shift, int workerID,String job) {
         try {
-            if (!workerController.isHR(callerID)) return false; //TODO:: change it later - deal with Response here.
             Worker worker = workerController.getWorker(workerID);
-            if (worker != null) {
-                return shiftsController.removeWorkerFromJobInShift(weekID, day, shift, worker, job);
-            } else return false; //TODO:: change it later - deal with Response here.
+            return shiftsController.removeWorkerFromJobInShift(weekID, day, shift, worker, job,callerID);
         }
         catch (Exception e){
             return false; //TODO:: change it later - deal with Response here.
@@ -73,11 +60,8 @@ public class ServiceLayer {
     }
     public boolean setShiftManagerToWeeklySchedule(int callerID,int weekID,int day, int shift, int workerID) {
         try {
-            if (!workerController.isHR(callerID)) return false; //TODO:: change it later - deal with Response here.
             Worker worker = workerController.getWorker(workerID);
-            if (worker != null) {
-                return shiftsController.setShiftManagerToWeeklySchedule(weekID, day, shift, worker);
-            } else return false; //TODO:: change it later - deal with Response here.
+            return shiftsController.setShiftManagerToWeeklySchedule(weekID, day, shift, worker,callerID);
         }
         catch (Exception e){
             return false; //TODO:: change it later - deal with Response here.
@@ -86,9 +70,7 @@ public class ServiceLayer {
     public WeeklyScheduleSL viewWeeklySchedule(int callerID, int weekID){
         //TODO: FIX THIS - A LOT OF NULL POINTER EXCEPTIONS
        try {
-           if (!workerController.isHR(callerID))
-               return null;//TODO:: we actually need to throw exceptions or responses like we did last year
-           Weekly_Schedule weekly_schedule = shiftsController.getWeeklySchedule(weekID);
+           Weekly_Schedule weekly_schedule = shiftsController.getWeeklyScheduleSL(weekID, callerID);
            if (weekly_schedule != null) {//if it was actually created at all
                ShiftSL[][] shiftSLS = new ShiftSL[5][2];
                Shift[][] shifts = weekly_schedule.getSchedule();
@@ -140,15 +122,11 @@ public class ServiceLayer {
     }
     public List<WorkerSL> showShiftWorkers(int callerID,int weekID, int day, int shift){
         try {
-            if (!workerController.isHR(callerID))
-                return null;//TODO:: change it later - deal with Response here.
             List<WorkerSL> workerSLS = new LinkedList<>();
-            List<Worker> workers = shiftsController.showShiftWorkers(weekID, day, shift);
-            if (workers != null) {
-                for (Worker worker : workers) {
-                    WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
-                    workerSLS.add(workerSL);
-                }
+            List<Worker> workers = shiftsController.showShiftWorkers(weekID, day, shift,callerID);//todo check if it may return null list//should be an empty list instead
+            for (Worker worker : workers) {
+                WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
+                workerSLS.add(workerSL);
             }
             return workerSLS;
         }
@@ -158,13 +136,8 @@ public class ServiceLayer {
     }
     public String getShiftManagerInfo (int callerID,int weekID, int day, int shift){
         try {
-            if (!workerController.isHR(callerID))
-                return "Only an HR can perform this action.";//TODO:: we actually need to throw exceptions or responses like we did last year
-            Worker worker = shiftsController.getShiftManager(weekID, day, shift);
-            if (worker != null) {
-                return worker.getName() + ": " + worker.getId();
-            }
-            return "There's currently no shift manager.";
+            Worker worker = shiftsController.getShiftManager(weekID, day, shift,callerID);
+            return worker.getName() + ": " + worker.getId();
         }
         catch(Exception e){
             return e.getMessage(); //TODO:: change it later - deal with Response here.
@@ -172,17 +145,14 @@ public class ServiceLayer {
     }
     public boolean createWeeklySchedule(int callerID,int weekID) {
         try {
-            if (!workerController.isHR(callerID))return false;
-            return shiftsController.createWeeklySchedule(weekID);
+            return shiftsController.createWeeklySchedule(weekID,callerID);
         }catch (Exception e){
             return false;
         }
-
     }
     public boolean addJobs(int callerID, String job){
         try {
-            if(!workerController.isHR(callerID))return false;
-            return workerController.addJob(job);
+            return workerController.addJob(job,callerID);
         }catch (Exception e){
             return false;
         }
@@ -190,17 +160,13 @@ public class ServiceLayer {
 
     public List<WorkerSL> showAllWorkers(int callerID){
         try {
-            if (!workerController.isHR(callerID))return null; //TODO:: we actually need to throw exceptions or responses like we did last year
             List<WorkerSL> workerSLS = new LinkedList<>();
-            List<Worker> workers = workerController.getWorkers();
-            if(workers != null) {
-                for (Worker worker : workers) {
-                    WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
-                    workerSLS.add(workerSL);
-                }
-                return workerSLS;
+            List<Worker> workers = workerController.getWorkers(callerID);
+            for (Worker worker : workers) {
+                WorkerSL workerSL = new WorkerSL(worker.getName(), worker.getId(), worker.getWorkerJobs());
+                workerSLS.add(workerSL);
             }
-            return null;
+            return workerSLS;
         }catch (Exception e){
             return null;
         }
@@ -210,8 +176,7 @@ public class ServiceLayer {
     public boolean registerAWorker(int callerID, String name, int id, String password, String email_address, int bankID,
                                    int branch, int salary){
         try{
-            if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
-            return workerController.addWorker(name, id, password, email_address, bankID, branch, salary);
+            return workerController.addWorker(name, id, password, email_address, bankID, branch, salary, callerID);
         }catch (Exception e){
             return false;
         }
@@ -220,8 +185,7 @@ public class ServiceLayer {
 
     public boolean removeAWorker(int callerID, int workerID){
         try{
-            if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
-            return workerController.deleteWorker(workerID);
+            return workerController.deleteWorker(workerID, callerID);
         }catch (Exception e){
             return false;
         }
@@ -241,8 +205,7 @@ public class ServiceLayer {
 
     public boolean addJobForAWorker(int callerID, int workerID, String job){
         try{
-            if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
-            return workerController.addJobForAWorker(workerID, job);
+            return workerController.addJobForAWorker(workerID, job, callerID);
         }catch (Exception e){
             return false;
         }
@@ -251,8 +214,7 @@ public class ServiceLayer {
 
     public boolean removeJobFromAWorker(int callerID, int workerID, String job){
         try{
-            if (!workerController.isHR(callerID))return false; //TODO:: we actually need to throw exceptions or responses like we did last year
-            return workerController.removeJobFromAWorker(workerID, job);
+            return workerController.removeJobFromAWorker(workerID, job, callerID);
         }catch (Exception e){
             return false;
         }
@@ -289,21 +251,16 @@ public class ServiceLayer {
     //the following method can be used by the HR as well:
     public WorkerScheduleSL viewWorkerSchedule(int workerID){
         try {
-            Worker_Schedule worker_schedule = shiftsController.getWorkerSchedule(workerID);
-            if(worker_schedule != null) {
-                return new WorkerScheduleSL(worker_schedule.getSchedule());
-            }
-            return null;//TODO:: change it later - deal with Response here.
+            Worker_Schedule worker_schedule = shiftsController.getWorkerSchedule(workerID);//todo see if it could return null, needs to be an exception if non existent
+            return new WorkerScheduleSL(worker_schedule.getSchedule());
         }catch (Exception e){
             return null;
         }
-
     }
 
     public boolean isShiftReady(int callerID, int weekID, int day, int shift){
         try {
-            if (!workerController.isHR(callerID)) return false; //TODO:: change it later - deal with Response here.
-            return shiftsController.isShiftIsReady(weekID, day, shift);
+            return shiftsController.isShiftIsReady(weekID, day, shift,callerID);
         }
         catch(Exception e){
             return false; //TODO:: change it later - deal with Response here.
@@ -312,8 +269,7 @@ public class ServiceLayer {
 
     public boolean isWeeklyScheduleReady(int callerID, int weekID){
         try {
-            if (!workerController.isHR(callerID)) return false; //TODO:: change it later - deal with Response here.
-            return shiftsController.isWeeklyScheduleReady(weekID);
+            return shiftsController.isWeeklyScheduleReady(weekID,callerID);
         }
         catch(Exception e){
             return false; //TODO:: change it later - deal with Response here.

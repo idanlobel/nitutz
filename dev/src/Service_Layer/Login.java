@@ -39,15 +39,17 @@ public class Login {
 
     public boolean isAUser() {
         WorkerController workerController = WorkerController.getInstance();
-        workerID = workerController.containsWorker(id, password);
+        workerID = workerController.idPassMatch(id, password);
         if (workerID == -1) {
             workerID = workerController.isHR(id, password);
         }
-
         if(workerID == -1)
             return false;
-
-        name = workerController.getWorkerName(id);
+        try {
+            name = workerController.getWorkerName(id);
+        }catch (Exception e){
+            return false;
+        }
         return true;
     }
 

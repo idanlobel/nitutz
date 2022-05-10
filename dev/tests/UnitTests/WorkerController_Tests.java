@@ -17,39 +17,39 @@ public class WorkerController_Tests {
     @Test
     void add_Worker_Success() throws Exception {
         assertEquals(true, workerController.addWorker("Amihai", 6, "AB13", "amihai@gmail.com",
-                306721, 067, 50000));
+                306721, 067, 50000,3));
         assertEquals(true, workerController.addWorker("Ori", 27, "Orkal57", "Ori@gmail.com",
-                387562, 22, 50000));
+                387562, 22, 50000,3));
     }
 
     @Test
     void add_Worker_Fail() throws Exception {
         assertEquals(false, workerController.addWorker("Amihai", 1, "AB13", "amihai@gmail.com",
-                306721, 067, 50000));
+                306721, 067, 50000,3));
         assertEquals(false, workerController.addWorker("Ori", 2, "Orkal57", "Ori@gmail.com",
-                387562, 22, 50000));
+                387562, 22, 50000,3));
     }
 
     //#2:
     @Test
     void delete_Worker_Success() throws Exception {
-        assertEquals(true, workerController.deleteWorker(1));
+        assertEquals(true, workerController.deleteWorker(1,3));
     }
 
     @Test
     void delete_Worker_Failure() throws Exception {
-        assertEquals(false, workerController.deleteWorker(300));
+        assertEquals(false, workerController.deleteWorker(300,3));
     }
 
     //#3:
     @Test
     void addJob_Success() throws Exception {
-        assertEquals(true, workerController.addJob("CLEANER"));
+        assertEquals(true, workerController.addJob("CLEANER",3));
     }
 
     @Test
     void addJob_Failure() throws Exception {
-        assertEquals(false, workerController.addJob("cashier"));
+        assertEquals(false, workerController.addJob("cashier",3));
     }
 
     //#4:
@@ -72,27 +72,27 @@ public class WorkerController_Tests {
     //#5:
     @Test
     void addJobForAWorker_Success() throws Exception {
-        assertEquals(true, workerController.addJobForAWorker(3, "cashier"));
+        assertEquals(true, workerController.addJobForAWorker(3, "cashier",3));
     }
 
     @Test
     void addJobForAWorker_Failure() throws Exception {
-        assertEquals(false, workerController.addJobForAWorker(2, "driver"));
-        assertEquals(false, workerController.addJobForAWorker(99, "driver"));
-        assertEquals(false, workerController.addJobForAWorker(2, "pizza maker"));
+        assertEquals(false, workerController.addJobForAWorker(2, "driver",3));
+        assertEquals(false, workerController.addJobForAWorker(99, "driver",3));
+        assertEquals(false, workerController.addJobForAWorker(2, "pizza maker",3));
     }
 
     //#6:
     @Test
     void removeJobFromAWorker_Success() throws Exception {
-        assertEquals(true, workerController.removeJobFromAWorker(2, "driver"));
+        assertEquals(true, workerController.removeJobFromAWorker(2, "driver",3));
     }
 
     @Test
     void removeJobFromAWorker_Failure() throws Exception {
-        assertEquals(false, workerController.removeJobFromAWorker(2, "cashier"));
-        assertEquals(false, workerController.removeJobFromAWorker(99, "driver"));
-        assertEquals(false, workerController.removeJobFromAWorker(2, "pizza maker"));
+        assertEquals(false, workerController.removeJobFromAWorker(2, "cashier",3));
+        assertEquals(false, workerController.removeJobFromAWorker(99, "driver",3));
+        assertEquals(false, workerController.removeJobFromAWorker(2, "pizza maker",3));
     }
 
     @AfterEach

@@ -29,13 +29,13 @@ public class ShiftsController_Tests {
     //#2:
     @Test
     void createWeeklySchedule_Success() throws Exception {
-        assertEquals(true, shiftsController.createWeeklySchedule(2));
-        assertEquals(true, shiftsController.createWeeklySchedule(3));
+        assertEquals(true, shiftsController.createWeeklySchedule(2,3));
+        assertEquals(true, shiftsController.createWeeklySchedule(3,3));
     }
 
     @Test
     void createWeeklySchedule_Failure() throws Exception {
-        assertEquals(false, shiftsController.createWeeklySchedule(1));
+        assertEquals(false, shiftsController.createWeeklySchedule(1,3));
     }
 
     //#3:

@@ -125,7 +125,6 @@ public class Shift {
     public boolean assignWorkerToJob(Worker worker, String job) throws Exception {
         try {
             if (!workers.contains(worker)) throw new Exception("There's no such worker in this shift");
-            if (!worker.hasJob(job))throw new Exception("There worker can't work in the specified job (he doesn't have it)");
             for (String job2 : jobToWorker.keySet()) {
                 if (jobToWorker.get(job2).contains(worker.getId())) {
                     for (int i = 0; i < jobToWorker.get(job2).size(); i++) {
