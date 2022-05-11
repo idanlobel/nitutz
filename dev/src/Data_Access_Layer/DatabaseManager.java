@@ -7,6 +7,7 @@ public class DatabaseManager {
         Connection conn = null;
         try {
             // db parameters
+            //"jdbc:sqlite:C:\\Users\\amiha\\Documents\\adss_group_j\\dev\\superlee.db"
             String url = "jdbc:sqlite:C:\\Users\\Ori\\Desktop\\uni\\nitutz\\adss_group_j\\dev\\superlee.db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);

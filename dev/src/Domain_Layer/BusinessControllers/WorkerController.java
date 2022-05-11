@@ -155,4 +155,17 @@ public class WorkerController {
             throw new Exception(e.getMessage());
         }
     }
+
+    public List<Worker> getAllDrivers() throws Exception {
+        try {
+            List<Worker> driversList = workers.getAllWorkers();
+            for(Worker w: driversList){
+                if(!w.getWorkerJobs().contains("driver")) driversList.remove(w);
+            }
+            return driversList;
+        }
+        catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
 }

@@ -207,4 +207,34 @@ public class ShiftsController {
             throw new Exception(e);
         }
     }
+
+    public List<Worker> getDriversInShift(int weekID, int day, int shift) throws Exception {
+        try {
+            List<Worker> drivers = weeklyScheduleDAO.get(weekID).getShift(day, shift).getShiftWorkers();
+            HashMap<String, List<Integer>> jobs = weeklyScheduleDAO.get(weekID).getShift(day, shift).getJobToWorker();
+            List<Integer> driverIds = jobs.get("driver");
+            for(Worker w: drivers){
+                if(!driverIds.contains(w.getId())) drivers.remove(w);
+            }
+            return drivers;
+        }
+        catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public List<Worker> getStoreKeepersInShift(int weekID, int day, int shift) throws Exception {
+        try {
+            List<Worker> storeKeepers = weeklyScheduleDAO.get(weekID).getShift(day, shift).getShiftWorkers();
+            HashMap<String, List<Integer>> jobs = weeklyScheduleDAO.get(weekID).getShift(day, shift).getJobToWorker();
+            List<Integer> storeKeepersIds = jobs.get("store keeper");
+            for(Worker w: storeKeepers){
+                if(!storeKeepersIds.contains(w.getId())) storeKeepers.remove(w);
+            }
+            return storeKeepers;
+        }
+        catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
 }
