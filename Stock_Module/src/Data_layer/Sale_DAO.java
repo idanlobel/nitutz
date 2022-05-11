@@ -1,17 +1,41 @@
 package Data_layer;
 
+import busniess_layer.Report;
+import busniess_layer.Sale;
+
 import java.sql.*;
+import java.util.WeakHashMap;
 
 public class Sale_DAO {
 
     private String table_name="Sale";
     private String connection_string;
-
+    private WeakHashMap<Integer, Sale> salesMap;
 
     public Sale_DAO(String connection_string)
     {
         this.connection_string=connection_string;
         create_table(connection_string);
+        salesMap=new WeakHashMap<>();
+    }
+    public Sale getSale(int id){
+        Sale s= salesMap.get(id);
+        if(s==null)
+            s=readSale(id);
+        return s;
+    }
+
+    private Sale readSale(int id) {
+        String sql = "SELECT * FROM "+table_name+ "WHERE id="+id;
+
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(sql);
+            return (Sale) res;
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     public Connection connect() {

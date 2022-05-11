@@ -1,17 +1,43 @@
 package Data_layer;
 
+import busniess_layer.Periodic_Order;
+import busniess_layer.Products;
+import busniess_layer.Report;
+
 import java.sql.*;
+import java.util.WeakHashMap;
 
 public class Report_DAO {
 
     private String table_name="Report";
     private String connection_string;
-
+    private WeakHashMap<Integer, Report> reportsMap;
 
     public Report_DAO(String connection_string)
     {
         this.connection_string=connection_string;
         create_table(connection_string);
+        reportsMap=new WeakHashMap<>();
+    }
+
+    public Report getReport(int id){
+        Report r= reportsMap.get(id);
+        if(r==null)
+            r=readReport(id);
+        return r;
+    }
+
+    private Report readReport(int id) {
+        String sql = "SELECT * FROM "+table_name+ "WHERE id="+id;
+
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(sql);
+            return (Report) res;
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     public Connection connect() {

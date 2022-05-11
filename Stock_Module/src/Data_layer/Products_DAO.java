@@ -1,17 +1,43 @@
 package Data_layer;
+import busniess_layer.Product;
+import busniess_layer.Products;
+
 import java.sql.*;
+import java.util.Locale;
+import java.util.WeakHashMap;
 
 public class Products_DAO {
 
     private String table_name="Products";
     private String connection_string;
-
+    private WeakHashMap<Long, Products> productsMap;
 
     public Products_DAO(String connection_string)
     {
         this.connection_string=connection_string;
         connect();
         create_table(connection_string);
+        productsMap=new WeakHashMap<>();
+    }
+
+    public Products getProducts(long catalog_number){
+        Products p= productsMap.get(catalog_number);
+        if(p==null)
+            p=readProducts(catalog_number);
+        return p;
+    }
+
+    private Products readProducts(long catalog_number) {
+        String sql = "SELECT * FROM "+table_name+ "WHERE catalog_number="+catalog_number;
+
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(sql);
+            return (Products) res;
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     public Connection connect() {

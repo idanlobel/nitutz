@@ -46,7 +46,7 @@ public class Stock {
                 added = true;
                 for(Product p : new_items)
                 {
-                    dal_controller.insert_product(p.get_id(),p.getName(),p.getLocation().toString(),p.getcostprice(),p.getsoldprice(),p.getExpire_date().toString(),p.isBroken(),p.getDelivery_date(),p.getSell_date(),p.isSold());
+                    dal_controller.insert_product(p.get_id(),p.getName(),p.getLocation().toString(),p.getcostprice(),p.getsoldprice(),p.getExpire_date().toString(),p.isBroken(),p.getDelivery_date(),p.getSell_date(),p.isSold(),products.getCatalog_number());
                 }
             }
         }
@@ -58,7 +58,7 @@ public class Stock {
             List<Product> new_items=products.getProduct_list();
             for(Product p: new_items)
             {
-                dal_controller.insert_product(p.get_id(),p.getName(),p.getLocation().toString(),p.getcostprice(),p.getsoldprice(),p.getExpire_date().toString(),p.isBroken(),p.getDelivery_date(),p.getSell_date(),p.isSold());
+                dal_controller.insert_product(p.get_id(),p.getName(),p.getLocation().toString(),p.getcostprice(),p.getsoldprice(),p.getExpire_date().toString(),p.isBroken(),p.getDelivery_date(),p.getSell_date(),p.isSold(),products.getCatalog_number());
             }
 
 

@@ -47,9 +47,9 @@ public  class DAL_controller {
 //        }
 //    }
 
-    public void insert_product(int id,String name,String location, double cost,double sell_price , String expiry, boolean borken, String delivery_date, String sold_date, boolean is_sold)
+    public void insert_product(int id,String name,String location, double cost,double sell_price , String expiry, boolean borken, String delivery_date, String sold_date, boolean is_sold,long catalog_number)
     {
-        this.product_table.insert(id,name,location,cost,sell_price,expiry,borken,delivery_date,sold_date,is_sold);
+        this.product_table.insert(id,name,location,cost,sell_price,expiry,borken,delivery_date,sold_date,is_sold,catalog_number);
     }
 
 

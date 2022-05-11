@@ -1,18 +1,44 @@
 package Data_layer;
 
+import busniess_layer.Periodic_Order;
+import busniess_layer.Product;
+import busniess_layer.Products;
+
 import java.sql.*;
+import java.util.WeakHashMap;
 
 public class Periodic_Order_DAO {
 
 
     private String table_name="Periodic_Order";
     private String connection_string;
-
+    private WeakHashMap<Integer, Periodic_Order> periodicOrdersMap;
 
     public Periodic_Order_DAO(String connection_string)
     {
         this.connection_string=connection_string;
         create_table(connection_string);
+        periodicOrdersMap=new WeakHashMap<>();
+    }
+
+    public Periodic_Order getPeriodicOrder(int id){
+        Periodic_Order p= periodicOrdersMap.get(id);
+        if(p==null)
+            p=readPeriodicOrder(id);
+        return p;
+    }
+
+    private Periodic_Order readPeriodicOrder(int id) {
+        String sql = "SELECT * FROM "+table_name+ "WHERE id="+id;
+
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(sql);
+            return (Periodic_Order) res;
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     public Connection connect() {

@@ -1,17 +1,41 @@
 package Data_layer;
 
+import busniess_layer.Product;
+
 import java.sql.*;
+import java.util.WeakHashMap;
 
 public class Product_DAO {
 
     private String table_name="Product";
     private String connection_string;
-
+    private WeakHashMap<Integer, Product> productMap;
 
     public Product_DAO(String connection_string)
     {
         this.connection_string=connection_string;
         create_table(connection_string);
+        productMap=new WeakHashMap<>();
+    }
+
+    public Product getProduct(int id){
+        Product p= productMap.get(id);
+        if(p==null)
+            p=readProduct(id);
+        return p;
+    }
+
+    private Product readProduct(int id) {
+        String sql = "SELECT * FROM "+table_name+ "WHERE id="+id;
+
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(sql);
+            return (Product) res;
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     public Connection connect() {
@@ -50,7 +74,8 @@ public class Product_DAO {
                 + " expire_date text,\n"
                 + " delivery_date text,\n"
                 + " sell_date text,\n"
-                + " sold boolean\n"
+                + " sold boolean, \n"
+                + "catalog_number Long FOREIGN Key Rreferences Products(catalog_number), \n"
                 + ");";
 
         try{
@@ -63,8 +88,8 @@ public class Product_DAO {
 
     }
 
-    public void insert(int id,String name,String location, Double cost_price,Double sell_price,String expire,boolean broken, String delivery_date,String sold_date, boolean sold){
-        String sql = "INSERT INTO Product(id, name, location, cost_price, sell_price, broken, expire_date, delivery_date, sell_date, sold) VALUES(?,?,?,?,?,?,?,?,?,?)";
+    public void insert(int id,String name,String location, Double cost_price,Double sell_price,String expire,boolean broken, String delivery_date,String sold_date, boolean sold, long catalog_number){
+        String sql = "INSERT INTO Product(id, name, location, cost_price, sell_price, broken, expire_date, delivery_date, sell_date, sold, catalog_number) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);
@@ -80,6 +105,7 @@ public class Product_DAO {
             pstmt.setString(8,delivery_date);
             pstmt.setString(9,sold_date);
             pstmt.setBoolean(10,sold);
+            pstmt.setLong(11,catalog_number);
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
