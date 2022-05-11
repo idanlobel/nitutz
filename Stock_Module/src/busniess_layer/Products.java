@@ -16,7 +16,7 @@ public class Products {
     private String sub_sub_category;
     private int sold_quantity;
     private int min_quantity;
-    private Dictionary<String,Double> prices_history;
+    private List<ProductPrice> prices_history;
     private List<Integer> sales_history;
     private long catalog_number;
     private String name;
@@ -35,8 +35,9 @@ public class Products {
         this.quantity=shelf_quantity+storage_quantity;
         this.manufactorer=manufactorer;
         this.main_category=category;
-        this.prices_history=new Hashtable<>();
-        this.prices_history.put(LocalDate.now().toString(),sell_price);
+        this.prices_history=new LinkedList<>();
+        ProductPrice originalPrice=new ProductPrice(this.catalog_number,this.current_sell_price,LocalDate.now().toString(),null);
+        this.prices_history.add(originalPrice);
         this.current_sell_price=sell_price;
         this.overall_sale_percentage=0.0;
         this.min_quantity=10;
@@ -91,7 +92,9 @@ public class Products {
     {
         Double price_after_sale=this.current_sell_price-(this.current_sell_price*precentage);
         this.current_sell_price=price_after_sale;
-        this.prices_history.put(start_date.toString(),price_after_sale);
+        //pls update the previous price end date to date.now
+        ProductPrice current_price=new ProductPrice(this.catalog_number,this.current_sell_price,start_date,null);
+        this.prices_history.add(current_price);
         this.overall_sale_percentage=this.overall_sale_percentage+precentage;
         update_prices(price_after_sale);
         this.sales_history.add(sale_id);
@@ -102,7 +105,9 @@ public class Products {
     {
         Double price_before_sale=this.current_sell_price/(1.0-percentage);
         this.current_sell_price=price_before_sale;
-        this.prices_history.put(LocalDate.now().toString(),price_before_sale);
+        ProductPrice lastPrice=this.prices_history.get(this.prices_history.size()-1);
+        lastPrice.setEnd_date(LocalDate.now().toString());
+        ProductPrice newPrice=new ProductPrice(this.catalog_number,this.current_sell_price,LocalDate.now().toString(),null);
         this.overall_sale_percentage=this.overall_sale_percentage-percentage;
         update_prices(price_before_sale);
     }
@@ -112,10 +117,7 @@ public class Products {
         return this.current_sell_price;
     }
 
-    public Double get_by_date(String date)
-    {
-        return this.prices_history.get(date);
-    }
+
     public String getName(){return this.name;}
     public String getManufactorer()
     {

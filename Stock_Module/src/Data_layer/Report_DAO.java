@@ -34,7 +34,7 @@ public class Report_DAO {
             Connection conn = DriverManager.getConnection(connection_string);
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery(sql);
-            return (Report) res;
+            return res.getObject(1,Report.class);
         } catch (SQLException e) {
             return null;
         }

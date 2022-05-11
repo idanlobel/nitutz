@@ -3,6 +3,8 @@ import busniess_layer.Product;
 import busniess_layer.Products;
 
 import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.WeakHashMap;
 
@@ -34,12 +36,30 @@ public class Products_DAO {
             Connection conn = DriverManager.getConnection(connection_string);
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery(sql);
-            return (Products) res;
+            return res.getObject(1,Products.class);
         } catch (SQLException e) {
             return null;
         }
     }
 
+    private List<Product> readAllProductInstances(long catalog_number) {
+        String sql = "SELECT * FROM Product WHERE catalog_number="+catalog_number;
+
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(sql);
+            List<Product> myProductList=new LinkedList<>();
+            ResultSetMetaData meta = res.getMetaData();
+            while(res.next()){
+                for(int i=1;i<=meta.getColumnCount();i++)
+                    myProductList.add(res.getObject(i,Product.class));
+            }
+            return myProductList;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
     public Connection connect() {
         Connection conn = null;
         try {
