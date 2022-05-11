@@ -32,7 +32,7 @@ public class Product_DAO {
             Connection conn = DriverManager.getConnection(connection_string);
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery(sql);
-            return (Product) res;
+            return res.getObject(1,Product.class);
         } catch (SQLException e) {
             return null;
         }

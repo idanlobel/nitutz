@@ -10,8 +10,34 @@ public  class DAL_controller {
     private Sale_DAO sale_table;
     private Periodic_Order_DAO periodic_order_table;
 
+    public PricesHistoryDAO getPricesHistoryDAO() {
+        return pricesHistoryDAO;
+    }
 
-    public DAL_controller()
+    private PricesHistoryDAO pricesHistoryDAO;
+    private static DAL_controller instance=new DAL_controller();
+
+    public Products_DAO getProducts_table() {
+        return products_table;
+    }
+
+    public Product_DAO getProduct_table() {
+        return product_table;
+    }
+
+    public Report_DAO getReport_table() {
+        return report_table;
+    }
+
+    public Sale_DAO getSale_table() {
+        return sale_table;
+    }
+
+    public Periodic_Order_DAO getPeriodic_order_table() {
+        return periodic_order_table;
+    }
+
+    private DAL_controller()
     {
 
        // this.connection_string="jdbc:sqlite:"+System.getProperty("user.dir")+"\\..\\dev\\database.db";
@@ -22,8 +48,11 @@ public  class DAL_controller {
         this.report_table=new Report_DAO(connection_string);
         sale_table=new Sale_DAO(connection_string);
         periodic_order_table=new Periodic_Order_DAO(connection_string);
+        pricesHistoryDAO=new PricesHistoryDAO(connection_string);
     }
-
+    public static DAL_controller getInstance(){
+        return instance;
+    }
 
 
 //    public void connect() {

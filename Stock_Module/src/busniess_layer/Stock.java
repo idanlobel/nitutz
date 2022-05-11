@@ -17,7 +17,7 @@ public class Stock {
         this.products_list = new ArrayList<>();
         this.sales_list = new ArrayList<>();
         this.periodic_orders_list=new ArrayList<>();
-        dal_controller=new DAL_controller();
+        //dal_controller=new DAL_controller();
     }
 
 

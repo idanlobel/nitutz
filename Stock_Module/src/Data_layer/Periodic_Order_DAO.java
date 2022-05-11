@@ -35,7 +35,7 @@ public class Periodic_Order_DAO {
             Connection conn = DriverManager.getConnection(connection_string);
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery(sql);
-            return (Periodic_Order) res;
+            return res.getObject(1,Periodic_Order.class);
         } catch (SQLException e) {
             return null;
         }
@@ -70,7 +70,7 @@ public class Periodic_Order_DAO {
         String sql = "CREATE TABLE IF NOT EXISTS Periodic_Order (\n"
                 + " id integer PRIMARY KEY,\n"
                 + " day_of_week text,\n"
-                + " catalog_number long,\n"
+                + " catalog_number Long FOREIGN KEY REFERENCES Products(catalog_number),\n"
                 + " quantity integer,\n"
                 + " manufacturer text,\n"
                 + " main_category text,\n"
