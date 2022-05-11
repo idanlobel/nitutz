@@ -4,6 +4,11 @@ import java.util.Date;
 
 public class EmploymentConditions {
     int salary;
+
+    public Date getRecruitmentDate() {
+        return recruitmentDate;
+    }
+
     Date recruitmentDate;
 
     public EmploymentConditions(int salary, Date recruitmentDate) {

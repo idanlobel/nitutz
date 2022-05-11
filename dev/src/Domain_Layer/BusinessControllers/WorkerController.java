@@ -109,8 +109,9 @@ public class WorkerController {
         }
     }
 
-    public boolean editWorker(String name, String password, String email_address, int bankID, int branch, int salary, int workerID) throws Exception {
+    public boolean editWorker(String name, String password, String email_address, int bankID, int branch, int salary, int workerID, int callerID) throws Exception {
         try {
+            if (workers.readHR().getId()!=callerID)throw new Exception("only HR can edit worker");
             Worker worker = getWorker(workerID);
             if (!name.equals("")) worker.setName(name);
             if (!password.equals("")) worker.setPassword(password);
@@ -131,6 +132,7 @@ public class WorkerController {
             Worker worker = getWorker(workerID);
             if(jobsDAO.exists(job.toLowerCase()) && !worker.getWorkerJobs().contains(job.toLowerCase())){
                 worker.getWorkerJobs().add(job.toLowerCase());
+                workers.update(worker);
                 return true;
             }
             throw new Exception("This job is problematic");
@@ -145,6 +147,7 @@ public class WorkerController {
         try {
             if (worker.getWorkerJobs().contains(job.toLowerCase())){
                 worker.getWorkerJobs().remove(job.toLowerCase());
+                workers.update(worker);
                 return true;
             }
             return false;

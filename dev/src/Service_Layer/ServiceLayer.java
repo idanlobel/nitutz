@@ -168,6 +168,7 @@ public class ServiceLayer {
             }
             return workerSLS;
         }catch (Exception e){
+            System.out.println(e.getMessage());
             return null;
         }
 
@@ -192,10 +193,10 @@ public class ServiceLayer {
 
     }
 
-    public boolean editAWorker(/*int callerID, */ String name, String password, String email_address, int bankID,
+    public boolean editAWorker(int callerID, String name, String password, String email_address, int bankID,
                                    int branch, int salary, int workerID){
         try{
-            return workerController.editWorker(name, password, email_address, bankID, branch, salary, workerID);
+            return workerController.editWorker(name, password, email_address, bankID, branch, salary, workerID,callerID);
 
         }catch (Exception e){
             return false;

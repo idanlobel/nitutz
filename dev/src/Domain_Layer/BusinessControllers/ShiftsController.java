@@ -58,6 +58,7 @@ public class ShiftsController {
             if (WorkerController.getInstance().isHR(workerID) && shiftType == 1 && present == true)
                 throw new Exception("The HR can only work in morning shifts");//The HR can only work in morning shifts
             worker_schedule.editShiftPresence(present, day, shiftType);
+            workerScheduleDAO.update(worker_schedule);
             return true;
         }
         catch (Exception e){

@@ -56,17 +56,17 @@ public class WorkerController_Tests {
     @Test
     void edit_Worker_Success() throws Exception {
         assertEquals(true, workerController.editWorker("", "", "yossi9700@gmail.com",
-                0, 0, 500, 2));
+                0, 0, 500, 2,3));
         assertEquals(true, workerController.editWorker("", "", "Ori77@gmail.com",
-                0, 0, 100000, 3));
+                0, 0, 100000, 3,3));
     }
 
     @Test
     void edit_Worker_Fail() throws Exception {
         assertEquals(false, workerController.editWorker("Amihai", "", "",
-                0, 0, 5000, 900));
+                0, 0, 5000, 900,3));
         assertEquals(false, workerController.editWorker("Ori", "paprika59", "",
-                0, 2222, 50, 99));
+                0, 2222, 50, 99,3));
     }
 
     //#5:

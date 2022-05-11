@@ -1,6 +1,7 @@
 package src.PresentationLayer;
 
 
+import src.Data_Access_Layer.DatabaseManager;
 import src.Service_Layer.*;
 
 import java.util.Arrays;
@@ -36,7 +37,6 @@ public class Main {
         //                    16 - removeAWorker, 17 - editAWorker,
         //                    18 - addJobForAWorker, 19 - removeJobFromAWorker
         //                    99 - exit the program: hence log-out
-
         int choice = 0;
         Scanner sc;
         while(choice != 99) {
@@ -248,7 +248,7 @@ public class Main {
                             "if you don't want to update something, just hit enter (without typing anything) or " +
                             "'0' if you're required to put in a number: ");
                     List<Object> ewD = editAWorker();
-                    if(serviceLayer.editAWorker(ewD.get(0) + "", ewD.get(1) + "",
+                    if(serviceLayer.editAWorker(3,ewD.get(0) + "", ewD.get(1) + "",
                             ewD.get(2) + "", (int) ewD.get(3), (int) ewD.get(4), (int) ewD.get(5), (int) ewD.get(6)))
                         System.out.println("The worker has been updated successfully");
                     else System.out.println("The worker doesn't exist in the system, please make sure that you've " +

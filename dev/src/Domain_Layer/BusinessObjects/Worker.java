@@ -6,6 +6,9 @@ public class Worker {
     String name;
     int id;
     private String password;
+    public String getEmail_address() {
+        return email_address;
+    }
     String email_address;
     BankAccount bankAccount;
     EmploymentConditions employmentConditions;
