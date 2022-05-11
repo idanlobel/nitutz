@@ -11,8 +11,8 @@ public class TransportSDTO {
     String departureTime;
     String driverId;
     String truckLicensePlateId;
-    String[] source;
-    List<String[]> destinations;
+    String source;
+    List<String> destinations;
     List<ProductsDocumentSDTO> productsDocumentSDTOS;
 
 
@@ -22,7 +22,7 @@ public class TransportSDTO {
     }
 
     public TransportSDTO(String id, String date, String departureTime, String driverId, String truckLicensePlateId,
-                         String[] source, List<String[]> destinations, List<ProductsDocumentSDTO> productsDocumentSDTOS) {
+                         String source, List<String> destinations, List<ProductsDocumentSDTO> productsDocumentSDTOS) {
         this.id = id;
         this.date = date;
         this.departureTime = departureTime;
@@ -53,11 +53,11 @@ public class TransportSDTO {
         return truckLicensePlateId;
     }
 
-    public String[] getSource() {
+    public String getSource() {
         return source;
     }
 
-    public List<String[]> getDestinations() {
+    public List<String> getDestinations() {
         return destinations;
     }
 

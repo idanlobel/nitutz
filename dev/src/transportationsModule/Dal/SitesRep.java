@@ -1,8 +1,13 @@
 package src.transportationsModule.Dal;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static src.transportationsModule.Dal.Connect.getConnection;
 
 public class SitesRep {
 
@@ -47,5 +52,19 @@ public class SitesRep {
         // TODO: 05/05/2022
         //get all sites from db
         return this.sitesCache;
+    }
+
+    public void insert( String name, double capacity) {
+        String sql = "INSERT INTO employees(name, capacity) VALUES(?,?)";
+
+        try{
+            Connection conn = getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, name);
+            pstmt.setDouble(2, capacity);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

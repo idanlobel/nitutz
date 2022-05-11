@@ -2,6 +2,7 @@ package src.transportationsModule.BusinessLogic;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
 
 public class TransportForm {
@@ -10,8 +11,8 @@ public class TransportForm {
     String date;
     String departureTime;
     String driverId;
-    String[] source;
-    List<String[]> destinations;
+    String source;
+    List<String> destinations;
     String truckLicenceNumber;
     List<TransportProductsDocument> transportProductsDocuments;
 
@@ -27,11 +28,11 @@ public class TransportForm {
         return driverId;
     }
 
-    public String[] getSource() {
+    public String getSource() {
         return source;
     }
 
-    public List<String[]> getDestinations() {
+    public List<String> getDestinations() {
         return destinations;
     }
 
@@ -43,7 +44,7 @@ public class TransportForm {
         return transportProductsDocuments;
     }
 
-    public TransportForm(String id, String date, String departureTime, String driverId, String[] source, List<String[]> destinations, String truckLicenceNumber) {
+    public TransportForm(String id, String date, String departureTime, String driverId, String source, List<String> destinations, String truckLicenceNumber) {
         this.id = id;
         this.date = date;
         this.departureTime = departureTime;
@@ -77,7 +78,7 @@ public class TransportForm {
                 '}';
     }
 
-    public void addDocument(String id, String[] destinationId, Dictionary<String, Integer> products) {
+    public void addDocument(String id, String destinationId, HashMap<String, Integer> products) {
         transportProductsDocuments.add(new TransportProductsDocument(id,destinationId,products));
     }
 
@@ -85,7 +86,7 @@ public class TransportForm {
         switch (toChangeField) {
 
             case "id": {
-                id = newVal;
+                this.id = newVal;
                 break;
             }
             case "date": {

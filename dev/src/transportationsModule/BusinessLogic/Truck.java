@@ -66,4 +66,20 @@ public class Truck {
         }
         //updating DB?
     }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public String getMaxWeight() {
+        return maxWeight;
+    }
 }

@@ -36,12 +36,12 @@ public class TransportService {
         //get מחסנאים שעובדים באותו משמרת
         transportSDTO.driverId = askInput("choose the transport driver id from your drivers crew: " + transportsFacade.showDriversDetailsAvailable(transportSDTO.departureTime, transportSDTO.date));
         transportSDTO.truckLicensePlateId = askInput("choose the truck from your truck: " + transportsFacade.viewTrucks());//getTrucksByLicenseType(); //driverService.getDriversLicenceTypeByDriveId(transportDTO.driverid) )
-        transportSDTO.source = askInput(2, "choose the source name and region from site list: " + transportsFacade.viewAllSites());
+        transportSDTO.source = askInput( "choose the source name and region from site list: " + transportsFacade.viewAllSites());
         int numberOfDest=Integer.parseInt( askInput("choose number of destinations: "));
         for (int i = 0; i < numberOfDest; i++) {
             ProductsDocumentSDTO tfD=new ProductsDocumentSDTO();
 
-            tfD.destinationId = askInput(2, "choose the destination name and region from site list: " + transportsFacade.viewAllSites());
+            tfD.destinationId = askInput("choose the destination name and region from site list: " + transportsFacade.viewAllSites());
             transportSDTO.destinations.add(tfD.destinationId);
             tfD.id="0";
             int numberOfProduct=Integer.parseInt( askInput("choose number of products to add for this destination: "));
@@ -93,13 +93,13 @@ public class TransportService {
 
 
     public void addTransport_init(String id, String date, String departureTime, String driverId,
-                                  String truckLicensePlateId, String[] source, List<String[]> destinations,
+                                  String truckLicensePlateId, String source, List<String> destinations,
                                   List<Object[]> documents){
 
         List<ProductsDocumentSDTO> docs = new LinkedList<>();
         for (Object[] o : documents){
             Object[][] items  = { {"milk", 20} , {"water" , 10} , {"queso" , 25 }};
-            docs.add(new ProductsDocumentSDTO((String)o[0],(String[])o[1], items) );
+            docs.add(new ProductsDocumentSDTO((String)o[0],(String)o[1], items) );
         }
         transportsFacade.regTransport(new TransportSDTO(id, date, departureTime, driverId, truckLicensePlateId, source, destinations, docs));
     }

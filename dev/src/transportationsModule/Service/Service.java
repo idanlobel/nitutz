@@ -90,7 +90,7 @@ public class Service {
         siteService.addSite_init("super1","sham","yosi","000","South","Supplier");
         siteService.addSite_init("branch2","po","yosf","001","North","Branch");
         transportService.addTransport_init("0000", "01/01/0000", "00:00","driverID","licenceId"
-                                            , new String[]{},new LinkedList<String[]>(),new LinkedList<Object[]>());
+                                            , "super1",new LinkedList<String>(),new LinkedList<Object[]>());
     }
 
 }
