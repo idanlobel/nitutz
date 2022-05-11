@@ -125,4 +125,27 @@ public  class DAL_controller {
     public void update_product_sell_price(int id, Double new_sell_price) {
         this.product_table.update_product_sell_price(id,new_sell_price);
     }
+
+    public Products_DAO getProducts_table()
+    {
+        return products_table;
+    }
+
+    public Product_DAO getProduct_table()
+    {
+        return product_table;
+    }
+    public  Periodic_Order_DAO getPeriodic_order_table()
+    {
+        return periodic_order_table;
+    }
+    public Sale_DAO getSale_table()
+    {
+        return sale_table;
+    }
+
+    public Report_DAO getReport_table()
+    {
+        return this.report_table;
+    }
 }

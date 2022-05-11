@@ -1,5 +1,7 @@
 package busniess_layer;
 
+import Data_layer.Product_DAO;
+import Data_layer.Products_DAO;
 import busniess_layer.Product;
 
 import java.time.LocalDate;
@@ -22,9 +24,10 @@ public class Products {
     private String name;
     private Double current_sell_price;
     private Double overall_sale_percentage;
+    private Products_DAO products_dao;
 
 
-    public Products(long catalog_number, String name, int quantity,Double cost_price,Double sell_price,String expiry,String manufactorer,String category,String sub_category,String sub_sub_category)
+    public Products(long catalog_number, String name, int quantity, Double cost_price, Double sell_price, String expiry, String manufactorer, String category, String sub_category, String sub_sub_category, Products_DAO pd, Product_DAO product_dao)
     {
         this.product_list=new ArrayList<>();
         this.catalog_number=catalog_number;
@@ -43,7 +46,10 @@ public class Products {
         this.sub_category=sub_category;
         this.sub_sub_category=sub_sub_category;
         this.sales_history=new ArrayList<>();
-        this.update_quantity(quantity,cost_price,expiry);
+
+        this.products_dao=pd;
+        pd.insert(catalog_number,name,0,sell_price,manufactorer,category,sub_category,sub_sub_category,min_quantity);
+        this.update_quantity(quantity,cost_price,expiry,product_dao);
 
 
     }
@@ -62,20 +68,21 @@ public class Products {
 
 
 
-    public List<Product> update_quantity(int number,double cost_price,String expiry)
+    public void update_quantity(int number,double cost_price,String expiry,Product_DAO pa)
     {
-        List<Product> new_items=new ArrayList<>();
+      //  List<Product> new_items=new ArrayList<>();
         for(int i=0;i<number;i++)
         {
-            Product new_product=new Product (this.name,LocalDate.now().toString(),cost_price,current_sell_price,expiry,ID_Generator.getInstance().Get_ID());
-            new_items.add(new_product);
+            Product new_product=new Product (this.name,LocalDate.now().toString(),cost_price,current_sell_price,expiry,ID_Generator.getInstance().Get_ID(),pa,catalog_number);
+            //new_items.add(new_product);
             this.product_list.add(new_product);
 
         }
 
         this.storage_quantity=this.storage_quantity+number;
         this.quantity=this.shelf_quantity+storage_quantity;
-        return new_items;
+        products_dao.update_products_quantity(quantity,storage_quantity,catalog_number);
+     //   return new_items;
 
     }
 
@@ -89,12 +96,15 @@ public class Products {
 
     public void Record_sale(double precentage,String start_date,int sale_id)
     {
+
         Double price_after_sale=this.current_sell_price-(this.current_sell_price*precentage);
         this.current_sell_price=price_after_sale;
         this.prices_history.put(start_date.toString(),price_after_sale);
         this.overall_sale_percentage=this.overall_sale_percentage+precentage;
+        this.products_dao.update_products_overall_sale_percentage(this.catalog_number,overall_sale_percentage);
         update_prices(price_after_sale);
         this.sales_history.add(sale_id);
+        this.products_dao.update_products_sell_price(this.catalog_number,price_after_sale);
     }
 
 
@@ -105,6 +115,7 @@ public class Products {
         this.prices_history.put(LocalDate.now().toString(),price_before_sale);
         this.overall_sale_percentage=this.overall_sale_percentage-percentage;
         update_prices(price_before_sale);
+        this.products_dao.update_products_sell_price(this.catalog_number,price_before_sale);
     }
 
     public Double getsellprice()
@@ -163,7 +174,9 @@ public class Products {
 
     public void set_min_quantity(int new_min)
     {
+
         this.min_quantity=new_min;
+        this.products_dao.update_products_min_quantity(this.catalog_number,new_min);
     }
 
     public boolean set_broken_item(int id)
@@ -183,6 +196,8 @@ public class Products {
     {
         this.storage_quantity=this.product_list.size();
         this.quantity=this.shelf_quantity+this.storage_quantity;
+        products_dao.update_products_quantity(quantity,storage_quantity,catalog_number);
+
     }
 
     public void remove_product(List<Product> items_to_remove) {

@@ -1,5 +1,7 @@
 package busniess_layer;
 
+import Data_layer.Product_DAO;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,8 +21,10 @@ public class Product {
     private String sell_date;
     private boolean sold;
     private int ID;
+    private Product_DAO product_dao;
+    private Long catalog_number;
 
-    public Product(String name,String delivery_date,Double cost_price,Double sell_price,String expire,int id)
+    public Product(String name, String delivery_date, Double cost_price, Double sell_price, String expire, int id, Product_DAO pd,long catalog_number)
     {
         this.name=name;
         this.delivery_date=delivery_date.toString();
@@ -31,12 +35,18 @@ public class Product {
         this.broken=false;
         this.sold=false;
         this.ID=id;
+        this.catalog_number=catalog_number;
+        product_dao=pd;
+        product_dao.insert(id,name,location.toString(),cost_price,sell_price,expire,broken,delivery_date,sell_date,sold,catalog_number);
+
 
     }
 
     public void set_sell_price(double new_sell_price)
     {
-     this.sell_price=new_sell_price;
+
+        this.sell_price=new_sell_price;
+        this.product_dao.update_product_sell_price(ID,new_sell_price);
     }
     public  Location getLocation()
     {

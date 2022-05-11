@@ -20,9 +20,9 @@ class StockTest {
     @BeforeEach
     void setUp() {
         stock_test=new Stock();
-        products_1_test=new Products(1,"something",100,50.0,100.0, LocalDate.now().toString(),"something","something","something","something");
-        products_2_test=new Products(2,"something",10,50.0,100.0, LocalDate.now().toString(),"something","something","something","something");
-        sale_test = new Sale(0,0, LocalDate.now().toString(),LocalDate.of(2033,4,6).toString(),"something");
+        products_1_test=new Products(1,"something",100,50.0,100.0, LocalDate.now().toString(),"something","something","something","something",null,null);
+        products_2_test=new Products(2,"something",10,50.0,100.0, LocalDate.now().toString(),"something","something","something","something",null,null);
+        sale_test = new Sale(0,0, LocalDate.now().toString(),LocalDate.of(2033,4,6).toString(),"something",null);
     }
 
     @Test

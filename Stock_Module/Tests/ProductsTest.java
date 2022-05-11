@@ -16,8 +16,8 @@ class ProductsTest {
     @BeforeEach
     void setUp() {
 
-        products_test=new Products(1,"something",10,50.0,100.0, LocalDate.of(2000,2,2).toString(),"something","something","something","something");
-        sale_test=new Sale(20,0,LocalDate.of(2000,2,2).toString(),LocalDate.of(2022,2,2).toString(),"something");
+        products_test=new Products(1,"something",10,50.0,100.0, LocalDate.of(2000,2,2).toString(),"something","something","something","something",null,null);
+        sale_test=new Sale(20,0,LocalDate.of(2000,2,2).toString(),LocalDate.of(2022,2,2).toString(),"something",null);
     }
     @Test
     void record_sale() throws Exception {

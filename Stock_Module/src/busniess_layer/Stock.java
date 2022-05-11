@@ -40,26 +40,17 @@ public class Stock {
         boolean added = false;
         for (Products products : this.products_list) {
             if (products.getCatalog_number()== products_catalog_number) {
-                List<Product> new_items=products.update_quantity(quantity, cost, expiry);
-                //update products table quantitiy
-                dal_controller.update_products_quantity(products.getQuantity(), products.getShelf_quantity(), products.getCatalog_number());
-                added = true;
-                for(Product p : new_items)
-                {
-                    dal_controller.insert_product(p.get_id(),p.getName(),p.getLocation().toString(),p.getcostprice(),p.getsoldprice(),p.getExpire_date().toString(),p.isBroken(),p.getDelivery_date(),p.getSell_date(),p.isSold(),products.getCatalog_number());
-                }
+
+                products.update_quantity(quantity,cost,expiry,dal_controller.getProduct_table());
+
+                  added = true;
+
             }
         }
         if (!added) {
             //maybe we should ask the client if there is a default price for selling , for exmaple : cost * 1.5
-            Products products = new Products(products_catalog_number, name, quantity, cost, cost * 1.5, expiry, manufactorer, category,sub_cat,sub_sub_cat);
+            Products products = new Products(products_catalog_number, name, quantity, cost, cost * 1.5, expiry, manufactorer, category,sub_cat,sub_sub_cat,dal_controller.getProducts_table(),dal_controller.getProduct_table());
             products_list.add(products);
-            dal_controller.insert_products(products_catalog_number,name,quantity,products.getsellprice(),manufactorer,category,sub_cat,sub_sub_cat, products.getMin_quantity());
-            List<Product> new_items=products.getProduct_list();
-            for(Product p: new_items)
-            {
-                dal_controller.insert_product(p.get_id(),p.getName(),p.getLocation().toString(),p.getcostprice(),p.getsoldprice(),p.getExpire_date().toString(),p.isBroken(),p.getDelivery_date(),p.getSell_date(),p.isSold(),products.getCatalog_number());
-            }
 
 
         }
@@ -67,9 +58,9 @@ public class Stock {
     }
     public void add_to_orders(String day,long products_catalog_number, int quantity, Double cost,  String name, String manufactorer, String category,String sub_cat,String sub_sub_cat)
     {
-        Periodic_Order order=new Periodic_Order(day,products_catalog_number,quantity,cost,name,manufactorer,category,sub_cat,sub_sub_cat);
+        Periodic_Order order=new Periodic_Order(day,products_catalog_number,quantity,cost,name,manufactorer,category,sub_cat,sub_sub_cat,dal_controller.getPeriodic_order_table());
         this.periodic_orders_list.add(order);
-        dal_controller.insert_periodic_order(order.getID(),day,products_catalog_number,quantity,manufactorer,category,sub_cat,sub_sub_cat,name,cost);
+
 
     }
 
@@ -80,16 +71,10 @@ public class Stock {
         //this checks the products list to add sale to products with provided id
         for (Products products : this.products_list) {
             if (products.getCatalog_number() == products_catalog_number) {
-                    Sale new_sale = new Sale(percentage, ID_Generator.getInstance().Get_ID(), LocalDate.now().toString(), endate, reason);
+                    Sale new_sale = new Sale(percentage, ID_Generator.getInstance().Get_ID(), LocalDate.now().toString(), endate, reason,dal_controller.getSale_table());
                     new_sale.Add_Products(products);
                     this.sales_list.add(new_sale);
-                    dal_controller.insert_sale(new_sale.getId(),new_sale.getpercentage(),new_sale.getStart_date(),new_sale.getEnd_date(),new_sale.getReason());
-                    dal_controller.update_products_sell_price(products_catalog_number, products.getsellprice());
-                List<Product> all_item=products.getProduct_list();
-                for(Product product:all_item)
-                {
-                    dal_controller.update_product_sell_price(product.get_id(),products.getsellprice());
-                }
+
             }
 
         }
@@ -108,20 +93,15 @@ public class Stock {
                 for(Sale sale:this.sales_list)
                 {
                     sale.Add_Products(p);
-                    dal_controller.update_products_sell_price(p.getCatalog_number(), p.getsellprice());
-                    List<Product> all_item=p.getProduct_list();
-                    for(Product product:all_item)
-                    {
-                        dal_controller.update_product_sell_price(product.get_id(),p.getsellprice());
-                    }
+
                 }
             }
         }
     }
 
     public void sale_by_category(String startdate, String endate, String reason, double percentage,String category,String sub_category,String sub_sub_category) throws Exception {
-        Sale new_sale=new Sale(percentage, ID_Generator.getInstance().Get_ID(), startdate,endate,reason);
-        this.dal_controller.insert_sale(new_sale.getId(),percentage,startdate,endate,reason);
+        Sale new_sale=new Sale(percentage, ID_Generator.getInstance().Get_ID(), startdate,endate,reason,dal_controller.getSale_table());
+
         boolean sub_is_null=false;
         boolean sub_sub_is_null=false;
         if(sub_category.equals("null"))
@@ -133,12 +113,7 @@ public class Stock {
             if(!sub_is_null & !sub_sub_is_null) {
                 if (p.getMain_category().equals(category) & p.getSub_category().equals(sub_category) & p.getSub_sub_category().equals(sub_sub_category)) {
                     new_sale.Add_Products(p);
-                    dal_controller.update_products_sell_price(p.getCatalog_number(), p.getsellprice());
-                    List<Product> all_item=p.getProduct_list();
-                    for(Product product:all_item)
-                    {
-                        dal_controller.update_product_sell_price(product.get_id(),p.getsellprice());
-                    }
+//                    }
                 }
             }
 
@@ -146,12 +121,7 @@ public class Stock {
             if(!sub_is_null & sub_sub_is_null) {
                 if (p.getMain_category().equals(category) & p.getSub_category().equals(sub_category) ) {
                     new_sale.Add_Products(p);
-                    dal_controller.update_products_sell_price(p.getCatalog_number(), p.getsellprice());
-                    List<Product> all_item=p.getProduct_list();
-                    for(Product product:all_item)
-                    {
-                        dal_controller.update_product_sell_price(product.get_id(),p.getsellprice());
-                    }
+
                 }
             }
 
@@ -159,24 +129,12 @@ public class Stock {
             if(sub_is_null & !sub_sub_is_null) {
                 if (p.getMain_category().equals(category)  & p.getSub_sub_category().equals(sub_sub_category)) {
                     new_sale.Add_Products(p);
-                    dal_controller.update_products_sell_price(p.getCatalog_number(), p.getsellprice());
-                    List<Product> all_item=p.getProduct_list();
-                    for(Product product:all_item)
-                    {
-                        dal_controller.update_product_sell_price(product.get_id(),p.getsellprice());
-                    }
                 }
             }
 
             if(sub_is_null & sub_sub_is_null) {
                 if (p.getMain_category().equals(category) ) {
                     new_sale.Add_Products(p);
-                    dal_controller.update_products_sell_price(p.getCatalog_number(), p.getsellprice());
-                    List<Product> all_item=p.getProduct_list();
-                    for(Product product:all_item)
-                    {
-                        dal_controller.update_product_sell_price(product.get_id(),p.getsellprice());
-                    }
                 }
             }
 
@@ -187,26 +145,19 @@ public class Stock {
 
 
 
-    public void remove_sale(int sale_id) {
+    public void remove_sale(int sale_id) throws Exception {
+        boolean found=false;
         for (Sale sale : this.sales_list) {
             if (sale.getId() == sale_id) {
-                List<Products> prodcuts_in_sale=sale.getProducts_in_sale();
-
+                found =true;
                 sale.sale_is_over();
-                for(Products p : prodcuts_in_sale)
-                {
-                    dal_controller.update_products_sell_price(p.getCatalog_number(), p.getsellprice());
-                    List<Product> all_item=p.getProduct_list();
-                    for(Product product:all_item)
-                    {
-                        dal_controller.update_product_sell_price(product.get_id(),p.getsellprice());
-                    }
-                }
                 dal_controller.remove_sale(sale_id);
-
-
             }
 
+        }
+        if(!found)
+        {
+            throw new Exception("no sale with this id: "+sale_id+"!!");
         }
     }
 
@@ -273,7 +224,7 @@ public class Stock {
 
 
         }
-        Report repo=new Report(Report.Subject.stock_report,ID_Generator.getInstance().Get_ID(),answer_list,null,null);
+        Report repo=new Report(Report.Subject.stock_report,ID_Generator.getInstance().Get_ID(),answer_list,null,null,dal_controller.getReport_table());
 
         repo.Fill_Me();
         return repo;
@@ -288,34 +239,34 @@ public class Stock {
 
     public Report make_stock_report()
     {
-        Report r=new Report(Report.Subject.stock_report, ID_Generator.getInstance().Get_ID(),this.products_list,null,null);
+        Report r=new Report(Report.Subject.stock_report, ID_Generator.getInstance().Get_ID(),this.products_list,null,null,dal_controller.getReport_table());
         r.Fill_Me();
-        dal_controller.insert_report(r.getId(),r.getSubject().toString());
+
         return r;
     }
 
     public Report make_prices_report()
     {
-        Report r=new Report(Report.Subject.prices_report, ID_Generator.getInstance().Get_ID(),null,null,get_every_product());
+        Report r=new Report(Report.Subject.prices_report, ID_Generator.getInstance().Get_ID(),null,null,get_every_product(),dal_controller.getReport_table());
         r.Fill_Me();
-        dal_controller.insert_report(r.getId(),r.getSubject().toString());
+
         return r;
     }
 
 
     public Report make_sales_report()
     {
-        Report r=new Report(Report.Subject.sales_report, ID_Generator.getInstance().Get_ID(),this.products_list,this.sales_list,null);
+        Report r=new Report(Report.Subject.sales_report, ID_Generator.getInstance().Get_ID(),this.products_list,this.sales_list,null,dal_controller.getReport_table());
         r.Fill_Me();
-        dal_controller.insert_report(r.getId(),r.getSubject().toString());
+
         return r;
     }
 
     public Report make_defective_report()
     {
-        Report r=new Report(Report.Subject.defective_items_report, ID_Generator.getInstance().Get_ID(),null,null,get_every_product());
+        Report r=new Report(Report.Subject.defective_items_report, ID_Generator.getInstance().Get_ID(),null,null,get_every_product(),dal_controller.getReport_table());
         r.Fill_Me();
-        dal_controller.insert_report(r.getId(),r.getSubject().toString());
+
         return r;
     }
 
@@ -341,8 +292,8 @@ public class Stock {
 
     public Report make_sorted_by_expiration_report()
     {
-        Report r=new Report(Report.Subject.sortedby_expiry_report,ID_Generator.getInstance().Get_ID(), null,null,this.sorted_by_expiration());
-                dal_controller.insert_report(r.getId(),r.getSubject().toString());
+        Report r=new Report(Report.Subject.sortedby_expiry_report,ID_Generator.getInstance().Get_ID(), null,null,this.sorted_by_expiration(),dal_controller.getReport_table());
+
         return r;
     }
 
@@ -434,7 +385,6 @@ public class Stock {
                 else {
                     o.set_quantity(quantity);
                     found = true;
-                    dal_controller.update_periodic_order_quantity(id,quantity);
                     break;
                 }
             }
@@ -461,7 +411,6 @@ public class Stock {
                 else {
                     o.setDay_of_week(day);
                     found = true;
-                    dal_controller.update_periodic_order_day(id,day);
                     break;
                 }
             }
@@ -503,44 +452,29 @@ public class Stock {
     public void remove_defective_and_expired_products()
     {
       List<Product> all_items_in_store=  get_every_product();
-     // List<Integer> all_ids_to_remove=new ArrayList<>();
+
         List<Product> items_to_remove=new ArrayList<>();
       for(Product p :all_items_in_store)
       {
           if(p.isBroken() || p.getExpire_date().isBefore(LocalDate.now()))
           {
-              //all_ids_to_remove.add(p.get_id());
+
               items_to_remove.add(p);
+              dal_controller.remove_product(p.get_id());
           }
       }
 
 
-//      for(Integer id:all_ids_to_remove)
-//      {
-//          for(Products p:products_list)
-//          {
-//              for(Product product:p.getProduct_list())
-//              {
-//                  if(product.get_id()==id)
-//                  {
-//                items_to_remove.add(product);
-//                  }
-//              }
-//          }
-//
-//      }
+
       for(Products p:products_list)
       {
          p.remove_product(items_to_remove);
          p.update_quantity_after_removing_items();
-         dal_controller.update_products_quantity(p.getQuantity(),p.getShelf_quantity(),p.getCatalog_number());
+
 
 
       }
-      for(Product p:items_to_remove)
-      {
-          dal_controller.remove_product(p.get_id());
-      }
+
 
     }
 }

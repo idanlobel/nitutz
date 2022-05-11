@@ -133,13 +133,13 @@ public class Products_DAO {
         }
     }
 
-    public void update_products_quantity(int quantity,int shelf_quantity,long catalog_number) {
-        String sql="UPDATE "+table_name+" SET quantity=?,shelf_quantity=? WHERE catalog_number=?";
+    public void update_products_quantity(int quantity,int storage_quantity,long catalog_number) {
+        String sql="UPDATE "+table_name+" SET quantity=?,storage_quantity=? WHERE catalog_number=?";
         try{
             Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1,quantity);
-            pstmt.setInt(2,shelf_quantity);
+            pstmt.setInt(2,storage_quantity);
             pstmt.setLong(3,catalog_number);
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -156,6 +156,34 @@ public class Products_DAO {
             pstmt.setDouble(1,new_sell_price);
 
             pstmt.setLong(2,products_catalog_number);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void update_products_min_quantity(long products_catalog_number, int new_min_quantity) {
+        String sql="UPDATE "+table_name+" SET min_quantity=? WHERE catalog_number=?";
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1,new_min_quantity);
+
+            pstmt.setLong(2,products_catalog_number);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void update_products_overall_sale_percentage(long catalog_number, Double overall_sale_percentage) {
+        String sql="UPDATE "+table_name+" SET overall_sale_percentage=? WHERE catalog_number=?";
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setDouble(1,overall_sale_percentage);
+
+            pstmt.setLong(2,catalog_number);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

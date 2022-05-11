@@ -63,7 +63,6 @@ public class Product_DAO {
 
     private void create_table(String connection_string) {
 
-
         String sql = "CREATE TABLE IF NOT EXISTS Product (\n"
                 + " id integer PRIMARY KEY,\n"
                 + " name text,\n"
@@ -74,9 +73,13 @@ public class Product_DAO {
                 + " expire_date text,\n"
                 + " delivery_date text,\n"
                 + " sell_date text,\n"
-                + " sold boolean, \n"
-                + "catalog_number Long FOREIGN Key Rreferences Products(catalog_number), \n"
+                + " sold boolean,\n"
+                + " catalog_number Long,\n"
+                + "  FOREIGN KEY (catalog_number) REFERENCES Products(catalog_number)\n"
                 + ");";
+
+
+
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);

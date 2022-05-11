@@ -1,5 +1,7 @@
 package busniess_layer;
 
+import Data_layer.Periodic_Order_DAO;
+
 public class Periodic_Order {
     private int ID;
     private String day_of_week;
@@ -12,8 +14,9 @@ public class Periodic_Order {
     private String sub_cat;
     private String sub_sub_cat;
     private boolean ordered;
+    private Periodic_Order_DAO periodic_order_dao;
 
-    public Periodic_Order(String day_of_week, long catalog_number, int quantity, double cost, String name, String manufactorer , String category, String sub_cat, String sub_sub_cat)
+    public Periodic_Order(String day_of_week, long catalog_number, int quantity, double cost, String name, String manufactorer , String category, String sub_cat, String sub_sub_cat, Periodic_Order_DAO poda)
     {
         this.ID=ID_Generator.getInstance().Get_ID();
         this.day_of_week=day_of_week;
@@ -26,6 +29,8 @@ public class Periodic_Order {
         this.sub_cat=sub_cat;
         this.sub_sub_cat=sub_sub_cat;
         ordered=false;
+        this.periodic_order_dao=poda;
+        poda.insert(ID,day_of_week,catalog_number,quantity,manufactorer,category,sub_cat,sub_sub_cat,name,cost);
     }
 
     public String getDay_of_week()
@@ -71,11 +76,13 @@ public class Periodic_Order {
     public void set_quantity(int new_quantitiy)
     {
         this.quantity=new_quantitiy;
+        this.periodic_order_dao.update_periodic_order_quantity(ID,new_quantitiy);
     }
 
     public void setDay_of_week(String day)
     {
         this.day_of_week=day;
+        this.periodic_order_dao.update_periodic_order_day(ID,day);
     }
     public void set_ordered_to_true()
     {

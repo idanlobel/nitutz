@@ -1,5 +1,7 @@
 package busniess_layer;
 
+import Data_layer.Sale_DAO;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +14,17 @@ public class Sale {
     private String end_date;
     private String reason;
     private List<Products> products_in_sale=new ArrayList<>();
+    private Sale_DAO sale_dao;
 
 
 
-    public Sale(double percentage,int Id, String start_date, String end_date, String reason) {
+    public Sale(double percentage,int Id, String start_date, String end_date, String reason,Sale_DAO sale_dao) {
         this.percentage = percentage/100;
         this.start_date = start_date;
         this.end_date = end_date;
         this.reason = reason;
+        this.sale_dao=sale_dao;
+        this.sale_dao.insert(Id,percentage,start_date,end_date,reason);
 
 
 //        this.products_in_sale.add(product);

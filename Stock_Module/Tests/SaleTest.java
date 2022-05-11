@@ -17,8 +17,8 @@ class SaleTest {
     @BeforeEach
     void setUp() {
         stock_test=new Stock();
-        products_test=new Products(1,"something",10,50.0,100.0,LocalDate.now().toString(),"something","something","something","something");
-        sale_test = new Sale(0,0, LocalDate.now().toString(),LocalDate.of(2033,4,6).toString(),"something");
+        products_test=new Products(1,"something",10,50.0,100.0,LocalDate.now().toString(),"something","something","something","something",null,null);
+        sale_test = new Sale(0,0, LocalDate.now().toString(),LocalDate.of(2033,4,6).toString(),"something",null);
     }
 
     @Test

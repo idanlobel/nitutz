@@ -91,7 +91,7 @@ public class Periodic_Order_DAO {
     }
 
     public void insert(int id, String day_of_week, long catalog_number,int quantity,String manufactorer,String category,String sub_category,String sub_sub_category,String name,Double cost) {
-        String sql = "INSERT INTO Periodic_Order(id, day_of_week, catalog_number, quantity, manufactorer, category, sub_category, sub_sub_category, name, cost) VALUES(?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Periodic_Order(id, day_of_week, catalog_number, quantity, manufacturer, main_category, sub_category, sub_sub_category, name, cost) VALUES(?,?,?,?,?,?,?,?,?,?)";
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);
