@@ -32,8 +32,39 @@ public class Periodic_Order {
         this.periodic_order_dao=poda;
 
 
-        poda.insert(day_of_week,catalog_number,quantity,manufactorer,category,sub_cat,sub_sub_cat,name,cost);
-        this.ID=poda.get_current_id();
+
+        int id_=poda.check_if_exists(day_of_week,catalog_number,quantity,manufactorer,category,sub_cat,sub_sub_cat,name,cost);
+        if(id_==-1)
+        {
+            poda.insert(day_of_week,catalog_number,quantity,manufactorer,category,sub_cat,sub_sub_cat,name,cost);
+            this.ID=poda.get_current_id();
+            poda.insert_in_map(ID,this);
+        }
+        else
+        {
+            this.ID=id_;
+        }
+
+
+
+    }
+
+
+    public Periodic_Order(int id,String day_of_week, long catalog_number, int quantity, double cost, String name, String manufactorer , String category, String sub_cat, String sub_sub_cat, Periodic_Order_DAO poda)
+    {
+
+        this.day_of_week=day_of_week;
+        this.catalog_number=catalog_number;
+        this.quantity=quantity;
+        this.cost=cost;
+        this.name=name;
+        this.manufactorer=manufactorer;
+        this.category=category;
+        this.sub_cat=sub_cat;
+        this.sub_sub_cat=sub_sub_cat;
+        ordered=false;
+        this.periodic_order_dao=poda;
+        this.ID=id;
 
 
     }

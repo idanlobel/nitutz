@@ -478,6 +478,12 @@ public class Stock {
       }
 
 
+
+
+    }
+    public List<Periodic_Order> get_periodic_order_list()
+    {
+        return this.periodic_orders_list;
     }
 
 

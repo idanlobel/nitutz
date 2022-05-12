@@ -29,13 +29,28 @@ public class Periodic_Order_DAO {
     }
 
     private Periodic_Order readPeriodicOrder(int id) {
-        String sql = "SELECT * FROM "+table_name+ "WHERE id="+id;
+        String sql = "SELECT * FROM "+table_name+ " WHERE id="+id;
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery(sql);
-            return res.getObject(1,Periodic_Order.class);
+          Integer id_=Integer.parseInt(res.getObject(1).toString());
+          String day_of_week=res.getObject(2).toString();
+          Long catalog_number=Long.parseLong(res.getObject(3).toString());
+            Integer quanitiy=Integer.parseInt(res.getObject(4).toString());
+            String manufactore=res.getObject(5).toString();
+            String main_cat=res.getObject(6).toString();
+            String sub_cat=res.getObject(7).toString();
+            String sub_sub_cat=res.getObject(8).toString();
+            String name=res.getObject(9).toString();
+            Double cost_price=Double.parseDouble(res.getObject(10).toString());
+            Periodic_Order order=new Periodic_Order(id_,day_of_week,catalog_number,quanitiy,cost_price,name,manufactore,main_cat,sub_cat,sub_sub_cat,this);
+
+
+
+           return order;
+
         } catch (SQLException e) {
             return null;
         }
@@ -57,7 +72,7 @@ public class Periodic_Order_DAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+
             }
         }
         return conn;
@@ -130,6 +145,7 @@ public class Periodic_Order_DAO {
 
 
             pstmt.executeUpdate();
+
         } catch (SQLException e) {
 
         }
@@ -176,4 +192,31 @@ public class Periodic_Order_DAO {
 
         }
     }
-}
+
+    public void insert_in_map(int id, Periodic_Order periodic_order) {
+        this.periodicOrdersMap.put(id,periodic_order);
+    }
+
+    public int check_if_exists(String day_of_week, long catalog_number, int quantity, String manufactorer, String category, String sub_cat, String sub_sub_cat, String name, double cost) {
+        String sql = "SELECT id FROM "+table_name+ " WHERE day_of_week='"+day_of_week +"' AND catalog_number= "+catalog_number+" AND quantity= "+quantity+" AND manufacturer= '"+manufactorer+"' AND main_category= '"+category+"' AND sub_category= '"+sub_cat+"' AND sub_sub_category= '"+sub_sub_cat+"' AND name= '"+name+"' AND cost= "+cost;
+
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(sql);
+
+            if(res.next()) {
+                Integer id_ = Integer.parseInt(res.getObject(1).toString());
+                return id_;
+            }
+
+            return -1;
+
+
+
+        } catch (SQLException e) {
+            return -1;
+        }
+    }
+    }
+

@@ -1,14 +1,12 @@
 import Data_layer.DAL_controller;
 import Data_layer.Products_DAO;
-import busniess_layer.Product;
-import busniess_layer.Products;
-import busniess_layer.Sale;
-import busniess_layer.Stock;
+import busniess_layer.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +22,7 @@ class StockTest {
         stock_test=new Stock();
         products_1_test=new Products(1,"something",100,50.0,100.0, LocalDate.now().toString(),"something","something","something","something", DAL_controller.getInstance().getProducts_table(), DAL_controller.getInstance().getProduct_table());
         products_2_test=new Products(2,"something",10,50.0,100.0, LocalDate.now().toString(),"something","something","something","something",DAL_controller.getInstance().getProducts_table(), DAL_controller.getInstance().getProduct_table());
-        sale_test = new Sale(0, LocalDate.now().toString(),LocalDate.of(2033,4,6).toString(),"something",DAL_controller.getInstance().getSale_table());
+       // sale_test = new Sale(0, LocalDate.now().toString(),LocalDate.of(2033,4,6).toString(),"something",DAL_controller.getInstance().getSale_table());
     }
 
     @Test
@@ -39,9 +37,9 @@ class StockTest {
     void order() {
         stock_test.Order(2,10,50.0, LocalDate.now().toString(),"somethig","something","somthing","something","something");
         stock_test.Order(2,50,50.0,"2022-08-09","something","something","something","something","something");
-        stock_test.Order(1,500,50.0,LocalDate.of(1111,1,20).toString(),"something","something","something","something","something");
+        stock_test.Order(1,5,50.0,LocalDate.of(1111,1,20).toString(),"something","something","something","something","something");
         assertEquals(60, stock_test.get_products(2).getQuantity());
-        assertEquals(500, stock_test.get_products(1).getQuantity());
+        assertEquals(5, stock_test.get_products(1).getQuantity());
     }
 
     @Test
@@ -78,6 +76,28 @@ class StockTest {
         assertEquals(75, stock_test.get_products(2).getsellprice());
 
     }
+
+    @Test
+    void make_periodic_order()
+    {
+
+        stock_test.add_to_orders(LocalDate.now().getDayOfWeek().toString().toLowerCase(Locale.ROOT),products_1_test.getCatalog_number(),8,50.0,products_1_test.getName(),products_1_test.getManufactorer(),products_1_test.getMain_category(),products_1_test.getSub_category(),products_1_test.getSub_sub_category());
+       int periodic_id=stock_test.get_periodic_order_list().get(0).getID();
+       Periodic_Order po=DAL_controller.getInstance().getPeriodic_order_table().getPeriodicOrder(periodic_id);
+        assertEquals(po.getID(),stock_test.get_periodic_order_list().get(0).getID());
+
+    }
+
+
+    @Test
+    void make_shortage_order()
+    {
+     stock_test.add_to_orders(LocalDate.now().getDayOfWeek().toString().toLowerCase(Locale.ROOT),999,3,20.0,"something","something","something","something","something");
+     stock_test.periodic_order();
+     stock_test.shortage_order();
+        assertEquals(stock_test.get_products(999).getQuantity(),stock_test.get_products(999).getMin_quantity()+1);
+    }
+
 
 
 }
