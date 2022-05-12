@@ -68,17 +68,19 @@ public class Periodic_Order_DAO {
 
 
         String sql = "CREATE TABLE IF NOT EXISTS Periodic_Order (\n"
-                + " id integer PRIMARY KEY,\n"
+                + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + " day_of_week text,\n"
-                + " catalog_number Long FOREIGN KEY REFERENCES Products(catalog_number),\n"
+                + " catalog_number long,\n"
                 + " quantity integer,\n"
                 + " manufacturer text,\n"
                 + " main_category text,\n"
                 + " sub_category text,\n"
                 + " sub_sub_category text,\n"
                 + " name text,\n"
-                + " cost double\n"
+                + " cost double,\n"
+                + "  FOREIGN KEY (catalog_number) REFERENCES Products(catalog_number)\n"
                 + ");";
+
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);
@@ -90,22 +92,41 @@ public class Periodic_Order_DAO {
 
     }
 
-    public void insert(int id, String day_of_week, long catalog_number,int quantity,String manufactorer,String category,String sub_category,String sub_sub_category,String name,Double cost) {
-        String sql = "INSERT INTO Periodic_Order(id, day_of_week, catalog_number, quantity, manufacturer, main_category, sub_category, sub_sub_category, name, cost) VALUES(?,?,?,?,?,?,?,?,?,?)";
+    public int get_current_id()
+    {
+        String query = "select seq from sqlite_sequence WHERE name = 'Periodic_Order'";
+
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(query);
+            int current_id=res.getInt(1);
+            conn.close();
+            return current_id;
+
+        } catch (SQLException e) {
+
+        }
+        return -1;
+
+    }
+
+    public void insert(String day_of_week, long catalog_number,int quantity,String manufactorer,String category,String sub_category,String sub_sub_category,String name,Double cost) {
+        String sql = "INSERT INTO Periodic_Order(day_of_week, catalog_number, quantity, manufacturer, main_category, sub_category, sub_sub_category, name, cost) VALUES(?,?,?,?,?,?,?,?,?)";
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, id);
-            pstmt.setString(2, day_of_week);
-            pstmt.setLong(3,catalog_number);
-            pstmt.setInt(4,quantity);
-            pstmt.setString(5,manufactorer);
-            pstmt.setString(6,category);
-            pstmt.setString(7,sub_category);
-            pstmt.setString(8,sub_sub_category);
-            pstmt.setString(9,name);
-            pstmt.setDouble(10,cost);
+
+            pstmt.setString(1, day_of_week);
+            pstmt.setLong(2,catalog_number);
+            pstmt.setInt(3,quantity);
+            pstmt.setString(4,manufactorer);
+            pstmt.setString(5,category);
+            pstmt.setString(6,sub_category);
+            pstmt.setString(7,sub_sub_category);
+            pstmt.setString(8,name);
+            pstmt.setDouble(9,cost);
 
 
             pstmt.executeUpdate();

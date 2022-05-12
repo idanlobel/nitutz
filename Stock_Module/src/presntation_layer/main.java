@@ -160,7 +160,7 @@ public class main {
                 }
             }
 
-            if(order_in_array[0].equals("Show") | order_in_array[0].equals("show"))
+            if(order_in_array.length==4 && order_in_array[0].equals("Show") | order_in_array[0].equals("show"))
             {
                 System.out.println(stock_manager.show_by_catgeory(order_in_array[1],order_in_array[2],order_in_array[3]).tostring());
             }

@@ -1,3 +1,5 @@
+import Data_layer.DAL_controller;
+import Data_layer.Products_DAO;
 import busniess_layer.Product;
 import busniess_layer.Products;
 import busniess_layer.Sale;
@@ -20,9 +22,9 @@ class StockTest {
     @BeforeEach
     void setUp() {
         stock_test=new Stock();
-        products_1_test=new Products(1,"something",100,50.0,100.0, LocalDate.now().toString(),"something","something","something","something",null,null);
-        products_2_test=new Products(2,"something",10,50.0,100.0, LocalDate.now().toString(),"something","something","something","something",null,null);
-        sale_test = new Sale(0,0, LocalDate.now().toString(),LocalDate.of(2033,4,6).toString(),"something",null);
+        products_1_test=new Products(1,"something",100,50.0,100.0, LocalDate.now().toString(),"something","something","something","something", DAL_controller.getInstance().getProducts_table(), DAL_controller.getInstance().getProduct_table());
+        products_2_test=new Products(2,"something",10,50.0,100.0, LocalDate.now().toString(),"something","something","something","something",DAL_controller.getInstance().getProducts_table(), DAL_controller.getInstance().getProduct_table());
+        sale_test = new Sale(0, LocalDate.now().toString(),LocalDate.of(2033,4,6).toString(),"something",DAL_controller.getInstance().getSale_table());
     }
 
     @Test

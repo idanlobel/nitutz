@@ -24,7 +24,7 @@ public class Product {
     private Product_DAO product_dao;
     private Long catalog_number;
 
-    public Product(String name, String delivery_date, Double cost_price, Double sell_price, String expire, int id, Product_DAO pd,long catalog_number)
+    public Product(String name, String delivery_date, Double cost_price, Double sell_price, String expire,Product_DAO pd,long catalog_number)
     {
         this.name=name;
         this.delivery_date=delivery_date.toString();
@@ -34,11 +34,11 @@ public class Product {
         this.location=Location.storage;
         this.broken=false;
         this.sold=false;
-        this.ID=id;
+
         this.catalog_number=catalog_number;
         product_dao=pd;
-        product_dao.insert(id,name,location.toString(),cost_price,sell_price,expire,broken,delivery_date,sell_date,sold,catalog_number);
-
+        product_dao.insert(name,location.toString(),cost_price,sell_price,expire,broken,delivery_date,sell_date,sold,catalog_number);
+        this.ID=product_dao.get_current_id();
 
     }
 

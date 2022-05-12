@@ -64,7 +64,7 @@ public class Product_DAO {
     private void create_table(String connection_string) {
 
         String sql = "CREATE TABLE IF NOT EXISTS Product (\n"
-                + " id integer PRIMARY KEY,\n"
+                + " id integer PRIMARY KEY AUTOINCREMENT,\n"
                 + " name text,\n"
                 + " location text,\n"
                 + " cost_price double,\n"
@@ -91,29 +91,49 @@ public class Product_DAO {
 
     }
 
-    public void insert(int id,String name,String location, Double cost_price,Double sell_price,String expire,boolean broken, String delivery_date,String sold_date, boolean sold, long catalog_number){
-        String sql = "INSERT INTO Product(id, name, location, cost_price, sell_price, broken, expire_date, delivery_date, sell_date, sold, catalog_number) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+    public void insert(String name,String location, Double cost_price,Double sell_price,String expire,boolean broken, String delivery_date,String sold_date, boolean sold, long catalog_number){
+        String sql = "INSERT INTO Product(name, location, cost_price, sell_price, broken, expire_date, delivery_date, sell_date, sold, catalog_number) VALUES(?,?,?,?,?,?,?,?,?,?)";
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, id);
-            pstmt.setString(2, name);
-            pstmt.setString(3,location);
-            pstmt.setDouble(4,cost_price);
-            pstmt.setDouble(5,sell_price);
-            pstmt.setBoolean(6,broken);
-            pstmt.setString(7,expire);
 
-            pstmt.setString(8,delivery_date);
-            pstmt.setString(9,sold_date);
-            pstmt.setBoolean(10,sold);
-            pstmt.setLong(11,catalog_number);
+            pstmt.setString(1, name);
+            pstmt.setString(2,location);
+            pstmt.setDouble(3,cost_price);
+            pstmt.setDouble(4,sell_price);
+            pstmt.setBoolean(5,broken);
+            pstmt.setString(6,expire);
+
+            pstmt.setString(7,delivery_date);
+            pstmt.setString(8,sold_date);
+            pstmt.setBoolean(9,sold);
+            pstmt.setLong(10,catalog_number);
 
             pstmt.executeUpdate();
+
         } catch (SQLException e) {
 
         }
+    }
+
+    public int get_current_id()
+    {
+        String query = "select seq from sqlite_sequence WHERE name = 'Product'";
+
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(query);
+            int current_id=res.getInt(1);
+            conn.close();
+            return current_id;
+
+        } catch (SQLException e) {
+
+        }
+        return -1;
+
     }
     public void delete_product(int id)
     {

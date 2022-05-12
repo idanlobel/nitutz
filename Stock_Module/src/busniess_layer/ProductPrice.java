@@ -19,9 +19,10 @@ public class ProductPrice {
         this.price = price;
         this.start_date = start_date;
         this.end_date = end_date;
-        this.id=id;
+
         pricesHistoryDAO= DAL_controller.getInstance().getPricesHistoryDAO();
         pricesHistoryDAO.insert(catalog_number,start_date,end_date,price);
+        this.id=pricesHistoryDAO.get_current_id();
     }
 
     public long getCatalog_number() {

@@ -16,8 +16,8 @@ public class Stock {
 
         this.products_list = new ArrayList<>();
         this.sales_list = new ArrayList<>();
-        this.periodic_orders_list=new ArrayList<>();
-        //dal_controller=new DAL_controller();
+        this.periodic_orders_list = new ArrayList<>();
+        dal_controller = DAL_controller.getInstance();
     }
 
 
@@ -71,7 +71,7 @@ public class Stock {
         //this checks the products list to add sale to products with provided id
         for (Products products : this.products_list) {
             if (products.getCatalog_number() == products_catalog_number) {
-                    Sale new_sale = new Sale(percentage, ID_Generator.getInstance().Get_ID(), LocalDate.now().toString(), endate, reason,dal_controller.getSale_table());
+                    Sale new_sale = new Sale(percentage, LocalDate.now().toString(), endate, reason,dal_controller.getSale_table());
                     new_sale.Add_Products(products);
                     this.sales_list.add(new_sale);
 
@@ -100,7 +100,7 @@ public class Stock {
     }
 
     public void sale_by_category(String startdate, String endate, String reason, double percentage,String category,String sub_category,String sub_sub_category) throws Exception {
-        Sale new_sale=new Sale(percentage, ID_Generator.getInstance().Get_ID(), startdate,endate,reason,dal_controller.getSale_table());
+        Sale new_sale=new Sale(percentage, startdate,endate,reason,dal_controller.getSale_table());
 
         boolean sub_is_null=false;
         boolean sub_sub_is_null=false;
@@ -224,7 +224,7 @@ public class Stock {
 
 
         }
-        Report repo=new Report(Report.Subject.stock_report,ID_Generator.getInstance().Get_ID(),answer_list,null,null,dal_controller.getReport_table());
+        Report repo=new Report(Report.Subject.stock_report,answer_list,null,null);
 
         repo.Fill_Me();
         return repo;
@@ -239,7 +239,7 @@ public class Stock {
 
     public Report make_stock_report()
     {
-        Report r=new Report(Report.Subject.stock_report, ID_Generator.getInstance().Get_ID(),this.products_list,null,null,dal_controller.getReport_table());
+        Report r=new Report(Report.Subject.stock_report, this.products_list,null,null);
         r.Fill_Me();
 
         return r;
@@ -247,7 +247,7 @@ public class Stock {
 
     public Report make_prices_report()
     {
-        Report r=new Report(Report.Subject.prices_report, ID_Generator.getInstance().Get_ID(),null,null,get_every_product(),dal_controller.getReport_table());
+        Report r=new Report(Report.Subject.prices_report,null,null,get_every_product());
         r.Fill_Me();
 
         return r;
@@ -256,7 +256,7 @@ public class Stock {
 
     public Report make_sales_report()
     {
-        Report r=new Report(Report.Subject.sales_report, ID_Generator.getInstance().Get_ID(),this.products_list,this.sales_list,null,dal_controller.getReport_table());
+        Report r=new Report(Report.Subject.sales_report, this.products_list,this.sales_list,null);
         r.Fill_Me();
 
         return r;
@@ -264,7 +264,7 @@ public class Stock {
 
     public Report make_defective_report()
     {
-        Report r=new Report(Report.Subject.defective_items_report, ID_Generator.getInstance().Get_ID(),null,null,get_every_product(),dal_controller.getReport_table());
+        Report r=new Report(Report.Subject.defective_items_report, null,null,get_every_product());
         r.Fill_Me();
 
         return r;
@@ -292,7 +292,7 @@ public class Stock {
 
     public Report make_sorted_by_expiration_report()
     {
-        Report r=new Report(Report.Subject.sortedby_expiry_report,ID_Generator.getInstance().Get_ID(), null,null,this.sorted_by_expiration(),dal_controller.getReport_table());
+        Report r=new Report(Report.Subject.sortedby_expiry_report, null,null,this.sorted_by_expiration());
 
         return r;
     }
@@ -334,6 +334,7 @@ public class Stock {
         {
             if(p.getMin_quantity()>p.getQuantity())
             {
+                answer+="WARNING!!  "+p.getName()+" has reached minimum quantity!   quantity:"+p.getQuantity()+"\n";
                 quantity_to_order= p.getMin_quantity()-p.getQuantity()+1;
 
                 Order(p.getCatalog_number(),quantity_to_order,p.getProduct_list().get(0).getcostprice(), LocalDate.parse(LocalDate.now().plusDays(7).toString()).toString(),p.getName(),p.getManufactorer(),p.getMain_category(),p.getSub_category(),p.getSub_sub_category());
@@ -367,6 +368,7 @@ public class Stock {
                 o.reset();
             }
         }
+
 
         return  answer;
     }
@@ -477,4 +479,7 @@ public class Stock {
 
 
     }
+
+
+
 }

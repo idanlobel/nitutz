@@ -65,7 +65,7 @@ public class Sale_DAO {
 
 
         String sql = "CREATE TABLE IF NOT EXISTS Sale (\n"
-                + " id integer PRIMARY KEY,\n"
+                + " id integer PRIMARY KEY AUTOINCREMENT,\n"
                 + " percentage double,\n"
                 + " start_date text,\n"
                 + " end_date text,\n"
@@ -82,17 +82,36 @@ public class Sale_DAO {
 
     }
 
-    public void insert(int id,double percentage,String start_date, String end_date,String reason){
-        String sql = "INSERT INTO Sale(id, percentage, start_date, end_date, reason) VALUES(?,?,?,?,?)";
+    public int get_current_id()
+    {
+        String query = "select seq from sqlite_sequence WHERE name = 'Sale'";
+
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(query);
+            int current_id=res.getInt(1);
+            conn.close();
+            return current_id;
+
+        } catch (SQLException e) {
+
+        }
+        return -1;
+
+    }
+
+    public void insert(double percentage,String start_date, String end_date,String reason){
+        String sql = "INSERT INTO Sale( percentage, start_date, end_date, reason) VALUES(?,?,?,?)";
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, id);
-            pstmt.setDouble(2, percentage);
-            pstmt.setString(3,start_date);
-            pstmt.setString(4,end_date);
-            pstmt.setString(5,reason);
+
+            pstmt.setDouble(1, percentage);
+            pstmt.setString(2,start_date);
+            pstmt.setString(3,end_date);
+            pstmt.setString(4,reason);
 
 
             pstmt.executeUpdate();

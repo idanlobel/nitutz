@@ -1,7 +1,5 @@
 package busniess_layer;
 
-import Data_layer.Report_DAO;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,22 +12,22 @@ public class Report {
     }
 
     private Subject subject;
-    private int id;
+
     private List<Products> products;
     private  List<Sale> sales;
     private List<Product> every_product;
-    private Report_DAO report_dao;
+//    private Report_DAO report_dao;
 
 
-    public Report (Subject s,int id,List<Products> products ,List<Sale> sales,List<Product> every_product,Report_DAO rd)
+    public Report (Subject s,List<Products> products ,List<Sale> sales,List<Product> every_product)
     {
         this.subject=s;
-        this.id=id;
+
         this.products=products;
         this.sales=sales;
         this.every_product=every_product;
-        this.report_dao=rd;
-        report_dao.insert(id,s.toString());
+     //   this.report_dao=rd;
+        //report_dao.insert(id,s.toString());
 
     }
 
@@ -189,10 +187,7 @@ public class Report {
 
     }
 
-    public int getId()
-    {
-        return id;
-    }
+
 
     public Subject getSubject() {
         return subject;

@@ -1,3 +1,4 @@
+import Data_layer.DAL_controller;
 import busniess_layer.Products;
 import busniess_layer.Sale;
 import busniess_layer.Stock;
@@ -17,8 +18,8 @@ class SaleTest {
     @BeforeEach
     void setUp() {
         stock_test=new Stock();
-        products_test=new Products(1,"something",10,50.0,100.0,LocalDate.now().toString(),"something","something","something","something",null,null);
-        sale_test = new Sale(0,0, LocalDate.now().toString(),LocalDate.of(2033,4,6).toString(),"something",null);
+        products_test=new Products(1,"something",10,50.0,100.0,LocalDate.now().toString(),"something","something","something","something", DAL_controller.getInstance().getProducts_table(), DAL_controller.getInstance().getProduct_table());
+        sale_test = new Sale(0, LocalDate.now().toString(),LocalDate.of(2033,4,6).toString(),"something",DAL_controller.getInstance().getSale_table());
     }
 
     @Test

@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.WeakHashMap;
 
 public class PricesHistoryDAO {
-    private String table_name="ProductsPrice";
+    private String table_name="ProductPrice";
     private String connection_string;
     private WeakHashMap<Integer, ProductPrice> pricesMap;
 
@@ -64,12 +64,13 @@ public class PricesHistoryDAO {
     private void create_table(String connection_string) {
 
 
-        String sql = "CREATE TABLE IF NOT EXISTS ProductPrices (\n"
-                + " id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,\n"
-                + " catalog_number Long FOREIGN KEY REFERENCES Products(catalog_number), \n"
-                + " start_date text NOT Null, \n"
+        String sql = "CREATE TABLE IF NOT EXISTS ProductPrice (\n"
+                + " id integer PRIMARY KEY AUTOINCREMENT,\n"
+                + " catalog_number Long, \n"
+                + " start_date text, \n"
                 + " end_date text, \n"
                 + "price double NOT Null, \n"
+                + "  FOREIGN KEY (catalog_number) REFERENCES Products(catalog_number)\n"
                 + ");";
 
         try{
@@ -82,8 +83,27 @@ public class PricesHistoryDAO {
 
     }
 
+    public int get_current_id()
+    {
+        String query = "select seq from sqlite_sequence WHERE name = 'ProductPrice'";
+
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(query);
+            int current_id=res.getInt(1);
+            conn.close();
+            return current_id;
+
+        } catch (SQLException e) {
+
+        }
+        return -1;
+
+    }
+
     public void insert(long catalog_number,String start_date, String end_date,double price){
-        String sql = "INSERT INTO ProductsPrice(catalog_number,start_date,end_date,price) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO ProductPrice(catalog_number,start_date,end_date,price) VALUES(?,?,?,?)";
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);

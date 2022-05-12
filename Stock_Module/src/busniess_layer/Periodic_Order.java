@@ -18,7 +18,7 @@ public class Periodic_Order {
 
     public Periodic_Order(String day_of_week, long catalog_number, int quantity, double cost, String name, String manufactorer , String category, String sub_cat, String sub_sub_cat, Periodic_Order_DAO poda)
     {
-        this.ID=ID_Generator.getInstance().Get_ID();
+
         this.day_of_week=day_of_week;
         this.catalog_number=catalog_number;
         this.quantity=quantity;
@@ -30,7 +30,12 @@ public class Periodic_Order {
         this.sub_sub_cat=sub_sub_cat;
         ordered=false;
         this.periodic_order_dao=poda;
-        poda.insert(ID,day_of_week,catalog_number,quantity,manufactorer,category,sub_cat,sub_sub_cat,name,cost);
+
+
+        poda.insert(day_of_week,catalog_number,quantity,manufactorer,category,sub_cat,sub_sub_cat,name,cost);
+        this.ID=poda.get_current_id();
+
+
     }
 
     public String getDay_of_week()

@@ -18,17 +18,17 @@ public class Sale {
 
 
 
-    public Sale(double percentage,int Id, String start_date, String end_date, String reason,Sale_DAO sale_dao) {
+    public Sale(double percentage,String start_date, String end_date, String reason,Sale_DAO sale_dao) {
         this.percentage = percentage/100;
         this.start_date = start_date;
         this.end_date = end_date;
         this.reason = reason;
         this.sale_dao=sale_dao;
-        this.sale_dao.insert(Id,percentage,start_date,end_date,reason);
+        this.sale_dao.insert(percentage,start_date,end_date,reason);
 
 
 //        this.products_in_sale.add(product);
-        this.ID=Id;
+        this.ID=this.sale_dao.get_current_id();
     }
     public int getId()
     {

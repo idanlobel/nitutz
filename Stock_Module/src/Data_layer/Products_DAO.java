@@ -110,7 +110,7 @@ public class Products_DAO {
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+
         }
 
     }

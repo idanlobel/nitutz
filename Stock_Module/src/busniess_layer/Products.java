@@ -1,5 +1,6 @@
 package busniess_layer;
 
+import Data_layer.PricesHistoryDAO;
 import Data_layer.Product_DAO;
 import Data_layer.Products_DAO;
 import busniess_layer.Product;
@@ -39,7 +40,7 @@ public class Products {
         this.manufactorer=manufactorer;
         this.main_category=category;
         this.prices_history=new LinkedList<>();
-        ProductPrice originalPrice=new ProductPrice(this.catalog_number,this.current_sell_price,LocalDate.now().toString(),null);
+        ProductPrice originalPrice=new ProductPrice(this.catalog_number,sell_price,LocalDate.now().toString(),null);
         this.prices_history.add(originalPrice);
         this.current_sell_price=sell_price;
         this.overall_sale_percentage=0.0;
@@ -74,7 +75,7 @@ public class Products {
       //  List<Product> new_items=new ArrayList<>();
         for(int i=0;i<number;i++)
         {
-            Product new_product=new Product (this.name,LocalDate.now().toString(),cost_price,current_sell_price,expiry,ID_Generator.getInstance().Get_ID(),pa,catalog_number);
+            Product new_product=new Product (this.name,LocalDate.now().toString(),cost_price,current_sell_price,expiry,pa,catalog_number);
             //new_items.add(new_product);
             this.product_list.add(new_product);
 
@@ -210,5 +211,17 @@ public class Products {
                 this.product_list.remove(p);
             }
         }
+    }
+
+    public Double get_by_date(String date)
+    {
+        for(ProductPrice pp:this.prices_history)
+        {
+            if(pp.getStart_date().equals(date))
+            {
+                return pp.getPrice();
+            }
+        }
+       return null;
     }
 }
