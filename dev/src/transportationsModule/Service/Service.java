@@ -51,7 +51,7 @@ public class Service {
 
         while(true){
             String action = askInput("hello " + userName + ", please choose action from the following options and press enter:\n"
-                    + "createForm , updateForm , addSite ,addDriver ,addTruck , updateSite , updateTruck , update truck , showFormByDate");
+                    + "createForm , updateForm , addSite ,addDriver ,addTruck , updateSite , updateTruck , update truck , showFormByDate , updateWeight");
 
             switch (action){
 
@@ -65,9 +65,13 @@ public class Service {
 
                 case "createForm": { transportService.createTransport(); break;}
 
-                case "showFormByDate": { transportService.showTransportForm(); break;}
+                case "UpdateForm": { transportService.updateTransport(); break;}
+
+                case "showFormByDate": { transportService.showTransportFormByDate(); break;}
 
                 case "updateForm": {  transportService.updateTransport(); break;}
+
+                case "updateWeight": {  transportService.updateWeight(); break;}
 
             }
         }
@@ -87,8 +91,8 @@ public class Service {
 //        driverService.driversController.addDriver("3133","itay","024231","A");
         truckService.addTruck_init("1","A","1234","mazda","10","100");
         truckService.addTruck_init("2","B","4321","mazda2","10","100");
-        siteService.addSite_init("super1","sham","yosi","000","South","Supplier");
-        siteService.addSite_init("branch2","po","yosf","001","North","Branch");
+        siteService.addSite_init("super1","sham","yosi","000","South");
+        siteService.addSite_init("branch2","po","yosf","001","North");
         transportService.addTransport_init("0000", "01/01/0000", "00:00","driverID","licenceId"
                                             , "super1",new LinkedList<String>(),new LinkedList<Object[]>());
     }

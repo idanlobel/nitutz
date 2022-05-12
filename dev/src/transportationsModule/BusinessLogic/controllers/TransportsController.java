@@ -2,6 +2,7 @@ package src.transportationsModule.BusinessLogic.controllers;
 
 import src.EmpModule.EMPLOYEEFACADE;
 import src.transportationsModule.BusinessLogic.TransportForm;
+import src.transportationsModule.BusinessLogic.TransportStatus;
 import src.transportationsModule.Dal.TransportsRep;
 import src.transportationsModule.Service.ProductsDocumentSDTO;
 import src.transportationsModule.Service.TransportSDTO;
@@ -20,14 +21,16 @@ public class TransportsController {
     }
 
     public void updateForm(String id, String toChangeField, String newVal) {
+
         getFormsById(id).update(id,toChangeField,newVal);
+        transportsRep.update(getFormsById(id));
     }
 
     public void createTransport(TransportSDTO transportSDTO){
         // TODO: 06/05/2022
         //
         TransportForm transportForm1= new TransportForm(transportSDTO.getId(), transportSDTO.getDate(), transportSDTO.getDepartureTime(), transportSDTO.getDriverid(),
-                transportSDTO.getSource(), transportSDTO.getDestinations(),transportSDTO.getTruckLicensePlateId());
+                transportSDTO.getSource(), transportSDTO.getDestinations(),transportSDTO.getTruckLicensePlateId(),transportSDTO.getStatus(),transportSDTO.getTransportWeight());
         for (ProductsDocumentSDTO traDoc: transportSDTO.getTransportProductsDocuments()) {
             transportForm1.addDocument(traDoc.getId(),traDoc.getDestinationId(),traDoc.getProducts());
         }

@@ -2,6 +2,7 @@ package src.transportationsModule.Service;
 
 import src.EmpModule.EMPLOYEEFACADE;
 import src.transportationsModule.BusinessLogic.IdGenerator;
+import src.transportationsModule.BusinessLogic.TransportStatus;
 import src.transportationsModule.BusinessLogic.controllers.TransportsFacade;
 
 import java.util.LinkedList;
@@ -43,7 +44,7 @@ public class TransportService {
 
             tfD.destinationId = askInput("choose the destination name and region from site list: " + transportsFacade.viewAllSites());
             transportSDTO.destinations.add(tfD.destinationId);
-            tfD.id="0";
+            tfD.id= idgenarator.getId();
             int numberOfProduct=Integer.parseInt( askInput("choose number of products to add for this destination: "));
             for (int j = 0; j < numberOfProduct; j++) {
                 tfD.products.put(askInput("name of product: "),Integer.parseInt(askInput("quantity: ")));
@@ -76,19 +77,7 @@ public class TransportService {
         String answer = scanner.next();
         return answer;
     }
-    /**
-     * @param question that the user will gonna asked to answer
-     * @return the answer of the user as a string
-     */
-    private String[] askInput(int numOfArgs, String question){
-        System.out.println(question);
-        String[] ans = new String[2];
-        String answer_Arg1 = scanner.next();
-        String answer_Arg2 = scanner.next();
-        ans[0] = answer_Arg1;
-        ans[1] = answer_Arg2;
-        return ans;
-    }
+
 
 
 
@@ -101,11 +90,11 @@ public class TransportService {
             Object[][] items  = { {"milk", 20} , {"water" , 10} , {"queso" , 25 }};
             docs.add(new ProductsDocumentSDTO((String)o[0],(String)o[1], items) );
         }
-        transportsFacade.regTransport(new TransportSDTO(id, date, departureTime, driverId, truckLicensePlateId, source, destinations, docs));
+        transportsFacade.regTransport(new TransportSDTO(id, date, departureTime, driverId, truckLicensePlateId, source, destinations, docs, TransportStatus.PreTransported,""));
     }
 
 
-    public void showTransportForm() {
+    public void showTransportFormByDate() {
 
         String date = askInput("enter date to pull all Transport Form:");
 
@@ -113,6 +102,7 @@ public class TransportService {
         //transportForm.truck????
         //\no good. needs Service objects???? tranportForm.source = siteService. askInput("choose the transport source from following: " + siteService.getSitesNames().toString())
         List<String> transports = transportsFacade.showTransportByDate(date);
+
         System.out.println(transports.toString());
 
     }
@@ -134,9 +124,13 @@ public class TransportService {
 
             toMore = askInput("do you want to change more? Y/N");
         }
+        transport = transportsFacade.getTransportById(id);
         System.out.println("Updated:");
         System.out.println(transport);
 
 
+    }
+
+    public void updateWeight() {
     }
 }

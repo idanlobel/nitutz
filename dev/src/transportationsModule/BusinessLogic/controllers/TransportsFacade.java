@@ -59,8 +59,8 @@ public class TransportsFacade {
         return sitesController.viewAllSites();
     }
 
-    public void addSite(String name, String address, String contactPersonName, String contactPersonNamePhone, String region, String siteType) {
-        sitesController.addSite(name, address, contactPersonName, contactPersonNamePhone, region, siteType);
+    public void addSite(String name, String address, String contactPersonName, String contactPersonNamePhone, String region) {
+        sitesController.addSite(name, address, contactPersonName, contactPersonNamePhone, region);
     }
 
     public String viewTrucks() {

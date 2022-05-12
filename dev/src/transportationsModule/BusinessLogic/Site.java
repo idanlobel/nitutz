@@ -1,20 +1,20 @@
-package src.transportationsModule.BusinessLogic.Garbage;
+package src.transportationsModule.BusinessLogic;
 
 import src.transportationsModule.BusinessLogic.ContactPerson;
+import src.transportationsModule.BusinessLogic.Garbage.Region;
+import src.transportationsModule.BusinessLogic.Garbage.SiteType;
 
 public class Site {
     public String name;
     public String address;
     public ContactPerson contactPerson;
     public Region region;
-    public SiteType siteType;
 
-    public Site(String name, String address, ContactPerson contactPerson, Region region,SiteType siteType ){
+    public Site(String name, String address, ContactPerson contactPerson, Region region ){
         this.name = name;
         this.address = address;
         this.contactPerson = contactPerson;
         this.region = region;
-        this.siteType =siteType;
     }
 
     public String getName() {

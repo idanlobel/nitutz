@@ -1,5 +1,8 @@
 package src.transportationsModule.Dal;
 
+import src.transportationsModule.BusinessLogic.ContactPerson;
+import src.transportationsModule.BusinessLogic.Garbage.Region;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -54,7 +57,9 @@ public class CreateTable {
                 + " departureTime text NOT NULL,\n"
                 + " driverId text NOT NULL,\n"
                 + " source text NOT NULL,\n"
-                + " truckLicenceNumber text NOT NULL\n"
+                + " truckLicenceNumber text NOT NULL,\n"
+                + " transportStatus text NOT NULL,\n"
+                + " transportWeight text \n"
                 + ");";
 
         try{
@@ -100,6 +105,32 @@ public class CreateTable {
                 + " TransportDocumentId text NOT NULL,"
                 + " PRIMARY KEY (productName,TransportDocumentId),\n"
                 + " FOREIGN KEY (TransportDocumentId) REFERENCES transportDocuments(id)"
+                + ");";
+
+        try{
+            Connection conn = DriverManager.getConnection(url);
+            Statement stmt = conn.createStatement();
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void createSitesTable() {
+//        public String name;
+//        public String address;
+//        public ContactPerson contactPerson;
+//        public Region region;
+//        public String siteType;
+        String url = "jdbc:sqlite:SuperDuper.db";
+
+        // SQL statement for creating a new table
+        String sql = "CREATE TABLE IF NOT EXISTS sites (\n"
+                + " name text PRIMARY KEY,\n"
+                + " address text NOT NULL,\n"
+                + " contactPersonName text NOT NULL,\n"
+                + " contactPersonPhone text NOT NULL,\n"
+                + " region text NOT NULL\n"
                 + ");";
 
         try{

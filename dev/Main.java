@@ -16,8 +16,8 @@ public class Main {
     createNewTransportFormsTable();
     createNewTransportDocumentTable();
     createNewDocumentProductsTable();
-
-
+    createSitesTable();
+    createSitesTable();
 
     Scanner var1 = new Scanner(System.in);
     Service var2 = new Service();

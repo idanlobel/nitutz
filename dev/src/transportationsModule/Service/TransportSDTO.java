@@ -1,6 +1,8 @@
 package src.transportationsModule.Service;
 
 
+import src.transportationsModule.BusinessLogic.TransportStatus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,8 @@ public class TransportSDTO {
     String driverId;
     String truckLicensePlateId;
     String source;
+    TransportStatus status;
+    String transportWeight;
     List<String> destinations;
     List<ProductsDocumentSDTO> productsDocumentSDTOS;
 
@@ -19,10 +23,12 @@ public class TransportSDTO {
     public TransportSDTO() {
         this.destinations = new ArrayList<>();
         this.productsDocumentSDTOS = new ArrayList<ProductsDocumentSDTO>();
+        transportWeight="";
+        status=TransportStatus.PreTransported;
     }
 
     public TransportSDTO(String id, String date, String departureTime, String driverId, String truckLicensePlateId,
-                         String source, List<String> destinations, List<ProductsDocumentSDTO> productsDocumentSDTOS) {
+                         String source, List<String> destinations, List<ProductsDocumentSDTO> productsDocumentSDTOS,TransportStatus status,String transportWeight) {
         this.id = id;
         this.date = date;
         this.departureTime = departureTime;
@@ -31,6 +37,8 @@ public class TransportSDTO {
         this.source = source;
         this.destinations = destinations;
         this.productsDocumentSDTOS = productsDocumentSDTOS;
+        this.status=status;
+        this.transportWeight=transportWeight;
     }
 
     public String getId() {
@@ -65,6 +73,22 @@ public class TransportSDTO {
 
 
     public List<ProductsDocumentSDTO> getTransportProductsDocuments() {
+        return productsDocumentSDTOS;
+    }
+
+    public String getDriverId() {
+        return driverId;
+    }
+
+    public TransportStatus getStatus() {
+        return status;
+    }
+
+    public String getTransportWeight() {
+        return transportWeight;
+    }
+
+    public List<ProductsDocumentSDTO> getProductsDocumentSDTOS() {
         return productsDocumentSDTOS;
     }
 }

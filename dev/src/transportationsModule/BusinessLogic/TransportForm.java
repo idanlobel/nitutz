@@ -12,10 +12,15 @@ public class TransportForm {
     String departureTime;
     String driverId;
     String source;
+    TransportStatus status;
+    String transportWeight;
     List<String> destinations;
     String truckLicenceNumber;
     List<TransportProductsDocument> transportProductsDocuments;
 
+    public TransportStatus getStatus() {
+        return status;
+    }
     public String getDate() {
         return date;
     }
@@ -44,7 +49,7 @@ public class TransportForm {
         return transportProductsDocuments;
     }
 
-    public TransportForm(String id, String date, String departureTime, String driverId, String source, List<String> destinations, String truckLicenceNumber) {
+    public TransportForm(String id, String date, String departureTime, String driverId, String source, List<String> destinations, String truckLicenceNumber,TransportStatus transportStatus,String transportWeight) {
         this.id = id;
         this.date = date;
         this.departureTime = departureTime;
@@ -53,6 +58,8 @@ public class TransportForm {
         this.destinations = destinations;
         this.truckLicenceNumber =truckLicenceNumber;
         transportProductsDocuments = new ArrayList<>();
+        this.status=transportStatus;
+        this.transportWeight=transportWeight;
     }
 
     public String getId() {
@@ -75,6 +82,7 @@ public class TransportForm {
                 ", driver=" + driverId +
                 ", source=" + source +
                 ", destinations=" + destinations +
+                ", status=" + status.toString() +
                 '}';
     }
 
@@ -97,7 +105,7 @@ public class TransportForm {
                 departureTime = newVal;
                 break;
             }
-            case "driverId": {
+            case "driver": {
                 driverId = newVal;
                 break;
             }
@@ -106,7 +114,14 @@ public class TransportForm {
 //        this.destinations = destinations;
 //        this.truckLicenceNumber =truckLicenceNumber;
 //        transportProductsDocuments = new ArrayList<>();
+
+
+
         }
 
+    }
+
+    public String getTransportWeight() {
+        return transportWeight;
     }
 }

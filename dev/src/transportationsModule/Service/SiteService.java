@@ -29,7 +29,7 @@ public class SiteService {
         String region = askInput("enter the site region South or North:" );
         String siteType = askInput("enter the site siteType Supplier Or Branch:" );
 
-        transportsFacade.addSite(name, address, contactPersonName,contactPersonNamePhone, region, siteType);
+        transportsFacade.addSite(name, address, contactPersonName,contactPersonNamePhone, region);
 
     }
 
@@ -46,7 +46,7 @@ public class SiteService {
     public void updateSite() {
     }
 
-    public void addSite_init(String name, String address, String contactPersonName, String contactPersonNamePhone, String region, String siteType) {
-        transportsFacade.addSite(name, address, contactPersonName, contactPersonNamePhone, region, siteType);
+    public void addSite_init(String name, String address, String contactPersonName, String contactPersonNamePhone, String region) {
+        transportsFacade.addSite(name, address, contactPersonName, contactPersonNamePhone, region);
     }
 }

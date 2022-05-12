@@ -8,7 +8,10 @@ public class TransportProductsDocument {
     String id;
     String destinationId;
     HashMap<String,Integer> products;
+    public TransportProductsDocument(){
 
+        this.products = new HashMap<>();
+    }
     public TransportProductsDocument(String id, String destinationId, HashMap<String, Integer> products){
         this.id = id;
         this.destinationId = destinationId;
@@ -35,5 +38,17 @@ public class TransportProductsDocument {
 
     public HashMap<String, Integer> getProducts() {
         return products;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setDestinationId(String destinationId) {
+        this.destinationId = destinationId;
+    }
+
+    public void setProducts(HashMap<String, Integer> products) {
+        this.products = products;
     }
 }
