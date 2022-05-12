@@ -59,7 +59,7 @@ public class WorkerController {
     }
 
     public boolean deleteWorker(int workerID, int callerID) throws Exception{
-        if(workers.readHR().getId() == workerID) throw new Exception("Can't remove HR!");
+        if(workers.readHR().getId() == callerID) throw new Exception("Can't remove HR!");
         try {
             workers.delete(workerID);
             workerScheduleDAO.delete(workerID);
@@ -128,8 +128,8 @@ public class WorkerController {
 
     public boolean addJobForAWorker(int workerID, String job, int callerID) throws Exception {
         try {
-            if (workers.readHR().getId()!=callerID)throw new Exception("only HR can add a job to a worker");
             Worker worker = getWorker(workerID);
+            if (workers.readHR().getId()!=callerID)throw new Exception("only HR can add a job to a worker");
             if(jobsDAO.exists(job.toLowerCase()) && !worker.getWorkerJobs().contains(job.toLowerCase())){
                 worker.getWorkerJobs().add(job.toLowerCase());
                 workers.update(worker);

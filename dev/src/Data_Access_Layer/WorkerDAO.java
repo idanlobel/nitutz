@@ -24,7 +24,7 @@ public class WorkerDAO {
         if (worker!=null) return  worker;
         Connection conn=null;
         try {
-            conn = DatabaseManager.connect();
+            conn = DatabaseManager.getInstance().connect();
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery("select * from workers where id = "+id);
             if ( rs.next() ) {
@@ -72,7 +72,7 @@ public class WorkerDAO {
             Connection conn=null;
             List<Integer> workerIDS = new LinkedList<>();
             try {
-                conn = DatabaseManager.connect();
+                conn = DatabaseManager.getInstance().connect();
                 Statement statement = conn.createStatement();
                 ResultSet rs = statement.executeQuery("select id from workers");
                 while ( rs.next() ) {
@@ -103,8 +103,10 @@ public class WorkerDAO {
         if (cacheWorkers.containsKey(worker.getId())) throw new Exception("worker already exists");
         Connection conn=null;
         String sql = "INSERT INTO workers(id,name,password,email,bank_id,bank_branch,salary,rec_date) VALUES(?,?,?,?,?,?,?,?)";
+        String sql2 = "INSERT INTO workerJobs(worker_id,job) VALUES(?,?)";
+        String sql3 = "INSERT INTO workerPresence(present,day,shift_type,worker_id) VALUES(?,?,?,?)";
         try {
-            conn = DatabaseManager.connect();
+            conn = DatabaseManager.getInstance().connect();
             PreparedStatement rs = conn.prepareStatement(sql);
             rs.setInt(1, worker.getId());
             rs.setString(2, worker.getName());
@@ -116,6 +118,25 @@ public class WorkerDAO {
             String date = format.format(worker.getEmploymentConditions().getRecruitmentDate());
             rs.setString(8,date);
             rs.executeUpdate();
+            //set his jobs;
+            for (String job:worker.getWorkerJobs()) {
+                rs=conn.prepareStatement(sql2);
+                rs.setInt(1,worker.getId());
+                rs.setString(2,job);
+                rs.execute();
+            }
+            //set his own worker schedule
+            for (int i =0; i<5; i++){
+                for (int j =0; j<2; j++){
+                    rs=conn.prepareStatement(sql3);
+                    rs.setInt(1,0); //all the days start with false as this worker was just now added
+                    rs.setInt(2,i);
+                    rs.setInt(3,j);
+                    rs.setInt(4,worker.getId());
+                    rs.execute();
+                }
+            }
+            conn.commit();
             cacheWorkers.put(worker.getId(),worker);
         } catch(Exception e) {
             if (!retry){retry=true; create(worker);}
@@ -146,10 +167,14 @@ public class WorkerDAO {
     public void delete(int id) throws Exception{
         Connection conn=null;
         String sql = "DELETE from workers where id = "+id;
+        String sql2 = "DELETE from workerJobs where id = "+id;
         try {
-            conn = DatabaseManager.connect();
+            conn = DatabaseManager.getInstance().connect();
             PreparedStatement rs = conn.prepareStatement(sql);
-            rs.executeUpdate();
+            rs.execute();
+            rs = conn.prepareStatement(sql2);
+            rs.execute();
+            conn.commit();
             cacheWorkers.remove(id);
         } catch(Exception e) {
             if (!retry){retry=true; delete(id);}
@@ -173,5 +198,28 @@ public class WorkerDAO {
                 new BankAccount(202562, 015), new EmploymentConditions(1, new Date()),
                 new LinkedList(Arrays.asList()));}//read from db;
         return hr;
+    }
+
+    public boolean exists(int id) throws Exception {
+        Worker worker = cacheWorkers.get(id);
+        if (worker!=null) return true;
+        Connection conn=null;
+        try {
+            conn = DatabaseManager.getInstance().connect();
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery("select * from workers where id = "+id);
+            if ( rs.next() ) return true;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                throw new Exception(ex.getMessage());
+            }
+        }
+        return false;
     }
 }
