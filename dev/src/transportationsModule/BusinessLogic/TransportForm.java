@@ -109,6 +109,14 @@ public class TransportForm {
                 driverId = newVal;
                 break;
             }
+            case "transportStatus":{
+                status=TransportStatus.valueOf(newVal);
+                break;
+            }
+            case "transportWeight":{
+                transportWeight=newVal;
+                break;
+            }
 //todo add support to
 //        this.source = source;
 //        this.destinations = destinations;

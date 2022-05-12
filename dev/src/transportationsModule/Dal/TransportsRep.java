@@ -153,7 +153,6 @@ public class TransportsRep {
             pstmt.setString(7, transportForm.getTransportWeight());
             pstmt.setString(8, transportForm.getId());
 
-            System.out.println(sql);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

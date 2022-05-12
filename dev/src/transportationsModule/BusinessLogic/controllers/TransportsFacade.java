@@ -83,4 +83,7 @@ public class TransportsFacade {
         transportsController.updateForm(id, toChangeField, newVal);
 
     }
+    public int getTruckMaxWeightFromTransportID(String id) {
+        return Integer.parseInt(trucksController.getTruckById(transportsController.getFormsById(id).getTruckLicenceNumber()).getMaxWeight());
+    }
 }

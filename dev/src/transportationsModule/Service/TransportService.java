@@ -132,5 +132,15 @@ public class TransportService {
     }
 
     public void updateWeight() {
+        String formIdToChangeWeight = askInput("enter the form id:");
+        int maxweight = transportsFacade.getTruckMaxWeightFromTransportID(formIdToChangeWeight);
+        int weightToUpdate = Integer.parseInt(askInput("enter the weight:"));
+        transportsFacade.updateForm(formIdToChangeWeight, "transportWeight", weightToUpdate+"");
+
+        if(maxweight<weightToUpdate){
+            transportsFacade.updateForm(formIdToChangeWeight, "transportStatus", TransportStatus.ReOrganize.toString());
+            System.out.println("please Contact transport manager to reorganize this transportation");
+        }
+
     }
 }
