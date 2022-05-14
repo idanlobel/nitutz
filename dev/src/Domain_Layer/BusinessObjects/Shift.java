@@ -116,7 +116,7 @@ public class Shift {
             return true;
         }
         catch(Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
 
@@ -135,7 +135,7 @@ public class Shift {
             return true;
         }
         catch (Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
 
@@ -160,7 +160,7 @@ public class Shift {
             else throw new Exception("There's no such worker in this shift");
         }
         catch(Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
     public boolean removeTransaction(int transactionID, int workerID) throws Exception {
@@ -180,7 +180,7 @@ public class Shift {
             throw new Exception("There are no transactions in this shift.");
         }
         catch(Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
     public boolean addTransaction(Transaction transaction, int workerID) throws Exception {
@@ -207,7 +207,7 @@ public class Shift {
             }
         }
         catch(Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
 

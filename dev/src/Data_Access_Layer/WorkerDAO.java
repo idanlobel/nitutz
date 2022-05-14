@@ -16,6 +16,8 @@ public class WorkerDAO {
     private static HashMap<Integer, Worker> cacheWorkers = new HashMap<>();
     private static HR hr;
 
+    WorkerScheduleDAO workerScheduleDAO = new WorkerScheduleDAO();
+
     private static boolean retry = false;
     private static SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
     public Worker get(int id) throws Exception{
@@ -143,15 +145,39 @@ public class WorkerDAO {
     public void update(Worker worker) throws Exception {
         if (!cacheWorkers.containsKey(worker.getId())) throw new Exception("worker doesn't exist");
         //update to db first
+        Connection conn = null;
         try {
-            delete(worker.getId());
-            create(worker);
+            conn = DatabaseManager.getInstance().connect();
+            Statement rs = conn.createStatement();
+            String date = format.format(worker.getEmploymentConditions().getRecruitmentDate());
+            String sql = "UPDATE workers SET name = '"+worker.getName()+"',password = '"+worker.getPassword()+"',email = '"
+                +worker.getEmail_address()+"',bank_id = '"+worker.getBankAccount().getBankID()+"',bank_branch = '"+worker.getBankAccount().getBranch()+
+                    "',salary = '"+worker.getEmploymentConditions().getSalary()+"',rec_date='"+date+"' where id = '"+worker.getId()+"';";
+            rs.addBatch(sql);
+            rs.addBatch("DELETE from workerJobs where worker_id = '"+worker.getId()+"';");
+            //set his jobs;
+            for (String job:worker.getWorkerJobs()) {
+                String sql2="\nINSERT INTO workerJobs(worker_id,job) VALUES('"+worker.getId()+"','"+job+"');";
+                rs.addBatch(sql2);
+            }
+            //PreparedStatement rs = conn.prepareStatement(sql);
+            rs.executeBatch();
+            conn.commit();
+            conn.close();
+            cacheWorkers.put(worker.getId(),worker);
         }catch (Exception e){
-            System.out.println("failed worker update");
+
             throw new Exception(e.getMessage());
         }
-        //maybe its better to actually make a delete sql instead but for now this will be it
-        cacheWorkers.put(worker.getId(), worker);
+        finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                throw new Exception(ex.getMessage());
+            }
+        }
     }
     public void delete(int id) throws Exception{
         Connection conn=null;

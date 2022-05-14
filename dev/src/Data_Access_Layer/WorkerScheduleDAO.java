@@ -88,10 +88,34 @@ public class WorkerScheduleDAO {
     }
     public void update(Worker_Schedule worker_schedule) throws Exception {
         if (!cacheWorkersSchedules.containsKey(worker_schedule.getId())) throw new Exception("worker doesn't exist");
-        //update to db first
-        delete(worker_schedule.getId());
-        create(worker_schedule);
-        cacheWorkersSchedules.put(worker_schedule.getId(), worker_schedule);
+        Connection conn=null;
+        try {
+            conn = DatabaseManager.getInstance().connect();
+            Statement rs = conn.createStatement();
+            for (int i =0; i<5; i++){
+                for (int j =0; j<2; j++){
+                    rs=conn.createStatement();
+                    boolean present = worker_schedule.getSchedule()[i][j];
+                    int presentInt = 0;
+                    if (present) presentInt = 1;
+                    String sql = "UPDATE workerPresence SET present = '"+presentInt+"' WHERE day = '"+i+"' and shift_type = '"+j+"' and worker_id = '"+worker_schedule.getId()+"'";
+                    rs.addBatch(sql);
+                }
+            }
+            rs.executeBatch();
+            conn.commit();
+            cacheWorkersSchedules.put(worker_schedule.getId(), worker_schedule);
+        } catch(Exception e) {
+            throw new Exception(e.getMessage());
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                throw new Exception(ex.getMessage());
+            }
+        }
     }
     public void delete(int id) throws Exception {
         if (!cacheWorkersSchedules.containsKey(id)) throw new Exception("worker doesn't exist");
