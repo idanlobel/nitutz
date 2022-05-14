@@ -55,6 +55,7 @@ public class Products_DAO {
                 for(int i=1;i<=meta.getColumnCount();i++)
                     myProductList.add(res.getObject(i,Product.class));
             }
+            stmt.close();
             return myProductList;
         } catch (SQLException e) {
             return null;
@@ -109,6 +110,7 @@ public class Products_DAO {
             Connection conn = DriverManager.getConnection(connection_string);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
+            conn.close();
         } catch (SQLException e) {
 
         }
@@ -135,6 +137,8 @@ public class Products_DAO {
             pstmt.setDouble(12,sell_price);
             pstmt.setDouble(13,0);
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -148,6 +152,8 @@ public class Products_DAO {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setLong(1,catalog_number);
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -162,6 +168,8 @@ public class Products_DAO {
             pstmt.setInt(2,storage_quantity);
             pstmt.setLong(3,catalog_number);
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -177,6 +185,8 @@ public class Products_DAO {
 
             pstmt.setLong(2,products_catalog_number);
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -191,6 +201,8 @@ public class Products_DAO {
 
             pstmt.setLong(2,products_catalog_number);
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -205,8 +217,38 @@ public class Products_DAO {
 
             pstmt.setLong(2,catalog_number);
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
+
+    public int check_if_exists(long catalog_number) {
+        String sql = "SELECT * FROM "+table_name+ " WHERE catalog_number= "+catalog_number ;
+
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(sql);
+
+            if(res.next()) {
+                int shelf_quantity=Integer.parseInt(res.getObject(3).toString());
+                conn.close();
+              return shelf_quantity;
+            }
+           res.close();
+            conn.close();
+            return -1;
+
+
+
+        } catch (SQLException e) {
+
+        }
+        return -1;
+    }
+
+
 }

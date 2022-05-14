@@ -46,8 +46,8 @@ public class Periodic_Order_DAO {
             String name=res.getObject(9).toString();
             Double cost_price=Double.parseDouble(res.getObject(10).toString());
             Periodic_Order order=new Periodic_Order(id_,day_of_week,catalog_number,quanitiy,cost_price,name,manufactore,main_cat,sub_cat,sub_sub_cat,this);
-
-
+            stmt.close();
+            conn.close();
 
            return order;
 
@@ -101,6 +101,7 @@ public class Periodic_Order_DAO {
             Connection conn = DriverManager.getConnection(connection_string);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
+            conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -117,6 +118,7 @@ public class Periodic_Order_DAO {
             ResultSet res = stmt.executeQuery(query);
             int current_id=res.getInt(1);
             conn.close();
+
             return current_id;
 
         } catch (SQLException e) {
@@ -145,7 +147,8 @@ public class Periodic_Order_DAO {
 
 
             pstmt.executeUpdate();
-
+pstmt.close();
+            conn.close();
         } catch (SQLException e) {
 
         }
@@ -159,6 +162,8 @@ public class Periodic_Order_DAO {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1,id);
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -174,6 +179,8 @@ public class Periodic_Order_DAO {
             pstmt.setInt(2,id);
 
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
         } catch (SQLException e) {
 
         }
@@ -188,6 +195,8 @@ public class Periodic_Order_DAO {
             pstmt.setInt(2,id);
 
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
         } catch (SQLException e) {
 
         }
@@ -207,8 +216,12 @@ public class Periodic_Order_DAO {
 
             if(res.next()) {
                 Integer id_ = Integer.parseInt(res.getObject(1).toString());
+                stmt.close();
+                conn.close();
                 return id_;
             }
+        stmt.close();
+            conn.close();
 
             return -1;
 

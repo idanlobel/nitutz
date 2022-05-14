@@ -50,8 +50,27 @@ public class Products {
         this.sales_history=new ArrayList<>();
 
         this.products_dao=pd;
-        pd.insert(catalog_number,name,0,sell_price,manufactorer,category,sub_category,sub_sub_category,min_quantity);
-        this.update_quantity(quantity,cost_price,expiry,product_dao);
+
+        int shelf_quan=products_dao.check_if_exists(catalog_number); // it gets shelf quantity
+        if(shelf_quan==-1)
+        {
+            pd.insert(catalog_number,name,0,sell_price,manufactorer,category,sub_category,sub_sub_category,min_quantity);
+            this.update_quantity(quantity,cost_price,expiry,product_dao);
+        }
+        else
+        {
+
+            this.product_list=product_dao.getProductlist(catalog_number);
+            this.quantity=this.product_list.size();
+            this.shelf_quantity=shelf_quan;
+            this.storage_quantity=quantity-shelf_quantity;
+
+        }
+
+
+
+
+
 
 
     }

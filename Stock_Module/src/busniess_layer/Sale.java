@@ -24,11 +24,21 @@ public class Sale {
         this.end_date = end_date;
         this.reason = reason;
         this.sale_dao=sale_dao;
-        this.sale_dao.insert(percentage,start_date,end_date,reason);
+        int id_=sale_dao.check_if_exists(percentage,start_date,end_date,reason);
+        if(id_==-1)
+        {
+            this.sale_dao.insert(percentage,start_date,end_date,reason);
+            this.ID=this.sale_dao.get_current_id();
+        }
+        else
+        {
+            this.ID=id_;
+        }
+
 
 
 //        this.products_in_sale.add(product);
-        this.ID=this.sale_dao.get_current_id();
+
     }
     public int getId()
     {

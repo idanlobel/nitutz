@@ -81,7 +81,7 @@ class StockTest {
     void make_periodic_order()
     {
 
-        stock_test.add_to_orders(LocalDate.now().getDayOfWeek().toString().toLowerCase(Locale.ROOT),products_1_test.getCatalog_number(),8,50.0,products_1_test.getName(),products_1_test.getManufactorer(),products_1_test.getMain_category(),products_1_test.getSub_category(),products_1_test.getSub_sub_category());
+        stock_test.define_periodic_orders(LocalDate.now().getDayOfWeek().toString().toLowerCase(Locale.ROOT),products_1_test.getCatalog_number(),8,50.0,products_1_test.getName(),products_1_test.getManufactorer(),products_1_test.getMain_category(),products_1_test.getSub_category(),products_1_test.getSub_sub_category());
        int periodic_id=stock_test.get_periodic_order_list().get(0).getID();
        Periodic_Order po=DAL_controller.getInstance().getPeriodic_order_table().getPeriodicOrder(periodic_id);
         assertEquals(po.getID(),stock_test.get_periodic_order_list().get(0).getID());
@@ -92,7 +92,7 @@ class StockTest {
     @Test
     void make_shortage_order()
     {
-     stock_test.add_to_orders(LocalDate.now().getDayOfWeek().toString().toLowerCase(Locale.ROOT),999,3,20.0,"something","something","something","something","something");
+     stock_test.define_periodic_orders(LocalDate.now().getDayOfWeek().toString().toLowerCase(Locale.ROOT),999,3,20.0,"something","something","something","something","something");
      stock_test.periodic_order();
      stock_test.shortage_order();
         assertEquals(stock_test.get_products(999).getQuantity(),stock_test.get_products(999).getMin_quantity()+1);

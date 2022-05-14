@@ -76,6 +76,7 @@ public class Sale_DAO {
             Connection conn = DriverManager.getConnection(connection_string);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
+            conn.close();
         } catch (SQLException e) {
 
         }
@@ -115,6 +116,7 @@ public class Sale_DAO {
 
 
             pstmt.executeUpdate();
+            conn.close();
         } catch (SQLException e) {
 
         }
@@ -128,9 +130,33 @@ public class Sale_DAO {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1,id);
             pstmt.executeUpdate();
+            conn.close();
         } catch (SQLException e) {
 
         }
     }
 
+    public int check_if_exists(double percentage, String start_date, String end_date, String reason) {
+        String sql = "SELECT id FROM "+table_name+ " WHERE percentage="+percentage +" AND start_date= '"+start_date+"' AND end_date= '"+end_date+"' AND reason= '"+reason+"'";
+
+
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(sql);
+
+            if(res.next()) {
+                Integer id_ = Integer.parseInt(res.getObject(1).toString());
+                conn.close();
+                return id_;
+            }
+            conn.close();
+            return -1;
+
+
+
+        } catch (SQLException e) {
+            return -1;
+        }
+    }
 }

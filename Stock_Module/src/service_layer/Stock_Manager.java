@@ -18,7 +18,7 @@ public class Stock_Manager {
 
 
 public void Auto_start() throws Exception {
-    this.make_order("500","20","100","2022-12-12","beer","beer's_spring","drinks","beverages","500_ml");
+    this.make_order("500","20","100","2022-12-12","beer","beers_spring","drinks","beverages","500_ml");
     this.make_order("123","200","10","2022-05-30","milk","tnuva","dairy","drinks","null");
     this.make_order("99","5","1000","2022-04-20","pizza","pizza_hut","food","fast_food","null");
     this.make_sale("500","2022-04-23","2022-08-09","easter","10");
@@ -35,7 +35,7 @@ public void Auto_start() throws Exception {
     public void create_order(String day,String product_catalog_number, String quantity, String cost,String name, String manufactorer, String category, String sub_cat, String sub_sub_cat)
     {
 
-        mystock.add_to_orders(day,Long.parseLong(product_catalog_number),Integer.parseInt(quantity),Double.parseDouble(cost),name,manufactorer,category,sub_cat,sub_sub_cat);
+        mystock.define_periodic_orders(day,Long.parseLong(product_catalog_number),Integer.parseInt(quantity),Double.parseDouble(cost),name,manufactorer,category,sub_cat,sub_sub_cat);
     }
 
     public void make_sale(String products_catalog_number, String startdate,String enddate , String reason, String percentage) throws Exception {

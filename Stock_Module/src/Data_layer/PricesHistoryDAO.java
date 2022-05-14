@@ -1,5 +1,6 @@
 package Data_layer;
 
+import busniess_layer.Periodic_Order;
 import busniess_layer.Product;
 import busniess_layer.ProductPrice;
 
@@ -26,13 +27,24 @@ public class PricesHistoryDAO {
     }
 
     private ProductPrice readProductPrice(int id) {
-        String sql = "SELECT * FROM "+table_name+ "WHERE id="+id;
+        String sql = "SELECT * FROM "+table_name+ " WHERE id="+id;
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery(sql);
-            return res.getObject(1,ProductPrice.class);
+            Integer id_=Integer.parseInt(res.getObject(1).toString());
+            Long catalog_number=Long.parseLong(res.getObject(2).toString());
+            String start_date=res.getObject(3).toString();
+            String end_date=res.getObject(4).toString();
+            Double price=Double.parseDouble(res.getObject(5).toString());
+            ProductPrice productprice=new ProductPrice(id_,catalog_number,price,start_date,end_date);
+
+
+stmt.close();
+            conn.close();
+            return productprice;
+
         } catch (SQLException e) {
             return null;
         }
@@ -77,6 +89,7 @@ public class PricesHistoryDAO {
             Connection conn = DriverManager.getConnection(connection_string);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
+            conn.close();
         } catch (SQLException e) {
 
         }
@@ -93,11 +106,13 @@ public class PricesHistoryDAO {
             ResultSet res = stmt.executeQuery(query);
             int current_id=res.getInt(1);
             conn.close();
+            conn.close();
             return current_id;
 
         } catch (SQLException e) {
 
         }
+
         return -1;
 
     }
@@ -114,6 +129,8 @@ public class PricesHistoryDAO {
             pstmt.setDouble(4,price);
 
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
         } catch (SQLException e) {
 
         }
@@ -126,6 +143,8 @@ public class PricesHistoryDAO {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1,id);
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
         } catch (SQLException e) {
 
         }
@@ -141,8 +160,39 @@ public class PricesHistoryDAO {
             pstmt.setInt(2,id);
 
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
         } catch (SQLException e) {
 
         }
+    }
+
+    public int check_if_exists(long catalog_number, String start_date, String end_date, double price) {
+        String sql = "SELECT id FROM "+table_name+ " WHERE catalog_number= "+catalog_number +" AND end_date IS NULL"+" AND price= "+price;
+
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(sql);
+
+            if(res.next()) {
+                Integer id_ = Integer.parseInt(res.getObject(1).toString());
+                conn.close();
+                return id_;
+            }
+            stmt.close();
+            conn.close();
+
+            return -1;
+
+
+
+        } catch (SQLException e) {
+            return -1;
+        }
+    }
+
+    public void insert_in_map(int id, ProductPrice productPrice) {
+        this.pricesMap.put(id,productPrice);
     }
 }

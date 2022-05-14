@@ -3,6 +3,8 @@ package Data_layer;
 import busniess_layer.Product;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.WeakHashMap;
 
 public class Product_DAO {
@@ -26,7 +28,7 @@ public class Product_DAO {
     }
 
     private Product readProduct(int id) {
-        String sql = "SELECT * FROM "+table_name+ "WHERE id="+id;
+        String sql = "SELECT * FROM "+table_name+ "WHERE ="+id;
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);
@@ -85,6 +87,7 @@ public class Product_DAO {
             Connection conn = DriverManager.getConnection(connection_string);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
+            conn.close();
         } catch (SQLException e) {
 
         }
@@ -111,7 +114,8 @@ public class Product_DAO {
             pstmt.setLong(10,catalog_number);
 
             pstmt.executeUpdate();
-
+    pstmt.close();
+            conn.close();
         } catch (SQLException e) {
 
         }
@@ -132,6 +136,7 @@ public class Product_DAO {
         } catch (SQLException e) {
 
         }
+
         return -1;
 
     }
@@ -143,6 +148,8 @@ public class Product_DAO {
             PreparedStatement pstmt = conn.prepareStatement(sql);
            pstmt.setInt(1,id);
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
         } catch (SQLException e) {
 
         }
@@ -158,6 +165,9 @@ public class Product_DAO {
             pstmt.setInt(2,id);
 
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+
         } catch (SQLException e) {
 
         }
@@ -173,8 +183,42 @@ public class Product_DAO {
             pstmt.setInt(2,id);
 
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
         } catch (SQLException e) {
 
         }
+    }
+
+
+    public List<Product> getProductlist(long catalog_number) {
+        String sql = "SELECT * FROM "+table_name+ " WHERE catalog_number = "+catalog_number;
+
+        List<Product> list_of_product=new ArrayList<>();
+        try{
+            Connection conn = DriverManager.getConnection(connection_string);
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(sql);
+            while (res.next())
+            {
+                Integer id_=Integer.parseInt(res.getObject(1).toString());
+                String name=res.getObject(2).toString();
+                String location=res.getObject(3).toString();
+                Double cost_price=Double.parseDouble(res.getObject(4).toString());
+                Double sell_price=Double.parseDouble(res.getObject(5).toString());
+                boolean broken=Boolean.parseBoolean(res.getObject(6).toString());
+                String expire_date=res.getObject(7).toString();
+                String delivry_date=res.getObject(8).toString();
+                boolean sold=Boolean.parseBoolean(res.getObject(10).toString());
+                list_of_product.add(new Product(id_,name,delivry_date,cost_price,sell_price,expire_date,location,broken,sold,catalog_number));
+
+
+            }
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            return null;
+        }
+        return list_of_product;
     }
 }

@@ -21,9 +21,32 @@ public class ProductPrice {
         this.end_date = end_date;
 
         pricesHistoryDAO= DAL_controller.getInstance().getPricesHistoryDAO();
-        pricesHistoryDAO.insert(catalog_number,start_date,end_date,price);
-        this.id=pricesHistoryDAO.get_current_id();
+
+        int id_=pricesHistoryDAO.check_if_exists(catalog_number,start_date,end_date,price);
+        if(id_==-1)
+        {
+            pricesHistoryDAO.insert(catalog_number,start_date,end_date,price);
+            this.id=pricesHistoryDAO.get_current_id();
+            pricesHistoryDAO.insert_in_map(id,this);
+        }
+        else
+        {
+            this.id=id_;
+        }
+
+
+
     }
+public ProductPrice(int id,Long catalog_number,double price,String start_date,String end_date)
+{
+    this.id=id;
+    this.catalog_number = catalog_number;
+    this.price = price;
+    this.start_date = start_date;
+    this.end_date = end_date;
+
+}
+
 
     public long getCatalog_number() {
         return catalog_number;

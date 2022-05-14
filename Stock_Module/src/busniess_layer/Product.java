@@ -1,5 +1,6 @@
 package busniess_layer;
 
+import Data_layer.DAL_controller;
 import Data_layer.Product_DAO;
 
 import java.time.LocalDate;
@@ -37,11 +38,44 @@ public class Product {
 
         this.catalog_number=catalog_number;
         product_dao=pd;
+
+
+
         product_dao.insert(name,location.toString(),cost_price,sell_price,expire,broken,delivery_date,sell_date,sold,catalog_number);
         this.ID=product_dao.get_current_id();
 
     }
 
+
+    public Product(int id,String name, String delivery_date, Double cost_price, Double sell_price, String expire,String location,boolean broken,boolean sold,long catalog_number)
+    {
+        this.ID=id;
+        this.name=name;
+        this.delivery_date=delivery_date.toString();
+        this.expire_date=expire;
+        this.sell_price=sell_price;
+        this.cost_price=cost_price;
+
+        if(location.equals("storage"))
+        {
+            this.location=Location.storage;
+        }
+        if(location.equals("shelf"))
+        {
+            this.location=Location.shelf;
+        }
+        if(location.equals("store"))
+        {
+            this.location=Location.store;
+        }
+        this.broken=false;
+        this.sold=false;
+
+        this.catalog_number=catalog_number;
+        product_dao= DAL_controller.getInstance().getProduct_table();
+
+
+    }
     public void set_sell_price(double new_sell_price)
     {
 
