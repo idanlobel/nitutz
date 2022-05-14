@@ -42,11 +42,11 @@ public class DatabaseManager {
                     "\t\"job\"\tTEXT NOT NULL,\n" +
                     "\tPRIMARY KEY(\"job\")\n" +
                     ")");
-            stmt.execute("CREATE TABLE \"weeklySchedule\" (\n" +
+            stmt.execute("CREATE TABLE if not exists \"weeklySchedule\" (\n" +
                     "\t\"id\"\tINTEGER,\n" +
                     "\tPRIMARY KEY(\"id\")\n" +
                     ");");
-            stmt.execute("CREATE TABLE \"driversData\" (\n" +
+            stmt.execute("CREATE TABLE if not exists \"driversData\" (\n" +
                     "\t\"id\"\tINTEGER,\n" +
                     "\t\"license\"\tTEXT NOT NULL,\n" +
                     "\tPRIMARY KEY(\"id\")\n" +
