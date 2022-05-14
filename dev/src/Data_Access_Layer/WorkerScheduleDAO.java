@@ -22,10 +22,12 @@ public class WorkerScheduleDAO {
         try {
             conn = DatabaseManager.getInstance().connect();
             Statement statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery("select * from workerPresence where worker_id = "+id);
+            ResultSet rs = statement.executeQuery("select * from workerPresence where worker_id = '"+id+"'");
             //need to change to final values like table name etc
             boolean[][] presence = new boolean[5][2];
+            boolean exists = false;
             while ( rs.next() ) {
+                exists=true;
                 int day = rs.getInt("day");
                 int shift = rs.getInt("shift_type");
                 int presentInt = rs.getInt("present");
@@ -33,6 +35,7 @@ public class WorkerScheduleDAO {
                 if (presentInt!=0) present = true;
                 presence[day][shift] = present;
             }
+            if (!exists) throw new Exception("Worker schedule does not exist");
             worker_schedule = new Worker_Schedule(presence,id);
             cacheWorkersSchedules.put(id,worker_schedule);
         } catch (Exception e) {
@@ -59,13 +62,13 @@ public class WorkerScheduleDAO {
             for (int i =0; i<5; i++){
                 for (int j =0; j<2; j++){
                     rs=conn.prepareStatement(sql);
-                    rs.setInt(1,0); //all the days start with false as this worker was just now added
-                    rs.setInt(2,i);
-                    rs.setInt(3,j);
                     boolean present = worker_schedule.getSchedule()[i][j];
                     int presentInt = 0;
                     if (present) presentInt = 1;
-                    rs.setInt(4,presentInt);
+                    rs.setInt(1,presentInt);
+                    rs.setInt(2,i);
+                    rs.setInt(3,j);
+                    rs.setInt(4,worker_schedule.getId());
                     rs.execute();
                 }
             }
@@ -94,7 +97,7 @@ public class WorkerScheduleDAO {
         if (!cacheWorkersSchedules.containsKey(id)) throw new Exception("worker doesn't exist");
         //delete from db first
         Connection conn=null;
-        String sql = "DELETE from workerPresence where id = "+id;
+        String sql = "DELETE from workerPresence where worker_id = '"+id+"'";
         try {
             conn = DatabaseManager.getInstance().connect();
             PreparedStatement rs = conn.prepareStatement(sql);

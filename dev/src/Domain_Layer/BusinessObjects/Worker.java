@@ -12,11 +12,11 @@ public class Worker {
     String email_address;
     BankAccount bankAccount;
     EmploymentConditions employmentConditions;
-    LinkedList<String> workerJobs;
+    List<String> workerJobs;
 
     //Create a new worker
     public Worker(String name, int id, String password, String email_address, BankAccount bankAccount,
-                  EmploymentConditions employmentConditions, LinkedList<String> workerJobs) {
+                  EmploymentConditions employmentConditions, List<String> workerJobs) {
         this.name = name;
         this.id = id;
         this.email_address = email_address;

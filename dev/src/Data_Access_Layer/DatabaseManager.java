@@ -6,8 +6,9 @@ public class DatabaseManager {
 
     private static DatabaseManager instance = null;
     private void createWorkersModuleTables() throws Exception {
+        Connection connection = null;
         try {
-            Connection connection = connect();
+            connection = connect();
             Statement stmt = connection.createStatement();
             stmt.execute("CREATE TABLE if not exists \"workers\" (\n" +
                     "\t\"id\"\tINTEGER NOT NULL,\n" +
@@ -39,7 +40,7 @@ public class DatabaseManager {
                     ")");
             stmt.execute("CREATE TABLE if not exists \"jobs\" (\n" +
                     "\t\"job\"\tTEXT NOT NULL,\n" +
-                    "\tPRIMARY KEY(\"Field1\")\n" +
+                    "\tPRIMARY KEY(\"job\")\n" +
                     ")");
             connection.commit();
             System.out.println("W BOZO");
@@ -47,6 +48,15 @@ public class DatabaseManager {
         catch (Exception e){
             System.out.println("L BOZO");
             throw new Exception(e.getMessage());
+        }
+        finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                throw new Exception(ex.getMessage());
+            }
         }
     }
     private DatabaseManager() throws Exception {

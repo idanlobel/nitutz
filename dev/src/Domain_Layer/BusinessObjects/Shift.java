@@ -17,6 +17,11 @@ public class Shift {
     //TODO:: צריך לוודא שאנחנו ממלאים את המערך למעלה בכל פעם שאנחנו מוסיפים עובדים או מוחקים עובדים מהרשימה!!!
     int shift_manager;
     List<Integer> workers;
+
+    public List<Integer> getWorkers() {
+        return workers;
+    }
+
     static List<String> mustJobs = new ArrayList<String>(Arrays.asList("store keeper", "steward", "cashier", "driver"));
     List<Transaction> shift_transactions;
     public Shift(int shift_manager, List<Integer> workers, List<Transaction> transactions) {
@@ -26,7 +31,7 @@ public class Shift {
         this.shift_transactions = transactions;
         mustJobs_Counter = new int [4]; //initialized by default
         jobToWorker = new HashMap<>();
-        shiftIsReady = false;
+        updateShiftIsReady();
     }
 
     public Shift() { //for now, since we have no database...
@@ -49,6 +54,8 @@ public class Shift {
     }
     public void setShiftManager(int worker){
         shift_manager = worker;
+        if (!jobToWorker.containsKey("shift manager"))jobToWorker.put("shift manager",new ArrayList<>());
+        jobToWorker.get("shift manager").add(worker);
         updateShiftIsReady();
         if(!workers.contains(worker)) workers.add(worker);
     }
@@ -58,44 +65,16 @@ public class Shift {
     }
 
     private void addToMustJobs_Counter(String job){
-                switch(job) {
-                    case "store keeper":
-                        mustJobs_Counter[0]++;
-                        break;
-                    case "steward":
-                        mustJobs_Counter[1]++;
-                        break;
-                    case "cashier":
-                        mustJobs_Counter[2]++;
-                        break;
-                    case "driver":
-                        mustJobs_Counter[3]++;
-                        break;
-                    default:
-                        //do nothing
-                        break;
-                }
+        for (int i =0 ;i<mustJobs.size(); i++){
+            if (job.equals(mustJobs.get(i)))mustJobs_Counter[i]++;
+        }
         updateShiftIsReady();
     }
 
     private void removeFromMustJobs_Counter(String job){
-            switch(job){
-                case "store keeper":
-                    mustJobs_Counter[0]--;
-                    break;
-                case "steward":
-                    mustJobs_Counter[1]--;
-                    break;
-                case "cashier":
-                    mustJobs_Counter[2]--;
-                    break;
-                case "driver":
-                    mustJobs_Counter[3]--;
-                    break;
-                default:
-                    //do nothing
-                    break;
-            }
+        for (int i =0 ;i<mustJobs.size(); i++){
+            if (job.equals(mustJobs.get(i)))mustJobs_Counter[i]--;
+        }
         updateShiftIsReady();
     }
 
@@ -146,6 +125,8 @@ public class Shift {
             if (!workers.contains(worker)) throw new Exception("There's no such worker in this shift");
             if (!jobToWorker.containsKey(job)) throw new Exception("There's no such job in this shift");
             if (!jobToWorker.get(job).contains(worker)) throw new Exception("There's no such job for this worker");
+            if ((job.equals("driver")||job.equals("store keeper"))&&jobToWorker.get(job).size()==1)
+                throw new Exception("need to add another worker to this job before removing");
             for (int i = 0; i < jobToWorker.get(job).size(); i++) {
                 if (jobToWorker.get(job).get(i) == worker) jobToWorker.get(job).remove(i);
             }
@@ -164,6 +145,8 @@ public class Shift {
                 workers.remove(worker);
                 for (String job : jobToWorker.keySet()) {
                     if (jobToWorker.get(job).contains(worker)) {
+                        if ((job.equals("driver")||job.equals("store keeper"))&&jobToWorker.get(job).size()==1)
+                            throw new Exception("need to add another worker to this job before removing");
                         jobToWorker.get(job).remove(worker);
                         if (jobToWorker.get(job).isEmpty()) jobToWorker.remove(job);
                         removeFromMustJobs_Counter(job);

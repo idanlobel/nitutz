@@ -5,7 +5,6 @@ import src.Domain_Layer.BusinessObjects.BankAccount;
 import src.Domain_Layer.BusinessObjects.EmploymentConditions;
 import src.Domain_Layer.BusinessObjects.HR;
 import src.Domain_Layer.BusinessObjects.Worker;
-import src.Domain_Layer.Repository;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -26,7 +25,7 @@ public class WorkerDAO {
         try {
             conn = DatabaseManager.getInstance().connect();
             Statement statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery("select * from workers where id = "+id);
+            ResultSet rs = statement.executeQuery("select * from workers where id = '"+id+"'");
             if ( rs.next() ) {
                 int worker_id = rs.getInt("id");
                 String name = rs.getString("name");
@@ -39,7 +38,9 @@ public class WorkerDAO {
                 Date date=format.parse(rec);
                 //need to change to date
                 worker = new Worker(name,worker_id,password,email,new BankAccount(bank_id,bank_branch),new EmploymentConditions(salary,date),new LinkedList<>());
-                ResultSet rs2 = statement.executeQuery("select * from workerJobs where worker_id = "+id);//read from worker jobs
+                conn.close();
+                conn = DatabaseManager.getInstance().connect();
+                ResultSet rs2 = conn.createStatement().executeQuery("select * from workerJobs where worker_id = '"+id+"'");//read from worker jobs
                 while (rs2.next()){
                     String job = rs2.getString("job");
                     worker.getWorkerJobs().add(job);
@@ -102,40 +103,23 @@ public class WorkerDAO {
     public void create(Worker worker) throws Exception {
         if (cacheWorkers.containsKey(worker.getId())) throw new Exception("worker already exists");
         Connection conn=null;
-        String sql = "INSERT INTO workers(id,name,password,email,bank_id,bank_branch,salary,rec_date) VALUES(?,?,?,?,?,?,?,?)";
-        String sql2 = "INSERT INTO workerJobs(worker_id,job) VALUES(?,?)";
-        String sql3 = "INSERT INTO workerPresence(present,day,shift_type,worker_id) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO workers(id,name,password,email,bank_id,bank_branch,salary,rec_date) VALUES(";
         try {
             conn = DatabaseManager.getInstance().connect();
-            PreparedStatement rs = conn.prepareStatement(sql);
-            rs.setInt(1, worker.getId());
-            rs.setString(2, worker.getName());
-            rs.setString(3, worker.getPassword());
-            rs.setString(4, worker.getEmail_address());
-            rs.setInt(5, worker.getBankAccount().getBankID());
-            rs.setInt(6, worker.getBankAccount().getBranch());
-            rs.setInt(7, worker.getEmploymentConditions().getSalary());
+            Statement rs = conn.createStatement();
             String date = format.format(worker.getEmploymentConditions().getRecruitmentDate());
-            rs.setString(8,date);
-            rs.executeUpdate();
+            //set worker data
+            sql+="'"+worker.getId()+"','"+worker.getName()+"','"+worker.getPassword()+"','"+worker.getEmail_address()+
+                    "','"+worker.getBankAccount().getBankID()+"','"+worker.getBankAccount().getBranch()+
+                    "','"+worker.getEmploymentConditions().getSalary()+"','"+date+"');";
+            rs.addBatch(sql);
             //set his jobs;
             for (String job:worker.getWorkerJobs()) {
-                rs=conn.prepareStatement(sql2);
-                rs.setInt(1,worker.getId());
-                rs.setString(2,job);
-                rs.execute();
+                String sql2="\nINSERT INTO workerJobs(worker_id,job) VALUES('"+worker.getId()+"','"+job+"');";
+                rs.addBatch(sql2);
             }
-            //set his own worker schedule
-            for (int i =0; i<5; i++){
-                for (int j =0; j<2; j++){
-                    rs=conn.prepareStatement(sql3);
-                    rs.setInt(1,0); //all the days start with false as this worker was just now added
-                    rs.setInt(2,i);
-                    rs.setInt(3,j);
-                    rs.setInt(4,worker.getId());
-                    rs.execute();
-                }
-            }
+            //PreparedStatement rs = conn.prepareStatement(sql);
+            rs.executeBatch();
             conn.commit();
             cacheWorkers.put(worker.getId(),worker);
         } catch(Exception e) {
@@ -159,21 +143,26 @@ public class WorkerDAO {
     public void update(Worker worker) throws Exception {
         if (!cacheWorkers.containsKey(worker.getId())) throw new Exception("worker doesn't exist");
         //update to db first
-        delete(worker.getId());
-        create(worker);
+        try {
+            delete(worker.getId());
+            create(worker);
+        }catch (Exception e){
+            System.out.println("failed worker update");
+            throw new Exception(e.getMessage());
+        }
         //maybe its better to actually make a delete sql instead but for now this will be it
         cacheWorkers.put(worker.getId(), worker);
     }
     public void delete(int id) throws Exception{
         Connection conn=null;
-        String sql = "DELETE from workers where id = "+id;
-        String sql2 = "DELETE from workerJobs where id = "+id;
+        String sql = "DELETE from workers where id = '"+id+"';";
+        String sql2 = "DELETE from workerJobs where worker_id = '"+id+"';";
         try {
             conn = DatabaseManager.getInstance().connect();
-            PreparedStatement rs = conn.prepareStatement(sql);
-            rs.execute();
-            rs = conn.prepareStatement(sql2);
-            rs.execute();
+            Statement rs = conn.createStatement();
+            rs.addBatch(sql);
+            rs.addBatch(sql2);
+            rs.executeBatch();
             conn.commit();
             cacheWorkers.remove(id);
         } catch(Exception e) {
@@ -193,10 +182,40 @@ public class WorkerDAO {
         }
     }
 
-    public HR readHR() {
-        if (hr==null) {hr = new HR("Ori", 3, "OriK3000", "OriK@gmail.com",
-                new BankAccount(202562, 015), new EmploymentConditions(1, new Date()),
-                new LinkedList(Arrays.asList()));}//read from db;
+    public HR readHR() throws Exception {
+        if (hr==null) {
+            int worker_id = -1;
+            Connection conn=null;
+            try {
+                conn = DatabaseManager.getInstance().connect();
+                Statement statement = conn.createStatement();
+                String search = "HR";
+                ResultSet rs = statement.executeQuery("select * from workerJobs where job = '"+search+"'");
+                if (rs.next()) {
+                     worker_id= rs.getInt("worker_id");
+
+                }
+            } catch (Exception e) {
+                    throw new Exception(e.getMessage());
+
+            } finally {
+                try {
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } catch (SQLException ex) {
+                    throw new Exception(ex.getMessage());
+                }
+            }
+            Worker worker;
+            try {
+                worker= get(worker_id);
+                hr = new HR(worker.getName(),worker.getId(),worker.getPassword(),
+                        worker.getEmail_address(),worker.getBankAccount(),worker.getEmploymentConditions(),worker.getWorkerJobs());
+            }catch (Exception e){
+                throw new Exception(e.getMessage());
+            }
+        }
         return hr;
     }
 

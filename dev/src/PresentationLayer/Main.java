@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Main {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         ServiceLayer serviceLayer = new ServiceLayer();
         System.out.println("Hello! welcome to our system. Firstly, please enter your login information: ");
         Login loginInfo = Login();
@@ -49,32 +49,29 @@ public class Main {
                 case 1: //editWorkerSchedule:
                     List<Object> list = editWorkerSchedule(loginInfo.isHr());
                     if (list == null) break;
-                    boolean ans = serviceLayer.editWorkerSchedule(loginInfo.getWorkerID(),
+                    Response<Boolean> ans = serviceLayer.editWorkerSchedule(loginInfo.getWorkerID(),
                             (boolean) list.get(0), (int) list.get(1), (int) list.get(2));
-                    if (ans) System.out.println("The shift information has been updated successfully");
-                    else System.out.println("There has been an issue, please try again.");
-
+                    if (ans.ErrorOccured())System.out.println(ans.ErrorMessage);
+                    else System.out.println("The shift information has been updated successfully");
                     break;
                 case 2: //viewWorkerSchedule
                     if (!loginInfo.isHr()) {
-                        WorkerScheduleSL workerSchedule = serviceLayer.viewWorkerSchedule(loginInfo.getWorkerID());
-                        if (workerSchedule == null) {
-                            System.out.println("There's no working schedule for you, please contact the HR.");
+                        Response<WorkerScheduleSL> workerSchedule = serviceLayer.viewWorkerSchedule(loginInfo.getWorkerID());
+                        if (workerSchedule.ErrorOccured()) {
+                            System.out.println(workerSchedule.ErrorMessage);
                             break;
                         }
-                        System.out.println("Your working Schedule: " +
-                                Arrays.deepToString(workerSchedule.getSchedule()));
+                        System.out.println("Your working Schedule: " + workerSchedule.value.toString());
                     } else {
                         System.out.println("Please enter the Worker's ID of the specified worker: ");
                         sc = new Scanner(System.in);
                         int workerID = sc.nextInt();
-                        WorkerScheduleSL workerSchedule = serviceLayer.viewWorkerSchedule(workerID);
-                        if (workerSchedule == null) {
-                            System.out.println("There's no working schedule for the specified worker.");
+                        Response<WorkerScheduleSL> workerSchedule = serviceLayer.viewWorkerSchedule(workerID);
+                        if (workerSchedule.ErrorOccured()) {
+                            System.out.println(workerSchedule.ErrorMessage);
                             break;
                         }
-                        System.out.println("The specified worker's working Schedule: " +
-                                Arrays.deepToString(workerSchedule.getSchedule()));
+                        System.out.println("The specified worker's working Schedule: " + workerSchedule.value.toString());
                     }
                     break;
 
@@ -82,22 +79,18 @@ public class Main {
                 case 3: //addTransaction - a 'shift Manager' or a 'Cashier' or an 'HR' can do this method
                     List<Object> l1 = addOrRemoveTransaction();
                     if (l1 == null) break;
-                    boolean ans1 = serviceLayer.addTransaction((int) l1.get(0),
+                    Response<Boolean> ans1 = serviceLayer.addTransaction((int) l1.get(0),
                             (int) l1.get(1), (int) l1.get(2), (int) l1.get(3), loginInfo.getWorkerID());
-                    if (ans1) System.out.println("The transaction has been made successfully");
-                    else System.out.println("There has been an issue: The transaction already exists, or you're not authorized to perform" +
-                            " this action.");
-
+                    if (ans1.ErrorOccured())System.out.println(ans1.ErrorMessage);
+                    else System.out.println("The transaction has been made successfully");
                     break;
                 case 4: //removeTransaction - a 'shift manager' or an 'HR' can perform this method
                     List<Object> l2 = addOrRemoveTransaction();
                     if (l2 == null) break;
-                    boolean ans2 = serviceLayer.removeTransaction(loginInfo.getWorkerID(), (int) l2.get(0),
+                    Response<Boolean> ans2 = serviceLayer.removeTransaction(loginInfo.getWorkerID(), (int) l2.get(0),
                             (int) l2.get(1), (int) l2.get(2), (int) l2.get(3));
-                    if (ans2) System.out.println("The transaction has been removed successfully");
-                    else System.out.println("You're either not authorized to remove a transaction" +
-                            " Or there's no such transaction.");
-
+                    if (ans2.ErrorOccured()) System.out.println(ans2.ErrorMessage);
+                    else System.out.println("The transaction has been removed successfully");
                     break;
 
                 //'HR' worker methods:
@@ -107,9 +100,9 @@ public class Main {
                     sc = new Scanner(System.in);
                     System.out.println("Please enter the Job's name that you'd like to add: ");
                     String job = sc.nextLine();
-                    boolean ans3 = serviceLayer.addJobs(loginInfo.getWorkerID(), job);
-                    if (ans3) System.out.println("The Job has been added successfully");
-                    else System.out.println("The Job already exists in the System, therefore it hasn't been added.");
+                    Response<Boolean> ans3 = serviceLayer.addJobs(loginInfo.getWorkerID(), job);
+                    if (ans3.ErrorOccured()) System.out.println(ans3.ErrorMessage);
+                    else System.out.println("The Job has been added successfully");
                     break;
 
                 case 6: //createWeeklySchedule
@@ -118,26 +111,26 @@ public class Main {
                     sc = new Scanner(System.in);
                     System.out.println("Please enter the id of the week for the weekly schedule: ");
                     int weekID = sc.nextInt();
-                    if (serviceLayer.createWeeklySchedule(loginInfo.getWorkerID(), weekID))
-                        System.out.println("The schedule has been created successfully");
+                    Response<Boolean> res = serviceLayer.createWeeklySchedule(loginInfo.getWorkerID(), weekID);
+                    if (res.ErrorOccured())
+                        System.out.println(res.ErrorMessage);
                     else
-                        System.out.println("There's already a Weekly Schedule with the provided Week ID" +
-                                " in the System, therefore it hasn't been created, please try again.");
+                        System.out.println("The schedule has been created successfully");
                     break;
                 case 7: //showShiftWorkers
                     if(!isHR(loginInfo.isHr()))
                         break;
                     List<Object> list1 = showShiftWorkers();
                     if (list1 == null) break;
-                    List<WorkerSL> workersInShift = serviceLayer.showShiftWorkers(loginInfo.getWorkerID(), (int) list1.get(0),
+                    Response<List<WorkerSL>> workersInShift = serviceLayer.showShiftWorkers(loginInfo.getWorkerID(), (int) list1.get(0),
                             (int) list1.get(1), (int) list1.get(2));
-                    if (workersInShift == null)
-                        System.out.println("You've entered a wrong week ID (meaning this Weekly Schedule doesn't exist)");
-                    else if (workersInShift.isEmpty())
+                    if (workersInShift.ErrorOccured())
+                        System.out.println(workersInShift.ErrorMessage);
+                    else if (workersInShift.value.isEmpty())
                         System.out.println("There are no workers in the specified shift");
-                    else System.out.println("The workers in the desired shift are: " + workersInShift.toString() + "\n" +
+                    else System.out.println("The workers in the desired shift are: " + workersInShift.value.toString() + "\n" +
                                 "And the shift manager is: " + serviceLayer.getShiftManagerInfo(loginInfo.getWorkerID(), (int) list1.get(0),
-                                (int) list1.get(1), (int) list1.get(2)));
+                                (int) list1.get(1), (int) list1.get(2)).value.toString());
                     break;
                 case 8: //viewWeeklySchedule TODO:: For now, if the Weekly Schedule will be shown only if being filled completely.
                     //TODO: FIX THIS - A LOT OF NULL POINTER EXCEPTIONS
@@ -147,88 +140,82 @@ public class Main {
                     sc = new Scanner(System.in);
                     System.out.println("Please enter the id of the week for the weekly schedule: ");
                     int weeklyID = sc.nextInt();
-                    WeeklyScheduleSL weeklySchedule = serviceLayer.viewWeeklySchedule(loginInfo.getWorkerID(), weeklyID);
-                    if (weeklySchedule == null)
-                        System.out.println("You've entered a wrong week ID (meaning this Weekly Schedule doesn't exist)");
-                    else System.out.println(weeklySchedule.toString());
+                    Response<WeeklyScheduleSL> weeklySchedule = serviceLayer.viewWeeklySchedule(loginInfo.getWorkerID(), weeklyID);
+                    if (weeklySchedule.ErrorOccured())
+                        System.out.println(weeklySchedule.ErrorMessage);
+                    else System.out.println(weeklySchedule.value.toString());
                     break;
                 case 9: //setShiftManagerToWeeklySchedule
                     if(!isHR(loginInfo.isHr()))
                         break;
                     List<Object> lst = addOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (lst == null) break;
-
-                    if (serviceLayer.setShiftManagerToWeeklySchedule(loginInfo.getWorkerID(), (int) lst.get(0),
-                            (int) lst.get(1), (int) lst.get(2), (int) lst.get(3)))
-                        System.out.println("The workers has been added to this shift as a 'Shift Manager' successfully");
-                    else System.out.println("There has been an issue, please try again and check that you've" +
-                            " entered everything correctly.");
+                    Response<Boolean> res2 = serviceLayer.setShiftManagerToWeeklySchedule(loginInfo.getWorkerID(), (int) lst.get(0),
+                            (int) lst.get(1), (int) lst.get(2), (int) lst.get(3));
+                    if (res2.ErrorOccured())
+                        System.out.println(res2.ErrorMessage);
+                    else System.out.println("The workers has been added to this shift as a 'Shift Manager' successfully");
                     break;
                 case 10: //removeWorkerFromWeeklySchedule
                     if(!isHR(loginInfo.isHr()))
                         break;
                     List<Object> ls = addOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (ls == null) break;
-
-                    if (serviceLayer.removeWorkerFromWeeklySchedule(loginInfo.getWorkerID(), (int) ls.get(0),
-                            (int) ls.get(1), (int) ls.get(2), (int) ls.get(3)))
-                        System.out.println("The worker has been remove from the desired shift in the " +
-                                "specified weekly schedule successfully");
-                    else System.out.println("There has been an issue, please try again and check that you've" +
-                            " entered everything correctly.");
+                    Response<Boolean> res3 = serviceLayer.removeWorkerFromWeeklySchedule(loginInfo.getWorkerID(), (int) ls.get(0),
+                            (int) ls.get(1), (int) ls.get(2), (int) ls.get(3));
+                    if (res3.ErrorOccured())
+                        System.out.println(res3.ErrorMessage);
+                    else System.out.println("The worker has been remove from the desired shift in the " +
+                        "specified weekly schedule successfully");
                     break;
                 case 11: //addWorkerToWeeklySchedule
                     if(!isHR(loginInfo.isHr()))
                         break;
                     List<Object> list2 = addOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (list2 == null) break;
-
-                    if (serviceLayer.addWorkerToWeeklySchedule(loginInfo.getWorkerID(), (int) list2.get(0),
-                            (int) list2.get(1), (int) list2.get(2), (int) list2.get(3)))
-                        System.out.println("The worker has been added to the desired shift in the " +
-                                "specified weekly schedule successfully");
-                    else System.out.println("There has been an issue, please try again and check that you've" +
-                            " entered everything correctly.");
+                    Response<Boolean> res4= serviceLayer.addWorkerToWeeklySchedule(loginInfo.getWorkerID(), (int) list2.get(0),
+                            (int) list2.get(1), (int) list2.get(2), (int) list2.get(3));
+                    if (res4.ErrorOccured())
+                        System.out.println(res4.ErrorMessage);
+                    else System.out.println("The worker has been added to the desired shift in the " +
+                            "specified weekly schedule successfully");
                     break;
                 case 12: //isShiftReady
                     if(!isHR(loginInfo.isHr()))
                         break;
                     List<Object> list3 = showShiftWorkers();
-                    if(serviceLayer.isShiftReady(loginInfo.getWorkerID(), (int)list3.get(0), (int)list3.get(1),
-                            (int)list3.get(2)))
-                        System.out.println("The shift is ready");
-
-                    else System.out.println("The shift isn't ready or doesn't exist, please make sure you've entered the " +
-                            "information correctly.");
+                    Response<Boolean> res5= serviceLayer.isShiftReady(loginInfo.getWorkerID(), (int)list3.get(0), (int)list3.get(1),
+                            (int)list3.get(2));
+                    if(res5.ErrorOccured())
+                        System.out.println(res5.ErrorMessage);
+                    else System.out.println("The shift is ready");
                     break;
                 case 13: //isWeeklyScheduleReady
                     if(!isHR(loginInfo.isHr()))
                         break;
                     System.out.println("Please enter the id of the week for the weekly schedule: ");
                     int weekly_id_number = sc.nextInt();
-
-                    if(serviceLayer.isWeeklyScheduleReady(loginInfo.getWorkerID(), weekly_id_number))
-                        System.out.println("The Weekly Schedule is ready");
-
-                    else System.out.println("The Weekly Schedule isn't ready or doesn't exist, please make sure you've entered the " +
-                            "information correctly.");
+                    Response<Boolean> res6= serviceLayer.isWeeklyScheduleReady(loginInfo.getWorkerID(), weekly_id_number);
+                    if(res6.ErrorOccured())
+                        System.out.println(res6.ErrorMessage);
+                    else System.out.println("The Weekly Schedule is ready");
                     break;
                 case 14: //showAllWorkers
                     if(!isHR(loginInfo.isHr()))
                         break;
-                    List<WorkerSL> allWorkers = serviceLayer.showAllWorkers(loginInfo.getID());
-                    if(allWorkers == null) System.out.println("There are no currently workers in the System.");
-                    else System.out.println(allWorkers.toString());
+                    Response<List<WorkerSL>> allWorkers = serviceLayer.showAllWorkers(loginInfo.getID());
+                    if(allWorkers.ErrorOccured()) System.out.println(allWorkers.ErrorMessage);
+                    else System.out.println(allWorkers.value.toString());
                     break;
                 case 15: //registerAWorker
                     if(!isHR(loginInfo.isHr()))
                         break;
                     List<Object> wD = registerAWorker();
-                    if(serviceLayer.registerAWorker(loginInfo.getWorkerID(), wD.get(0) + "", (int) wD.get(1),
-                            wD.get(2) + "", wD.get(3) + "", (int) wD.get(4), (int) wD.get(5), (int) wD.get(6)))
-                        System.out.println("The worker has been registered successfully");
-                    else System.out.println("A worker with the same ID already exists in the System. If you wish to update his details " +
-                            "please use the 'edit' method.");
+                    Response<Boolean> res7= serviceLayer.registerAWorker(loginInfo.getWorkerID(), wD.get(0) + "", (int) wD.get(1),
+                            wD.get(2) + "", wD.get(3) + "", (int) wD.get(4), (int) wD.get(5), (int) wD.get(6));
+                    if(res7.ErrorOccured())
+                        System.out.println(res7.ErrorMessage);
+                    else System.out.println("The worker has been registered successfully");
                     break;
                 case 16: //removeAWorker
                     if(!isHR(loginInfo.isHr()))
@@ -236,10 +223,10 @@ public class Main {
                     sc= new Scanner(System.in);
                     System.out.println("Please enter the worker's ID: ");
                     int wID = sc.nextInt();
-                    if(serviceLayer.removeAWorker(loginInfo.getID(), wID))
-                        System.out.println("The worker has been removed successfully");
-                    else System.out.println("The worker doesn't exist in the system, please make sure that you've " +
-                            "entered everything correctly and try again.");
+                    Response<Boolean> res8= serviceLayer.removeAWorker(loginInfo.getID(), wID);
+                    if(res8.ErrorOccured())
+                        System.out.println(res8.ErrorMessage);
+                    else System.out.println("The worker has been removed successfully");
                     break;
                 case 17: //editAWorker
                     if(!isHR(loginInfo.isHr()))
@@ -248,58 +235,53 @@ public class Main {
                             "if you don't want to update something, just hit enter (without typing anything) or " +
                             "'0' if you're required to put in a number: ");
                     List<Object> ewD = editAWorker();
-                    if(serviceLayer.editAWorker(3,ewD.get(0) + "", ewD.get(1) + "",
-                            ewD.get(2) + "", (int) ewD.get(3), (int) ewD.get(4), (int) ewD.get(5), (int) ewD.get(6)))
-                        System.out.println("The worker has been updated successfully");
-                    else System.out.println("The worker doesn't exist in the system, please make sure that you've " +
-                            "entered everything correctly and try again.");
+                    Response<Boolean> res9= serviceLayer.editAWorker(3,ewD.get(0) + "", ewD.get(1) + "",
+                            ewD.get(2) + "", (int) ewD.get(3), (int) ewD.get(4), (int) ewD.get(5), (int) ewD.get(6));
+                    if(res9.ErrorOccured())
+                        System.out.println(res9.ErrorMessage);
+                    else System.out.println("The worker has been updated successfully");
                     break;
                 case 18: //addJobForAWorker
                     if(!isHR(loginInfo.isHr()))
                         break;
                     List<Object> workerJob = addOrRemoveAJob_Worker();
-                    if(serviceLayer.addJobForAWorker(loginInfo.getID(), (int) workerJob.get(0), workerJob.get(1) + ""))
-                        System.out.println("The job has been added successfully");
-                    else System.out.println("The worker doesn't exist in the system or the worker already has this job" +
-                            " or the job isn't from the provided list of jobs," +
-                            " please make sure that you've entered everything correctly and try again.");
+                    Response<Boolean> res10= serviceLayer.addJobForAWorker(loginInfo.getID(), (int) workerJob.get(0), workerJob.get(1) + "");
+                    if(res10.ErrorOccured())
+                        System.out.println(res10.ErrorMessage);
+                    else System.out.println("The job has been added successfully");
                     break;
                 case 19: //removeJobFromAWorker
                     if(!isHR(loginInfo.isHr()))
                         break;
                     List<Object> workerJobR = addOrRemoveAJob_Worker();
-                    if(serviceLayer.removeJobFromAWorker(loginInfo.getID(), (int) workerJobR.get(0), workerJobR.get(1) + ""))
-                        System.out.println("The job has been removed successfully");
-                    else System.out.println("The worker doesn't exist in the system or the worker doesn't have this job or the job isn't " +
-                            "on the provided list of jobs" +
-                            ", please make sure that you've entered everything correctly and try again.");
+                    Response<Boolean> res11= serviceLayer.removeJobFromAWorker(loginInfo.getID(), (int) workerJobR.get(0), workerJobR.get(1) + "");
+                    if(res11.ErrorOccured())
+                        System.out.println(res11.ErrorMessage);
+                    else System.out.println("The job has been removed successfully");
                     break;
-
-                case 20:
+                case 20://assign job for a worker in week
                     if(!isHR(loginInfo.isHr()))
                         break;
                     List<Object> listassign = assignOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (listassign == null) break;
-
-                    if (serviceLayer.assignWorkerToJobInShift(loginInfo.getWorkerID(), (int) listassign.get(0),
-                            (int) listassign.get(1), (int) listassign.get(2), (int) listassign.get(3),(String)listassign.get(4)))
-                        System.out.println("The worker has been added to the desired job in the " +
-                                "specified weekly schedule successfully");
-                    else System.out.println("There has been an issue, please try again and check that you've" +
-                            " entered everything correctly.");
+                    Response<Boolean> res12= serviceLayer.assignWorkerToJobInShift(loginInfo.getWorkerID(), (int) listassign.get(0),
+                            (int) listassign.get(1), (int) listassign.get(2), (int) listassign.get(3),(String)listassign.get(4));
+                    if (res12.ErrorOccured())
+                        System.out.println(res12.ErrorMessage);
+                    else System.out.println("The worker has been added to the desired job in the " +
+                            "specified weekly schedule successfully");
                     break;
-                case 21:
+                case 21://remove job for a worker in week
                     if(!isHR(loginInfo.isHr()))
                         break;
                     List<Object> listremove = assignOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (listremove == null) break;
-
-                    if (serviceLayer.removeWorkerFromJobInShift(loginInfo.getWorkerID(), (int) listremove.get(0),
-                            (int) listremove.get(1), (int) listremove.get(2), (int) listremove.get(3),(String) listremove.get(4)))
-                        System.out.println("The worker has been removed from the desired job in the " +
-                                "specified weekly schedule successfully");
-                    else System.out.println("There has been an issue, please try again and check that you've" +
-                            " entered everything correctly.");
+                    Response<Boolean> res13= serviceLayer.removeWorkerFromJobInShift(loginInfo.getWorkerID(), (int) listremove.get(0),
+                            (int) listremove.get(1), (int) listremove.get(2), (int) listremove.get(3),(String) listremove.get(4));
+                    if (res13.ErrorOccured())
+                        System.out.println(res13.ErrorMessage);
+                    else System.out.println("The worker has been removed from the desired job in the " +
+                            "specified weekly schedule successfully");
                     break;
                 case 99:
                     System.out.println("You've been successfully logged-out.");

@@ -15,6 +15,11 @@ public class Weekly_Schedule {
     }
     public Weekly_Schedule(int weekID) {
         this.schedule = new Shift[5][2];
+        for (int i =0; i<5; i++){
+            for (int j = 0; j<2; j++){
+                schedule[i][j] = new Shift();
+            }
+        }
         this.id=weekID;
     }
     public Shift getShift(int day, int shiftType)throws Exception{

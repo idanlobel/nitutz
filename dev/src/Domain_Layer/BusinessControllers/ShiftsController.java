@@ -4,7 +4,6 @@ import src.Data_Access_Layer.WeeklyScheduleDAO;
 import src.Data_Access_Layer.WorkerDAO;
 import src.Data_Access_Layer.WorkerScheduleDAO;
 import src.Domain_Layer.BusinessObjects.*;
-import src.Domain_Layer.Repository;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -41,7 +40,7 @@ public class ShiftsController {
             return weeklyScheduleDAO.get(weekID);
         }
         catch(Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
     public Weekly_Schedule getWeeklyScheduleSL(int weekID,int callerID ) throws Exception {
@@ -50,7 +49,7 @@ public class ShiftsController {
             return getWeeklySchedule(weekID);
         }
         catch(Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
     public boolean editWorkerSchedule(int workerID, boolean present, int day, int shiftType) throws Exception {
@@ -63,7 +62,7 @@ public class ShiftsController {
             return true;
         }
         catch (Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
     //TODO:: For now we can't implement this method because we don't know which shifts the Business_Layer.HR would like to add -
@@ -78,7 +77,7 @@ public class ShiftsController {
             return true;
         }
         catch (Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
     public boolean assignWorkerToJobInShift(int weekID, int day, int shift, int id, String job, int callerID) throws Exception {
@@ -92,7 +91,7 @@ public class ShiftsController {
             return true;
         }
         catch (Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
     public boolean removeWorkerFromJobInShift(int weekID, int day, int shift, int worker, String job, int callerID) throws Exception {
@@ -105,7 +104,7 @@ public class ShiftsController {
             return true;
         }
         catch (Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
     public boolean removeWorkerFromWeeklySchedule(int weekID,int day, int shift, int worker,int callerID) throws Exception {
@@ -118,7 +117,7 @@ public class ShiftsController {
             return true;
         }
         catch (Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
     public boolean setShiftManagerToWeeklySchedule(int weekID,int day, int shift, int id, int callerID) throws Exception {
@@ -131,7 +130,7 @@ public class ShiftsController {
             return true;
         }
         catch (Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
     public List<Worker> showShiftWorkers(int weekID, int day, int shift, int callerID) throws Exception {
@@ -145,7 +144,7 @@ public class ShiftsController {
             return workers;
         }
         catch (Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
     public Worker getShiftManager(int weekID, int day, int shift, int callerID) throws Exception {
@@ -159,7 +158,7 @@ public class ShiftsController {
             return workerDAO.get(id);
         }
         catch(Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
     public boolean createWeeklySchedule(int weekID, int callerID) throws Exception {
@@ -184,7 +183,7 @@ public class ShiftsController {
             return true;
         }
         catch(Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
     public boolean removeTransaction(int weekID, int day, int shift, int transactionID, int workerID) throws Exception {
@@ -195,7 +194,7 @@ public class ShiftsController {
            return true;
        }
        catch(Exception e){
-           throw new Exception(e);
+           throw new Exception(e.getMessage());
        }
     }
     public boolean isShiftIsReady (int weekID, int day, int shift, int callerID) throws Exception {
@@ -203,10 +202,11 @@ public class ShiftsController {
             if (workerDAO.readHR().getId()!=callerID)throw new Exception("only HR can see if shift is ready");
             Weekly_Schedule weekly_schedule = getWeeklySchedule(weekID);
             Shift sft = weekly_schedule.getShift(day, shift);
-            return sft.isShiftIsReady();
+            if (sft.isShiftIsReady())return true;
+            throw new Exception("shift was not ready");
         }
         catch(Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
     public boolean isWeeklyScheduleReady (int weekID, int callerID) throws Exception {
@@ -220,7 +220,7 @@ public class ShiftsController {
             return true;
         }
         catch(Exception e){
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
 

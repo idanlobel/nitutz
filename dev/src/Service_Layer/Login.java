@@ -37,7 +37,8 @@ public class Login {
         return workerID;
     }
 
-    public boolean isAUser() {
+    public boolean isAUser() throws Exception {
+        try {
         WorkerController workerController = WorkerController.getInstance();
         workerID = workerController.idPassMatch(id, password);
         if (workerID == -1) {
@@ -45,7 +46,7 @@ public class Login {
         }
         if(workerID == -1)
             return false;
-        try {
+
             name = workerController.getWorkerName(id);
         }catch (Exception e){
             return false;
@@ -53,7 +54,7 @@ public class Login {
         return true;
     }
 
-    public boolean isHR() {
+    public boolean isHR() throws Exception {
         WorkerController workerController = WorkerController.getInstance();
         isHr = workerController.isHR(workerID);
         return isHr;

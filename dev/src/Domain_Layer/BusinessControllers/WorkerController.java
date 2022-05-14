@@ -3,7 +3,6 @@ package src.Domain_Layer.BusinessControllers;
 import src.Data_Access_Layer.JobsDAO;
 import src.Data_Access_Layer.WorkerDAO;
 import src.Data_Access_Layer.WorkerScheduleDAO;
-import src.Domain_Layer.Repository;
 import src.Domain_Layer.BusinessObjects.*;
 
 import java.util.Date;
@@ -32,7 +31,7 @@ public class WorkerController {
     public int idPassMatch(int id, String password) {
         try {
             Worker worker = getWorker(id);
-            if (worker.getPassword()==password)return id;
+            if (worker.getPassword().equals(password))return id;
             return -1;//login info incorrect
         }catch (Exception e){
             return -1;//worker doesnt exist (might need to send an exception instead)
@@ -59,7 +58,7 @@ public class WorkerController {
     }
 
     public boolean deleteWorker(int workerID, int callerID) throws Exception{
-        if(workers.readHR().getId() == callerID) throw new Exception("Can't remove HR!");
+        if(workers.readHR().getId() == workerID) throw new Exception("Can't remove HR!");
         try {
             workers.delete(workerID);
             workerScheduleDAO.delete(workerID);
@@ -79,13 +78,17 @@ public class WorkerController {
         }
     }
 
-    public int isHR(int id, String password) {
-        if (workers.readHR().getId() == id && workers.readHR().passwordsMatch(password))
-            return id;
-        return -1; //Not an hr;
+    public int isHR(int id, String password) throws Exception {
+        try {
+            if (workers.readHR().getId() == id && workers.readHR().passwordsMatch(password))
+                return id;
+            return -1; //Not an hr;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
     }
 
-    public boolean isHR(int id) {
+    public boolean isHR(int id) throws Exception {
         return workers.readHR().getId() == id;
     }
 
@@ -165,6 +168,16 @@ public class WorkerController {
             return driversList;
         }
         catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public boolean Login(int ID, String password) throws Exception {
+        try {
+            Worker worker = workers.get(ID);
+            if (worker.getPassword().equals(password))return true;
+            return false;
+        }catch (Exception e){
             throw new Exception(e.getMessage());
         }
     }

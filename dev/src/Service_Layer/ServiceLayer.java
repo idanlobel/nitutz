@@ -6,6 +6,7 @@ import src.Domain_Layer.BusinessObjects.Shift;
 import src.Domain_Layer.BusinessObjects.Weekly_Schedule;
 import src.Domain_Layer.BusinessObjects.Worker;
 import src.Domain_Layer.BusinessObjects.Worker_Schedule;
+import sun.security.util.Password;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,6 +20,18 @@ public class ServiceLayer {
         this.workerController = WorkerController.getInstance();
         this.shiftsController = ShiftsController.getInstance();
     }
+
+    //Login
+    public Response<Boolean> Login(int ID, String password) throws Exception {
+        Response<Boolean> response;
+        try {
+            response = Response.FromValue(workerController.Login(ID, password));
+        }catch (Exception e){
+            response = Response.FromError(e.getMessage());
+        }
+        return response;
+    }
+
 
     //all of these are HR methods
     public Response<Boolean> addWorkerToWeeklySchedule(int callerID,int weekID,int day, int shift, int workerID) {
@@ -48,7 +61,7 @@ public class ServiceLayer {
         Response<Boolean> response;
         try {
             Worker worker = workerController.getWorker(workerID);
-            response = Response.FromValue(shiftsController.assignWorkerToJobInShift(weekID, day, shift, weekID, job,callerID));
+            response = Response.FromValue(shiftsController.assignWorkerToJobInShift(weekID, day, shift, workerID, job,callerID));
         }
         catch (Exception e){
             response = Response.FromError(e.getMessage());

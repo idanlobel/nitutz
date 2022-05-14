@@ -16,31 +16,33 @@ public class JobsDAO {
     public JobsDAO(){
     }
     public boolean exists(String job) throws Exception {
+        boolean toret = true;
         if (!cacheJobs.contains(job)){
             //read from db
             Connection conn=null;
             try {
                 conn = DatabaseManager.getInstance().connect();
                 Statement statement = conn.createStatement();
-                ResultSet rs = statement.executeQuery("select * from jobs where job = "+job);
+                String sql = "select * from jobs where job = '"+job+"'";
+                ResultSet rs = statement.executeQuery(sql);
                 if ( rs.next() ) {
                     cacheJobs.add(job);
-                    return true;
+                    toret = true;
                 }
-                return false;
+                else toret = false;
             } catch (Exception e) {
-                return false;
+                throw new Exception(e.getMessage());
             } finally {
                 try {
                     if (conn != null) {
                         conn.close();
                     }
-                } catch (SQLException ex) {
-                    throw new Exception(ex.getMessage());
+                } catch (Exception e) {
+                    throw new Exception(e.getMessage());
                 }
             }
         }
-        return true;
+        return toret;
     }
     public List<String> getAllJobs() throws Exception{
         if (readAll)return cacheJobs;
