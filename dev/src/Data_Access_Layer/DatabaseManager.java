@@ -42,11 +42,18 @@ public class DatabaseManager {
                     "\t\"job\"\tTEXT NOT NULL,\n" +
                     "\tPRIMARY KEY(\"job\")\n" +
                     ")");
+            stmt.execute("CREATE TABLE \"weeklySchedule\" (\n" +
+                    "\t\"id\"\tINTEGER,\n" +
+                    "\tPRIMARY KEY(\"id\")\n" +
+                    ");");
+            stmt.execute("CREATE TABLE \"driversData\" (\n" +
+                    "\t\"id\"\tINTEGER,\n" +
+                    "\t\"license\"\tTEXT NOT NULL,\n" +
+                    "\tPRIMARY KEY(\"id\")\n" +
+                    ");");
             connection.commit();
-            System.out.println("W BOZO");
         }
         catch (Exception e){
-            System.out.println("L BOZO");
             throw new Exception(e.getMessage());
         }
         finally {
