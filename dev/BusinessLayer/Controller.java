@@ -7,15 +7,23 @@ public class Controller {
     private final Hashtable<Integer,Supplier> suppliers;
     private final Hashtable<Integer,Contract> contracts;
     private final HashMap<Integer,Order> toDeliverOrders;
+    private final HashMap<Integer,List<PeriodicProduct>> periodicProducts; //0-sunday, 6-saturday
+    private final HashMap<Integer,List<Contract>> periodicSuppliers; //0-sunday, 6-saturday
     private int orderIdTracker=0;
     private final Hashtable<Integer,Order> orderHistory;
-    private final Hashtable<Integer, Product> products; //TODO: GET ITEMS FROM STOCK MODULE
+    //private final Hashtable<Integer, Product> products;
     public Controller(){
         toDeliverOrders=new HashMap<>();
         suppliers=new Hashtable<>();
         contracts=new Hashtable<>();
         orderHistory=new Hashtable<>();
-        products=new Hashtable<Integer, Product>();
+        periodicProducts=new HashMap<>();
+        periodicSuppliers=new HashMap<>();
+        for(int i=0;i<7;i++){
+            periodicProducts.put(i,new ArrayList<>());
+            periodicSuppliers.put(i,new ArrayList<>());
+        }
+      //  products=new Hashtable<Integer, Product>();
     }
     public Supplier AddSupplier(String name, Integer companyNumber, String bankNumber, List<ContactPerson> contactPeople,String orderingCP) {
         if(suppliers.containsKey(companyNumber))
@@ -35,7 +43,7 @@ public class Controller {
 
     }
 
-    public Contract SignContract(int companyNumber, List<int[]> itemInfoList, HashMap<Integer,List<int[]>> discountsList, boolean[] deliveryDays) {
+    public Contract SignPeriodicContract(int companyNumber, List<int[]> itemInfoList, HashMap<Integer,List<int[]>> discountsList, boolean[] deliveryDays) {
         if(!suppliers.containsKey(companyNumber))
             throw new IllegalArgumentException("USER ERROR: supplier with id "+companyNumber+" does not exist");
         if(deliveryDays.length != 7)
@@ -49,7 +57,9 @@ public class Controller {
         contracts.put(companyNumber,contract);
         return contract;
     }
-
+    public Contract SignShortageContract(int companyNumber, List<int[]> idPairsList, HashMap<Integer, List<int[]>> discountsList) {
+        return null;
+    }
     public Order OrderProducts(int companyNumber, List<int[]> productsAndAmounts, String contactPerson, LocalDate arrivalTime) { //product[0]=supplierId, [1]=amount
         if(!contracts.containsKey(companyNumber))
             throw new IllegalArgumentException("USER ERROR: Supplier has not signed contract with us");
@@ -118,15 +128,14 @@ public class Controller {
         toDeliverOrders.clear();
         return tmp;
     }
-
-    public void OrderProduct(int id, int amount) {
-        Product product=products.get(id);
+    private void OrderProduct(int id, int amount,List<Contract> supplierOptions) {
+    //    Product product=new Product(id);
         int chosenSupp=-1,bestPrice=-1,discount=100;
         for(Contract contract: contracts.values()){
             if(contract.ContainsProduct(id)){
                 chosenSupp=contract.getSupplier().getCompanyNumber();
                 discount=contract.getDiscount(id,amount);
-                int price=contract.getProduct(product.getId()).getPrice()*amount*discount;
+                int price=contract.getProduct(id).getPrice()*amount*discount;
                 if(bestPrice==-1 || price<bestPrice)
                     bestPrice=price;
             }
@@ -152,4 +161,6 @@ public class Controller {
         }
         throw new RuntimeException("Logic Error in Controller => getArrivalDate");
     }
+
+
 }

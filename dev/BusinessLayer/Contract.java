@@ -8,7 +8,6 @@ public class Contract {
     private final HashMap<Integer, SupplierProduct> products; //TODO: ITEM IS A PLACEHOLDER- COMPLETE POST STORAGE MERGE
     private final HashMap<Integer, List<int[]>> discounts; //[0]=amount, [1]=percent (itemId is our system's id, not the supplier's)
     private final boolean[] deliveryDays; //size=7, true= delivery day
-
     // public Contract(Supplier supplier, List<Product> products, HashMap<Integer,List<int[]>> discounts) {
     //    this.supplier =supplier;
     //   this.products=products;
@@ -30,7 +29,7 @@ public class Contract {
         }
     }
 
-
+    protected enum WeekDay {Sun,Mon,Tue,Wed,thu,Fri,Sat};
     public HashMap<Integer,List<int[]>> getDiscounts() {
         return discounts;
     }

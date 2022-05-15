@@ -16,10 +16,9 @@ public class SupplyModuleService {
         controller=new Controller();
     }
 
-    public Response<Supplier> AddSupplier(Integer companyNumber, String name,  String bankNumber, List<ContactPerson> contactPeople){
+    public Response<Supplier> AddSupplier(Integer companyNumber, String name,  String bankNumber, List<ContactPerson> contactPeople,String orderingCP){
         try{
-         //   return new IsValue<Supplier>(controller.AddSupplier(name, companyNumber, bankNumber, contactPeople),"Supplier added");
-            return null;
+            return new IsValue<Supplier>(controller.AddSupplier(name, companyNumber, bankNumber, contactPeople,orderingCP),"Supplier added");
         }
         catch (Exception e){
             return new IsError(e.getMessage());
@@ -49,9 +48,17 @@ public class SupplyModuleService {
             return new IsError(e.getMessage());
         }
     }
-    public Response<Contract> SignContract(int companyNumber, List<int[]> idPairsList, HashMap<Integer,List<int[]>> discountsList, boolean[] deliveryDays){
+    public Response<Contract> SignShortageContract(int companyNumber, List<int[]> idPairsList, HashMap<Integer,List<int[]>> discountsList){
         try {
-            return new IsValue<Contract>(controller.SignContract(companyNumber,idPairsList,discountsList,deliveryDays),"Contract added");
+            return new IsValue<Contract>(controller.SignShortageContract(companyNumber,idPairsList,discountsList),"Contract added");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
+    public Response<Contract> SignPeriodicContract(int companyNumber, List<int[]> idPairsList, HashMap<Integer,List<int[]>> discountsList, boolean[] deliveryDays){
+        try {
+            return new IsValue<Contract>(controller.SignPeriodicContract(companyNumber,idPairsList,discountsList,deliveryDays),"Contract added");
         }
         catch (Exception e){
             return new IsError(e.getMessage());
@@ -86,7 +93,7 @@ public class SupplyModuleService {
     public Response OrderProduct(int id,int amount){
 
         try {
-            controller.OrderProduct(id,amount);
+        //    controller.OrderProduct(id,amount);
             return new IsValue(null,"Ordering successful");
         }
         catch (Exception e){

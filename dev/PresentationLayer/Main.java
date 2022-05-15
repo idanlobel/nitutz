@@ -84,7 +84,7 @@ public class Main { //note: this code is assumed to be made as a placeholder til
             String Email=scanner.next();
             contactPeople.add(new ContactPerson(cName,Email,cellNum));
         }
-        handleResponse(service.AddSupplier(companyNumber,companyName,bankNum,contactPeople));
+    //    handleResponse(service.AddSupplier(companyNumber,companyName,bankNum,contactPeople));
     }
     public static void getSupplierChain(SupplyModuleService service,Scanner scanner){
         int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,1);
@@ -134,7 +134,7 @@ public class Main { //note: this code is assumed to be made as a placeholder til
         String[] split=days.split(",");
         for(String day:split)
             par[Integer.parseInt(day)-1]=true;
-        handleResponse(service.SignContract(companyNumber,idPairs,discounts,par));
+        //handleResponse(service.SignContract(companyNumber,idPairs,discounts,par));
     }
     public static void getContractChain(SupplyModuleService service,Scanner scanner){
         int companyNumber=requestNumberInput("Please state the company number with which the contract is signed with: ",scanner,-1,1);
