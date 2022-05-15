@@ -7,6 +7,11 @@ public  class DAL_controller {
     private Products_DAO products_table;
     private Product_DAO product_table;
 
+    public SalesHistoryDAO getSales_history_table() {
+        return sales_history_table;
+    }
+
+    private SalesHistoryDAO sales_history_table;
     private Sale_DAO sale_table;
     private Periodic_Order_DAO periodic_order_table;
 
@@ -45,6 +50,7 @@ public  class DAL_controller {
         sale_table=new Sale_DAO(connection_string);
         periodic_order_table=new Periodic_Order_DAO(connection_string);
         pricesHistoryDAO=new PricesHistoryDAO(connection_string);
+        sales_history_table=new SalesHistoryDAO(connection_string);
     }
     public static DAL_controller getInstance(){
         return instance;

@@ -20,7 +20,7 @@ class ProductsTest {
     void setUp() {
 
         products_test=new Products(1,"something",10,50.0,100.0, LocalDate.of(2000,2,2).toString(),"something","something","something","something", DAL_controller.getInstance().getProducts_table(), DAL_controller.getInstance().getProduct_table());
-        sale_test=new Sale(20,LocalDate.of(2000,2,2).toString(),LocalDate.of(2022,2,2).toString(),"something",DAL_controller.getInstance().getSale_table());
+        sale_test=new Sale(20,LocalDate.of(2000,2,2).toString(),LocalDate.of(2022,2,2).toString(),"something",DAL_controller.getInstance().getSale_table(),DAL_controller.getInstance().getSales_history_table());
     }
     @Test
     void record_price() throws Exception {

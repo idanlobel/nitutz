@@ -1,6 +1,7 @@
 package busniess_layer;
 
 import Data_layer.Sale_DAO;
+import Data_layer.SalesHistoryDAO;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,16 +16,17 @@ public class Sale {
     private String reason;
     private List<Products> products_in_sale=new ArrayList<>();
     private Sale_DAO sale_dao;
+    private SalesHistoryDAO salesHistoryDAO;
 
 
-
-    public Sale(double percentage,String start_date, String end_date, String reason,Sale_DAO sale_dao) {
+    public Sale(double percentage,String start_date, String end_date, String reason,Sale_DAO sale_dao,SalesHistoryDAO salesHistoryDAO) {
         this.percentage = percentage/100;
         this.start_date = start_date;
         this.end_date = end_date;
         this.reason = reason;
         this.sale_dao=sale_dao;
         int id_=sale_dao.check_if_exists(percentage,start_date,end_date,reason);
+        this.salesHistoryDAO=salesHistoryDAO;
         if(id_==-1)
         {
             this.sale_dao.insert(percentage,start_date,end_date,reason);
@@ -49,7 +51,7 @@ public class Sale {
 
         this.products_in_sale.add(p);
         p.Record_sale(percentage,start_date,this.ID);
-
+        salesHistoryDAO.insert(ID,p.getCatalog_number());
     }
 
     public void sale_is_over()
