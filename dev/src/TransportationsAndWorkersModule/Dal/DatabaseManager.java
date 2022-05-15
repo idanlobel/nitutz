@@ -1,4 +1,4 @@
-package src.TransportationsAndWorkersModule.Dal.Workers;
+package src.TransportationsAndWorkersModule.Dal;
 
 import java.sql.*;
 

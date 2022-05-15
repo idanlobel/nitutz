@@ -6,6 +6,7 @@ package src.TransportationsAndWorkersModule.Dal.Workers;
 
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.Shift;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.Weekly_Schedule;
+import src.TransportationsAndWorkersModule.Dal.DatabaseManager;
 
 import java.sql.*;
 import java.util.*;

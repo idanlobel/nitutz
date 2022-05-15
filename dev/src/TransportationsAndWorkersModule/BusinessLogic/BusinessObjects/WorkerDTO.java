@@ -5,16 +5,16 @@ import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers
 public class WorkerDTO {
     Integer id;
     String licenseType;
-    Worker work;
+    String name;
 
     public WorkerDTO(){
 
     }
 
-    public WorkerDTO(Integer id, String licenseType, Worker work) {
+    public WorkerDTO(Integer id, String licenseType, String name) {
         this.id = id;
         this.licenseType = licenseType;
-        this.work = work;
+        this.name = name;
     }
 
     public Integer getId() {
@@ -25,7 +25,7 @@ public class WorkerDTO {
         return licenseType;
     }
 
-    public Worker getWork() {
-        return work;
+    public String getName() {
+        return name;
     }
 }

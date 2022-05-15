@@ -1,6 +1,8 @@
 package src.TransportationsAndWorkersModule.Dal.Workers;
 
 
+import src.TransportationsAndWorkersModule.Dal.DatabaseManager;
+
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;

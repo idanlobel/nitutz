@@ -2,7 +2,7 @@ package src.TransportationsAndWorkersModule.Dal.Transportation;
 
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.ContactPerson;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.Site;
-import src.TransportationsAndWorkersModule.Dal.Workers.DatabaseManager;
+import src.TransportationsAndWorkersModule.Dal.DatabaseManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

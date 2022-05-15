@@ -2,7 +2,7 @@ package src.TransportationsAndWorkersModule.Dal.Transportation;
 
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.LicenseType;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.Truck;
-import src.TransportationsAndWorkersModule.Dal.Workers.DatabaseManager;
+import src.TransportationsAndWorkersModule.Dal.DatabaseManager;
 
 
 import java.sql.*;

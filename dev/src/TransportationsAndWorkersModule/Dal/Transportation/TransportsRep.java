@@ -3,7 +3,7 @@ package src.TransportationsAndWorkersModule.Dal.Transportation;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.TransportForm;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.TransportProductsDocument;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.TransportStatus;
-import src.TransportationsAndWorkersModule.Dal.Workers.DatabaseManager;
+import src.TransportationsAndWorkersModule.Dal.DatabaseManager;
 
 import java.sql.*;
 import java.util.*;
