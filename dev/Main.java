@@ -1,29 +1,36 @@
 
-import src.transportationsModule.Service.Service;
+import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.Worker;
+import src.TransportationsAndWorkersModule.Service.ServiceTransportation.Service;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
-import static src.transportationsModule.Dal.Create.createNewDatabase;
-import static src.transportationsModule.Dal.CreateTable.*;
+import static src.Presentation.Transportation.Main.mainTransport;
+import static src.Presentation.Workers.Main.mainWorkers;
+import static src.TransportationsAndWorkersModule.Dal.Transportation.Create.createNewDatabase;
+import static src.TransportationsAndWorkersModule.Dal.Transportation.CreateTable.*;
 
 public class Main {
 
     public static void main(String[] args) {
-	System.out.println("Connecting to DB...");
-	createNewDatabase("SuperDuper.db");
-    createNewTrucksTable();
-    createNewTransportFormsTable();
-    createNewTransportDocumentTable();
-    createNewDocumentProductsTable();
-    createSitesTable();
-    createSitesTable();
+	System.out.println("Choose Workers Or Transport:");
+    Scanner scanner = new Scanner(System.in);
+    String s = scanner.nextLine();
+    if ( s.equals("Workers")){
+        try {
+            mainWorkers();
+        } catch (Exception e) {
+            System.out.println("run program again");
+        }
+    }
+    else if(s.equals("Transport")){
+        mainTransport();
+    }
+    else{
+        System.out.println("run program again");
+    }
 
-    Scanner var1 = new Scanner(System.in);
-    Service var2 = new Service();
 
-    var2.Serve(var1);
-            }
+    }
 
 
 

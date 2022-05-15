@@ -1,6 +1,6 @@
 package src.EmpModule;
 
-import src.transportationsModule.BusinessLogic.LicenseType;
+import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.LicenseType;
 
 public class Driver_EmployeeModule {
 
