@@ -19,14 +19,13 @@ public class Sale {
     private SalesHistoryDAO salesHistoryDAO;
 
 
-    public Sale(double percentage,String start_date, String end_date, String reason,Sale_DAO sale_dao,SalesHistoryDAO salesHistoryDAO) {
+    public Sale(double percentage,String start_date, String end_date, String reason,Sale_DAO sale_daoO) {
         this.percentage = percentage/100;
         this.start_date = start_date;
         this.end_date = end_date;
         this.reason = reason;
         this.sale_dao=sale_dao;
         int id_=sale_dao.check_if_exists(percentage,start_date,end_date,reason);
-        this.salesHistoryDAO=salesHistoryDAO;
         if(id_==-1)
         {
             this.sale_dao.insert(percentage,start_date,end_date,reason);

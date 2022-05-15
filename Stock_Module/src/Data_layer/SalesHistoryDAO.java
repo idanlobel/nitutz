@@ -67,8 +67,9 @@ public class SalesHistoryDAO {
 
 
         String sql = "CREATE TABLE IF NOT EXISTS ProductPrice (\n"
-                + " sale_id integer PRIMARY KEY,\n"
+                + " sale_id integer ,\n"
                 + " catalog_number Long, \n"
+                + "Primary key (sale_id,catalog_number)"
                 + "  FOREIGN KEY (catalog_number) REFERENCES Products(catalog_number), \n"
                 + " Foreign KEY (sale_id) REFERENCES Sale(id) \n"
                 + ");";

@@ -49,7 +49,7 @@ public class Stock {
         }
         if (!added) {
             //maybe we should ask the client if there is a default price for selling , for exmaple : cost * 1.5
-            Products products = new Products(products_catalog_number, name, quantity, cost, cost * 1.5, expiry, manufactorer, category,sub_cat,sub_sub_cat,dal_controller.getProducts_table(),dal_controller.getProduct_table());
+            Products products = new Products(products_catalog_number, name, quantity, cost, cost * 1.5, expiry, manufactorer, category,sub_cat,sub_sub_cat,dal_controller.getProducts_table(),dal_controller.getProduct_table(),dal_controller.getSales_history_table());
             products_list.add(products);
 
 

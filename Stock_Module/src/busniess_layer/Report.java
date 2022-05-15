@@ -64,20 +64,10 @@ public class Report {
 
                 for(Products p :products)
                 {
-
-                    for(Integer sale_id:p.getSales_history())
+                    for(Sale s:p.getsaleshistory())
                     {
-                        for(Sale s:sales)
-                        {
-                            if(s.getId()==sale_id)
-                            {
-                                newlist.add(p);
-
-                            }
-                        }
+                        newlist.add(p);
                     }
-
-
                 }
                 this.products=newlist;
                 break;
@@ -137,16 +127,9 @@ public class Report {
                 for(Products p :products)
                 {
                     answer+="name:   "+p.getName()+"\n";
-                    for(Integer sale_id:p.getSales_history())
+                    for(Sale s:p.getSales_history())
                     {
-                        for(Sale s:sales)
-                        {
-                            if(s.getId()==sale_id)
-                            {
-
-                                answer +="start date:  "+s.getStart_date() + "    end date:   "+s.getEnd_date()+"  reason:   "+s.getReason()+"\n";
-                            }
-                        }
+                        answer +="start date:  "+s.getStart_date() + "    end date:   "+s.getEnd_date()+"  reason:   "+s.getReason()+"\n";
                     }
 
                 }
