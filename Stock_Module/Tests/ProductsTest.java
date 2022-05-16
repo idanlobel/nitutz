@@ -1,14 +1,13 @@
 import Data_layer.DAL_controller;
 import busniess_layer.Products;
 import busniess_layer.Sale;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ProductsTest {
 
@@ -19,8 +18,14 @@ class ProductsTest {
    @BeforeEach
     void setUp() {
 
-        products_test=new Products(1,"something",10,50.0,100.0, LocalDate.of(2000,2,2).toString(),"something","something","something","something", DAL_controller.getInstance().getProducts_table(), DAL_controller.getInstance().getProduct_table());
-        sale_test=new Sale(20,LocalDate.of(2000,2,2).toString(),LocalDate.of(2022,2,2).toString(),"something",DAL_controller.getInstance().getSale_table(),DAL_controller.getInstance().getSales_history_table());
+        products_test=new Products(1,"something",10,50.0,100.0, LocalDate.of(2000,2,2).toString(),"something","something","something","something", DAL_controller.getInstance().getProducts_table(), DAL_controller.getInstance().getProduct_table(),DAL_controller.getInstance().getSales_history_table());
+        sale_test=new Sale(20,LocalDate.of(2000,2,2).toString(),LocalDate.of(2022,2,2).toString(),"something",DAL_controller.getInstance().getSale_table());
+    }
+
+    @AfterEach
+    void clear()
+    {
+        DAL_controller.getInstance().clear_database();
     }
     @Test
     void record_price() throws Exception {
@@ -35,7 +40,7 @@ class ProductsTest {
         //checks that the sale was recorded
 
         sale_test.Add_Products(products_test);
-        assertEquals(sale_test.getId(),products_test.getsaleshistory().get(0));
+        assertEquals(sale_test.getId(),products_test.getsaleshistory().get(0).getId());
 
     }
 }

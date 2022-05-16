@@ -1,5 +1,12 @@
 package Data_layer;
 
+
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+
 public  class DAL_controller {
 
 
@@ -7,9 +14,7 @@ public  class DAL_controller {
     private Products_DAO products_table;
     private Product_DAO product_table;
 
-    public SalesHistoryDAO getSales_history_table() {
-        return sales_history_table;
-    }
+
 
     private SalesHistoryDAO sales_history_table;
     private Sale_DAO sale_table;
@@ -28,6 +33,9 @@ public  class DAL_controller {
 
     public Product_DAO getProduct_table() {
         return product_table;
+    }
+    public SalesHistoryDAO getSales_history_table() {
+        return sales_history_table;
     }
 
 
@@ -154,6 +162,31 @@ public  class DAL_controller {
         this.product_table.update_product_sell_price(id,new_sell_price);
     }
 
+
+    public void clear_database() {
+        List<String> tables_names=new ArrayList<>();
+        tables_names.add("Periodic_Order");
+        tables_names.add("ProductPrice");
+        tables_names.add("Product");
+        tables_names.add("Products");
+        tables_names.add("Sale");
+        tables_names.add("SalesHistory");
+
+        for(String table:tables_names)
+        {      String sql =" DELETE FROM "+table+";";
+            try{
+                Connection conn = DriverManager.getConnection(connection_string);
+                Statement stmt = conn.createStatement();
+                stmt.execute(sql);
+                stmt.close();
+                conn.close();
+            } catch (SQLException e) {
+
+            }
+
+        }
+
+    }
 
 
 

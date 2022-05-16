@@ -1,5 +1,6 @@
 package Data_layer;
 
+import busniess_layer.Periodic_Order;
 import busniess_layer.Report;
 import busniess_layer.Sale;
 
@@ -26,13 +27,22 @@ public class Sale_DAO {
     }
 
     private Sale readSale(int id) {
-        String sql = "SELECT * FROM "+table_name+ "WHERE id="+id;
+        String sql = "SELECT * FROM "+table_name+ " WHERE id="+id;
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery(sql);
-            return res.getObject(0,Sale.class);
+            Integer id_=Integer.parseInt(res.getObject(1).toString());
+            Double percentage=Double.parseDouble(res.getObject(2).toString());
+            String start_date=(res.getObject(3).toString());
+            String end_date=(res.getObject(4).toString());
+            String reason=(res.getObject(5).toString());
+
+            Sale sale=new Sale(id_,percentage,start_date,end_date,reason,this);
+            stmt.close();
+            conn.close();
+            return sale;
         } catch (SQLException e) {
             return null;
         }
@@ -116,6 +126,7 @@ public class Sale_DAO {
 
 
             pstmt.executeUpdate();
+           pstmt.close();
             conn.close();
         } catch (SQLException e) {
 
@@ -147,9 +158,11 @@ public class Sale_DAO {
 
             if(res.next()) {
                 Integer id_ = Integer.parseInt(res.getObject(1).toString());
+                stmt.close();
                 conn.close();
                 return id_;
             }
+            stmt.close();
             conn.close();
             return -1;
 

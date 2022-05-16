@@ -105,7 +105,7 @@ stmt.close();
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery(query);
             int current_id=res.getInt(1);
-            conn.close();
+            stmt.close();
             conn.close();
             return current_id;
 

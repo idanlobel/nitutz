@@ -30,7 +30,7 @@ public class Products_DAO {
     }
 
     private Products readProducts(long catalog_number) {
-        String sql = "SELECT * FROM "+table_name+ "WHERE catalog_number="+catalog_number;
+        String sql = "SELECT * FROM "+table_name+ " WHERE catalog_number="+catalog_number;
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);
@@ -56,6 +56,7 @@ public class Products_DAO {
                     myProductList.add(res.getObject(i,Product.class));
             }
             stmt.close();
+            conn.close();
             return myProductList;
         } catch (SQLException e) {
             return null;

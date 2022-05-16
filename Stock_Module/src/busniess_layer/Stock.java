@@ -3,6 +3,8 @@ package busniess_layer;
 import Data_layer.DAL_controller;
 import ServiceLayer.SupplyModuleService;
 import BusinessLayer.Responses.*;
+
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -56,11 +58,13 @@ public class Stock {
             products_list.add(products);
         }
 
+
+
     }
-    public void define_periodic_orders(int day,long products_catalog_number, int quantity, Double cost,  String name, String manufactorer, String category,String sub_cat,String sub_sub_cat)
+    public void define_periodic_orders(String day,long products_catalog_number, int quantity, Double cost,  String name, String manufactorer, String category,String sub_cat,String sub_sub_cat)
     {
         Periodic_Order order=new Periodic_Order(day,products_catalog_number,quantity,cost,name,manufactorer,category,sub_cat,sub_sub_cat,dal_controller.getPeriodic_order_table());
-        supplyModuleService.AddPeriodicProduct((int) products_catalog_number,quantity,day);
+        supplyModuleService.AddPeriodicProduct((int) products_catalog_number,quantity, DayOfWeek.valueOf(day.toUpperCase(Locale.ROOT)).getValue());
         this.periodic_orders_list.add(order);
     }
 
@@ -86,6 +90,7 @@ public class Stock {
 
     //@@@@@@@@@@@@@@ here add update to sales_history_table
     public void Add_to_sale(long products_catalog_number,int sales_id) throws Exception {
+        boolean added=false;
         for(Products p:this.products_list)
         {
             if(p.getCatalog_number()==products_catalog_number)
@@ -93,10 +98,16 @@ public class Stock {
                 for(Sale sale:this.sales_list)
                 {
                     sale.Add_Products(p);
+                    added=true;
 
                 }
             }
         }
+        if(!added)
+        {
+            throw new Exception("id or catalog number not found!");
+        }
+
     }
 
     public void sale_by_category(String startdate, String endate, String reason, double percentage,String category,String sub_category,String sub_sub_category) throws Exception {

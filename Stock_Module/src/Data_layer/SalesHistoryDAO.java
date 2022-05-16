@@ -23,7 +23,7 @@ public class SalesHistoryDAO {
 
 
     public List<Sale> getSalesHistory(long catalog_number){
-        String sql = "SELECT * FROM "+table_name+ "WHERE catalog_number="+catalog_number;
+        String sql = "SELECT * FROM "+table_name+ " WHERE catalog_number= "+catalog_number;
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);
@@ -31,9 +31,11 @@ public class SalesHistoryDAO {
             ResultSet res = stmt.executeQuery(sql);
             LinkedList<Sale> sales_history=new LinkedList<>();
             while (res.next()) {
-                int idForRes = res.getInt(0);
+                int idForRes = res.getInt(1);
                 sales_history.add(DAL_controller.getInstance().getSale_table().getSale(idForRes));
             }
+            stmt.close();
+            conn.close();
             return sales_history;
         } catch (SQLException e) {
             return null;
@@ -56,7 +58,7 @@ public class SalesHistoryDAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+
             }
         }
         return conn;
@@ -66,18 +68,22 @@ public class SalesHistoryDAO {
     private void create_table(String connection_string) {
 
 
-        String sql = "CREATE TABLE IF NOT EXISTS ProductPrice (\n"
+        String sql = "CREATE TABLE IF NOT EXISTS SalesHistory (\n"
                 + " sale_id integer ,\n"
                 + " catalog_number Long, \n"
-                + "Primary key (sale_id,catalog_number)"
+                + " PRIMARY KEY (sale_id, catalog_number),"
                 + "  FOREIGN KEY (catalog_number) REFERENCES Products(catalog_number), \n"
-                + " Foreign KEY (sale_id) REFERENCES Sale(id) \n"
+                + " FOREIGN KEY (sale_id) REFERENCES Sale(id) \n"
                 + ");";
+
+
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
+            stmt.close();
+            conn.close();
         } catch (SQLException e) {
 
         }
@@ -93,6 +99,8 @@ public class SalesHistoryDAO {
             pstmt.setInt(1, sale_id);
             pstmt.setLong(2, catalog_number);
             pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
         } catch (SQLException e) {
 
         }

@@ -130,6 +130,7 @@ public class Product_DAO {
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery(query);
             int current_id=res.getInt(1);
+            stmt.close();
             conn.close();
             return current_id;
 

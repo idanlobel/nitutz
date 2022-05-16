@@ -16,7 +16,7 @@ public class Periodic_Order {
     private boolean ordered;
     private Periodic_Order_DAO periodic_order_dao;
 
-    public Periodic_Order(int day_of_week, long catalog_number, int quantity, double cost, String name, String manufactorer , String category, String sub_cat, String sub_sub_cat, Periodic_Order_DAO poda)
+    public Periodic_Order(String day_of_week, long catalog_number, int quantity, double cost, String name, String manufactorer , String category, String sub_cat, String sub_sub_cat, Periodic_Order_DAO poda)
     {
 
         this.day_of_week=day_of_week;

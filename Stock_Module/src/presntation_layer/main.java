@@ -162,7 +162,7 @@ public class main {
 
             if(order_in_array.length==4 && order_in_array[0].equals("Show") | order_in_array[0].equals("show"))
             {
-                System.out.println(stock_manager.show_by_catgeory(order_in_array[1],order_in_array[2],order_in_array[3]).tostring());
+                System.out.println(stock_manager.show_by_catgeory(order_in_array[1],order_in_array[2],order_in_array[3]).getValue().tostring());
             }
 
             if(order_in_array[0].equals("report") | order_in_array[0].equals("Report"))
@@ -170,28 +170,28 @@ public class main {
                 switch (order_in_array[1].toLowerCase(Locale.ROOT)) {
                     case "stock": {
                         System.out.println("showing stock report");
-                        System.out.println(stock_manager.make_stock_report().tostring());
+                        System.out.println(stock_manager.make_stock_report().getValue().tostring());
                         break;
                     }
 
                     case "prices":{
                         System.out.println("showing prices report");
-                        System.out.println(stock_manager.make_prices_report().tostring());
+                        System.out.println(stock_manager.make_prices_report().getValue().tostring());
                         break;
                     }
                     case "sales":{
                         System.out.println("showing sales report");
-                        System.out.println(stock_manager.make_sales_report().tostring());
+                        System.out.println(stock_manager.make_sales_report().getValue().tostring());
                         break;
                     }
                     case "defective":{
                         System.out.println("showing defective report");
-                        System.out.println(stock_manager.make_defective_report().tostring());
+                        System.out.println(stock_manager.make_defective_report().getValue().tostring());
                         break;
                     }
                     case "expiry":{
                         System.out.println("showing expiry report");
-                        System.out.println(stock_manager.make_expiry_report().tostring());
+                        System.out.println(stock_manager.make_expiry_report().getValue().tostring());
                         break;
                     }
                 }
@@ -199,7 +199,7 @@ public class main {
 
             if(order_in_array.length>3 && order_in_array[0].toLowerCase(Locale.ROOT).equals("set") & order_in_array[1].toLowerCase(Locale.ROOT).equals("broken") & order_in_array[2].toLowerCase(Locale.ROOT).equals("item"))
             {
-                if(stock_manager.set_broken_product(order_in_array[3],order_in_array[4]))
+                if(stock_manager.set_broken_product(order_in_array[3],order_in_array[4]).getValue())
                 {
                     System.out.println("successfully set item to broken state");
                 }

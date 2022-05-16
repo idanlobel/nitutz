@@ -1,5 +1,6 @@
 package busniess_layer;
 
+import Data_layer.DAL_controller;
 import Data_layer.Sale_DAO;
 import Data_layer.SalesHistoryDAO;
 
@@ -19,7 +20,7 @@ public class Sale {
     private SalesHistoryDAO salesHistoryDAO;
 
 
-    public Sale(double percentage,String start_date, String end_date, String reason,Sale_DAO sale_daoO) {
+    public Sale(double percentage,String start_date, String end_date, String reason,Sale_DAO sale_dao) {
         this.percentage = percentage/100;
         this.start_date = start_date;
         this.end_date = end_date;
@@ -35,10 +36,24 @@ public class Sale {
         {
             this.ID=id_;
         }
+        this.salesHistoryDAO=DAL_controller.getInstance().getSales_history_table();
 
 
 
 //        this.products_in_sale.add(product);
+
+    }
+
+    public Sale(int id,double percentage,String start_date, String end_date, String reason,Sale_DAO sale_dao) {
+        this.percentage = percentage;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.reason = reason;
+        this.sale_dao=sale_dao;
+        this.ID=id;
+        this.salesHistoryDAO= DAL_controller.getInstance().getSales_history_table();
+
+
 
     }
     public int getId()
