@@ -1,4 +1,4 @@
-package BusinessLayer;
+package SuppliersBusinessLayer;
 
 public class ContactPerson {
     private final String name;
@@ -9,6 +9,14 @@ public class ContactPerson {
         this.name=name;
         this.Email=Email;
         this.cellNumber=cellNumber;
+    }
+
+    public void setCellNumber(String cellNumber) {
+        this.cellNumber = cellNumber;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
     }
 
     public String getName() {

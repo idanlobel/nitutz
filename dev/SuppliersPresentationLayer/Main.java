@@ -1,11 +1,11 @@
-package PresentationLayer;
+package SuppliersPresentationLayer;
 
-import BusinessLayer.ContactPerson;
-import BusinessLayer.Contracts.Contract;
-import BusinessLayer.Order;
-import BusinessLayer.Responses.Response;
-import BusinessLayer.Supplier;
-import ServiceLayer.SupplyModuleService;
+import SuppliersBusinessLayer.ContactPerson;
+import SuppliersBusinessLayer.Contracts.Contract;
+import SuppliersBusinessLayer.Order;
+import SuppliersBusinessLayer.Responses.Response;
+import SuppliersBusinessLayer.Supplier;
+import SuppliersServiceLayer.SupplyModuleService;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

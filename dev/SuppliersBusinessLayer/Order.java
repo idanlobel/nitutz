@@ -1,10 +1,9 @@
-package BusinessLayer;
+package SuppliersBusinessLayer;
 
 
-import BusinessLayer.Contracts.Contract;
-import BusinessLayer.Products.Product;
-import BusinessLayer.Products.SupplierProduct;
-
+import SuppliersBusinessLayer.Products.Product;
+import SuppliersBusinessLayer.Products.SupplierProduct;
+import java.util.*;
 import java.time.LocalDate;
 import java.util.HashMap;
 
@@ -16,8 +15,8 @@ public class Order {
     private int totalPrice;
     private final LocalDate orderDate;
     private final LocalDate arrivalDate;
-
-
+    private int generalDiscount;
+    private int totalItemAmount;
     public Order(int id, int supplyCompanyNumber,ContactPerson contactPerson, LocalDate arrivalDate) {
         this.supplyCompanyNumber= supplyCompanyNumber;
         this.id=id;
@@ -27,8 +26,11 @@ public class Order {
         this.totalPrice = 0;
         this.orderDate = LocalDate.now();
         this.arrivalDate = arrivalDate;
+        this.generalDiscount=100;
+        this.totalItemAmount=0;
+
     }
-    public void AddProduct(SupplierProduct product, int amount, int initPrice, int discount){
+    public void AddProduct(SupplierProduct product, int amount, int initPrice, int discount,List<int[]> generalDiscounts){
         if(itemInfos.containsKey(product))
             throw new IllegalArgumentException("User Error: Duplicate "+product.getId()+" in order");
         if(amount==0)
@@ -36,17 +38,20 @@ public class Order {
         if(initPrice==0)
             throw new IllegalArgumentException("User Error: Item "+product.getId()+ " price can not be 0");
         itemInfos.put(product,new int[]{amount,initPrice,discount});
+        totalItemAmount+=amount;
+        for(int[] discountPair:generalDiscounts)
+            if(totalItemAmount>discountPair[0] & generalDiscount>discountPair[1])
+                generalDiscount=discountPair[1];
         totalPrice+=initPrice*amount*((double)discount/100);
     }
 
     public int getSupplyCompanyNumber() {
         return supplyCompanyNumber;
     }
-
     @Override
     public String toString() {
         StringBuilder acc= new StringBuilder();
-        acc.append("Order number ").append(id).append("\nContact Person: ").append(contactPerson.getName()).append("\nTotal Price: ").append(totalPrice).append("\nOrder Date: ").append(orderDate).append("\nArrival Date: ").append(arrivalDate);
+        acc.append("Order number ").append(id).append("\nContact Person: ").append(contactPerson.getName()).append("\nTotal Price: ").append(getTotalPrice()).append("\nOrder Date: ").append(orderDate).append("\nArrival Date: ").append(arrivalDate);
         acc.append("\n----------Item List---------=\n");
         int count=1;
         for(Product product: itemInfos.keySet()){
@@ -62,6 +67,6 @@ public class Order {
     }
 
     public int getTotalPrice() {
-        return totalPrice;
+        return totalPrice*generalDiscount;
     }
 }

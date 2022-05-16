@@ -1,4 +1,4 @@
-package BusinessLayer.Responses;
+package SuppliersBusinessLayer.Responses;
 
 public class IsValue<T> extends Response<T>{
     private final T object;

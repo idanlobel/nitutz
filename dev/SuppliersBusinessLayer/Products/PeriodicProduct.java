@@ -1,4 +1,4 @@
-package BusinessLayer.Products;
+package SuppliersBusinessLayer.Products;
 
 public class PeriodicProduct extends Product {
     int amount;

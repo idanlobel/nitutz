@@ -1,4 +1,4 @@
-package BusinessLayer.Responses;
+package SuppliersBusinessLayer.Responses;
 
 public abstract class Response<T> {
 

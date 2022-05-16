@@ -1,4 +1,4 @@
-package BusinessLayer.Products;
+package SuppliersBusinessLayer.Products;
 
 public abstract class Product {
     private int id;

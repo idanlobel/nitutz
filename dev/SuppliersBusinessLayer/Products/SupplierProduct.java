@@ -1,4 +1,4 @@
-package BusinessLayer.Products;
+package SuppliersBusinessLayer.Products;
 
 public class SupplierProduct extends Product {
     private final int supplierId;
