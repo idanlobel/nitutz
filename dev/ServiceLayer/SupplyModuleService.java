@@ -1,6 +1,7 @@
 package ServiceLayer;
 
 import BusinessLayer.*;
+import BusinessLayer.Contracts.Contract;
 import BusinessLayer.Responses.IsError;
 import BusinessLayer.Responses.Response;
 import BusinessLayer.Responses.IsValue;
@@ -80,20 +81,40 @@ public class SupplyModuleService {
             return new IsError(e.getMessage());
         }
     }
-    //TODO: DELETE
-    public Response<Order> OrderProducts(int companyNumber, String contactPersonName, LocalDate arrivalDate, List<int[]> products){
+    public Response OrderProduct(int id,int amount){
 
         try {
-            return new IsValue<Order>(controller.OrderProducts(companyNumber,products,contactPersonName,arrivalDate),"Ordering successful");
+        //    controller.OrderProduct(id,amount);
+            return new IsValue(null,"Ordering successful");
         }
         catch (Exception e){
             return new IsError(e.getMessage());
         }
     }
-    public Response OrderProduct(int id,int amount){
+    public Response AddPeriodicProduct(int id,int amount,int day){
 
         try {
-        //    controller.OrderProduct(id,amount);
+            //    controller.OrderProduct(id,amount);
+            return new IsValue(null,"Ordering successful");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
+    public Response ChangePeriodicProduct(int id,int amount,int day){
+
+        try {
+            //    controller.OrderProduct(id,amount);
+            return new IsValue(null,"Ordering successful");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
+    public Response DeletePeriodicProduct(int id,int amount,int day){
+
+        try {
+            //    controller.OrderProduct(id,amount);
             return new IsValue(null,"Ordering successful");
         }
         catch (Exception e){

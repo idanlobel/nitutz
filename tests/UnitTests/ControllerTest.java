@@ -1,7 +1,7 @@
 package UnitTests;
 
 //import BusinessLayer.ContactPerson;
-//import BusinessLayer.Contract;
+//import BusinessLayer.Contracts.Contract;
 //import BusinessLayer.Controller;
 //import BusinessLayer.Order;
 //import BusinessLayer.Supplier;

@@ -1,6 +1,6 @@
-package BusinessLayer;
+package BusinessLayer.Products;
 
-public class PeriodicProduct extends Product{
+public class PeriodicProduct extends Product {
     int amount;
     public PeriodicProduct(int id,int amount) {
         super(id);

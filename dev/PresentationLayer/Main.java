@@ -1,7 +1,7 @@
 package PresentationLayer;
 
 import BusinessLayer.ContactPerson;
-import BusinessLayer.Contract;
+import BusinessLayer.Contracts.Contract;
 import BusinessLayer.Order;
 import BusinessLayer.Responses.Response;
 import BusinessLayer.Supplier;
@@ -173,7 +173,7 @@ public class Main { //note: this code is assumed to be made as a placeholder til
             int amount=requestNumberInput("Enter amount: ",scanner,-1,1);
             products.add(new int[]{id,amount});
         }
-        handleResponse(service.OrderProducts(companyNumber,cName,date,products));
+     //   handleResponse(service.OrderProducts(companyNumber,cName,date,products));
     }
     public static void getOrderChain(SupplyModuleService service,Scanner scanner){
         int orderId=requestNumberInput("Please state an order id: ",scanner,-1,1);

@@ -1,6 +1,6 @@
-package BusinessLayer;
+package BusinessLayer.Products;
 
-public class SupplierProduct extends Product{
+public class SupplierProduct extends Product {
     private final int supplierId;
     private int price;
     public SupplierProduct(int supplierId, int price, int id) {

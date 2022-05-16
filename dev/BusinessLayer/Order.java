@@ -1,15 +1,16 @@
 package BusinessLayer;
 
 
+import BusinessLayer.Contracts.Contract;
+import BusinessLayer.Products.Product;
+import BusinessLayer.Products.SupplierProduct;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Order {
     private final int id;
     private final int supplyCompanyNumber;
-  //  private final Contract contract;
     private final HashMap<Product,int[]> itemInfos; //[0]=amount,[1]=initial price [2]=discount
     private final ContactPerson contactPerson;
     private int totalPrice;
@@ -17,19 +18,19 @@ public class Order {
     private final LocalDate arrivalDate;
 
 
-    public Order(int id,Contract contract, String contactPerson, LocalDate arrivalDate) {
-        this.supplyCompanyNumber= contract.getSupplier().getCompanyNumber();
+    public Order(int id, int supplyCompanyNumber,ContactPerson contactPerson, LocalDate arrivalDate) {
+        this.supplyCompanyNumber= supplyCompanyNumber;
         this.id=id;
         //   this.contract = contract;
         this.itemInfos = new HashMap<>();
-        this.contactPerson = contract.getSupplier().getContact(contactPerson);
+        this.contactPerson = contactPerson;
         this.totalPrice = 0;
         this.orderDate = LocalDate.now();
         this.arrivalDate = arrivalDate;
     }
-    public void AddProduct(SupplierProduct product, int amount, int initPrice,int discount){
+    public void AddProduct(SupplierProduct product, int amount, int initPrice, int discount){
         if(itemInfos.containsKey(product))
-            throw new IllegalArgumentException("User Error: Duplicate "+product.getId()+" in order"); // TODO: replace with name after integration
+            throw new IllegalArgumentException("User Error: Duplicate "+product.getId()+" in order");
         if(amount==0)
             throw new IllegalArgumentException("User Error: Item "+product.getId()+ " amount can not be 0");
         if(initPrice==0)

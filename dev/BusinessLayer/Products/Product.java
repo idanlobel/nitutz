@@ -1,6 +1,6 @@
-package BusinessLayer;
+package BusinessLayer.Products;
 
-public class Product {
+public abstract class Product {
     private int id;
     public Product(int id){
         this.id=id;

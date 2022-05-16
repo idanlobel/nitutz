@@ -1,4 +1,7 @@
-package BusinessLayer;
+package BusinessLayer.Contracts;
+
+import BusinessLayer.Products.SupplierProduct;
+import BusinessLayer.Supplier;
 
 import java.util.*;
 
@@ -7,7 +10,6 @@ public class Contract {
     private final Supplier supplier;
     private final HashMap<Integer, SupplierProduct> products; //TODO: ITEM IS A PLACEHOLDER- COMPLETE POST STORAGE MERGE
     private final HashMap<Integer, List<int[]>> discounts; //[0]=amount, [1]=percent (itemId is our system's id, not the supplier's)
-    private final boolean[] deliveryDays; //size=7, true= delivery day
     // public Contract(Supplier supplier, List<Product> products, HashMap<Integer,List<int[]>> discounts) {
     //    this.supplier =supplier;
     //   this.products=products;
@@ -17,12 +19,11 @@ public class Contract {
     //     idList.add(product.getId());
     //TODO: HANDLE DYNAMIC DELIVERY DAYS
     //}
-    public Contract(Supplier supplier, List<SupplierProduct> products, HashMap<Integer, List<int[]>> discounts, boolean[] deliveryDays) {
+    public Contract(Supplier supplier, List<SupplierProduct> products, HashMap<Integer, List<int[]>> discounts) {
         this.productIds=new HashSet<>();
         this.supplier = supplier;
         this.products = new HashMap<>();
         this.discounts = discounts;
-        this.deliveryDays = deliveryDays;
         for (SupplierProduct product : products) {
             this.products.put(product.getId(), product);
             this.productIds.add(product.getId());
@@ -36,9 +37,6 @@ public class Contract {
 
     public Supplier getSupplier() {
         return supplier;
-    }
-    public boolean[] getDeliveryDays(){
-        return deliveryDays;
     }
     public Collection<Integer> getProductsIds() {
         return products.keySet();
@@ -56,12 +54,5 @@ public class Contract {
     }
     public boolean ContainsProduct(int id){
         return productIds.contains(id);
-    }
-    @Override
-    public String toString() {
-        return "supplier=" + supplier +
-                ", products=" + products +
-                ", discounts=" + discounts +
-                ", deliveryDays=" + Arrays.toString(deliveryDays)+"\n";
     }
 }
