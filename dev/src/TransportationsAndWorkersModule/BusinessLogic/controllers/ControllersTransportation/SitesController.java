@@ -18,6 +18,7 @@ public class SitesController {
     public void addSite(String name, String address, String contactPersonName, String contactPersonNamePhone, String region) {
         Site siteData = new Site(name, address,new ContactPerson(contactPersonName,contactPersonNamePhone),region);
         sitesRep.addSite(name, address, contactPersonName, contactPersonNamePhone, region);
+        //todo insert site
     }
 
     public List<String> viewAllSites() {

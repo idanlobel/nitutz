@@ -26,6 +26,7 @@ public class TransportsFacade {
         sitesController = new SitesController();
         // TODO: 07/05/2022  
         employeefacade = new EMPLOYEEFACADE();
+        workersFacade = new WorkersFacade();
 
     }
 
@@ -100,11 +101,16 @@ public class TransportsFacade {
         return null;
     }
 
-    public void isLegalStieToTransportByShift(String date, String departureTime, String destinationId) {
+    public Boolean isLegalStieToTransportByShift(String date, String departureTime, String destinationId) {
         try {
-            List<WorkerDTO>  lst= workersFacade.isTransportLegal();
+            String[] time=departureTime.split(":");
+            int shiftType=Integer.parseInt(time[0])>13?1:0;
+            String[] dates=date.split(" ");
+            Boolean  aBoolean= workersFacade.isTransportLegal(Integer.parseInt(dates[0]),Integer.parseInt(dates[1]),shiftType,destinationId);
+            return aBoolean;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

@@ -33,6 +33,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="in.co.s13:common-sqlite-jdbc:0.3" level="project" />
+    <orderEntry type="library" name="sqlite-jdbc-3.36.0.3" level="project" />
   </component>
 </module>
