@@ -92,7 +92,6 @@ public class WorkerScheduleDAO {
         cacheWorkersSchedules.put(worker_schedule.getId(), worker_schedule);
     }
     public void delete(int id) throws Exception {
-        if (!cacheWorkersSchedules.containsKey(id)) throw new Exception("worker doesn't exist");
         //delete from db first
         Connection conn=null;
         String sql = "DELETE from workerPresence where worker_id = '"+id+"'";
