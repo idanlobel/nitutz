@@ -11,6 +11,14 @@ public class ContactPerson {
         this.cellNumber=cellNumber;
     }
 
+    public void setCellNumber(String cellNumber) {
+        this.cellNumber = cellNumber;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
+    }
+
     public String getName() {
         return name;
     }

@@ -6,7 +6,6 @@ import BusinessLayer.Responses.IsError;
 import BusinessLayer.Responses.Response;
 import BusinessLayer.Responses.IsValue;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,9 +16,9 @@ public class SupplyModuleService {
         controller=new Controller();
     }
 
-    public Response<Supplier> AddSupplier(Integer companyNumber, String name,  String bankNumber, List<ContactPerson> contactPeople,String orderingCP){
+    public Response<Supplier> AddSupplier(Integer companyNumber, String name,  String bankNumber,String address, List<ContactPerson> contactPeople,String orderingCP){
         try{
-            return new IsValue<Supplier>(controller.AddSupplier(name, companyNumber, bankNumber, contactPeople,orderingCP),"Supplier added");
+            return new IsValue<Supplier>(controller.AddSupplier(name, companyNumber, bankNumber,address, contactPeople,orderingCP),"Supplier added");
         }
         catch (Exception e){
             return new IsError(e.getMessage());
@@ -47,6 +46,14 @@ public class SupplyModuleService {
         }
         catch (Exception e){
             return new IsError(e.getMessage());
+        }
+    }
+    public void RemoveContractPerson(int companyNumber,String Name){
+        try{
+
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
         }
     }
     public Response<Contract> SignShortageContract(int companyNumber, List<int[]> idPairsList, HashMap<Integer,List<int[]>> discountsList){
@@ -84,7 +91,7 @@ public class SupplyModuleService {
     public Response OrderProduct(int id,int amount){
 
         try {
-        //    controller.OrderProduct(id,amount);
+            controller.ShortageOrder(id,amount);
             return new IsValue(null,"Ordering successful");
         }
         catch (Exception e){
@@ -94,7 +101,7 @@ public class SupplyModuleService {
     public Response AddPeriodicProduct(int id,int amount,int day){
 
         try {
-            //    controller.OrderProduct(id,amount);
+            controller.AddPeriodicProduct(id,amount,day);
             return new IsValue(null,"Ordering successful");
         }
         catch (Exception e){
@@ -104,17 +111,17 @@ public class SupplyModuleService {
     public Response ChangePeriodicProduct(int id,int amount,int day){
 
         try {
-            //    controller.OrderProduct(id,amount);
+            controller.ChangePeriodicProductAmount(id,amount,day);
             return new IsValue(null,"Ordering successful");
         }
         catch (Exception e){
             return new IsError(e.getMessage());
         }
     }
-    public Response DeletePeriodicProduct(int id,int amount,int day){
+    public Response DeletePeriodicProduct(int id,int day){
 
         try {
-            //    controller.OrderProduct(id,amount);
+            controller.RemovePeriodicProduct(id,day);
             return new IsValue(null,"Ordering successful");
         }
         catch (Exception e){

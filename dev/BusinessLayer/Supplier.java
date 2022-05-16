@@ -7,10 +7,11 @@ public class Supplier {
     private final String name;
     private final Integer companyNumber;
     private final String bankNumber;
+    private String address;
     private final HashMap<String, ContactPerson> contactList;
     private String orderingCP;
 
-    public Supplier(String name, Integer companyNumber, String bankNumber, List<ContactPerson> contactList,String orderingCP) {
+    public Supplier(String name, Integer companyNumber, String bankNumber,String address, List<ContactPerson> contactList,String orderingCP) {
         if (companyNumber == null | name == null | bankNumber == null | contactList == null)
             throw new IllegalArgumentException("System Error: one of the supplier parameter is null");
         if (name.trim().length() == 0)
@@ -21,6 +22,7 @@ public class Supplier {
         this.companyNumber = companyNumber;
         this.bankNumber = bankNumber;
         this.contactList = new HashMap<>();
+        this.address=address;
         for (ContactPerson contactPerson : contactList)
             this.contactList.put(contactPerson.getName(), contactPerson);
         if(!this.contactList.containsKey(orderingCP))
@@ -33,7 +35,28 @@ public class Supplier {
             throw new IllegalArgumentException("USER ERROR: SUPPLIER " + this.name + " ALREADY HAS A CONTACT NAMED " + contactPerson.getName());
         contactList.put(contactPerson.getName(), contactPerson);
     }
+    public boolean ContainsContract(String name){
+        return contactList.containsKey(name);
+    }
 
+    private void CheckNameValidity(String name){
+        if(!contactList.containsKey(name)){
+            throw new IllegalArgumentException("USER ERROR: "+getName()+" has no contract person named "+name);
+        }
+    }
+    public ContactPerson RemoveContact(String name){
+        CheckNameValidity(name);
+        ContactPerson contactPerson=contactList.remove(name);
+        return contactPerson;
+    }
+    public void ChangeContactEmail(String name,String newMail){
+        CheckNameValidity(name);
+        contactList.get(name).setEmail(newMail);
+    }
+    public void ChangeContactPhoneNum(String name,String newNum){
+        CheckNameValidity(name);
+        contactList.get(name).setCellNumber(newNum);
+    }
     public ContactPerson getContact(String name) {
         return contactList.get(name);
     }

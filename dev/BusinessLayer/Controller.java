@@ -30,10 +30,10 @@ public class Controller {
         }
     }
 
-    public Supplier AddSupplier(String name, Integer companyNumber, String bankNumber, List<ContactPerson> contactPeople,String orderingCP) {
+    public Supplier AddSupplier(String name, Integer companyNumber, String bankNumber,String address, List<ContactPerson> contactPeople,String orderingCP) {
         if(suppliers.containsKey(companyNumber))
             throw new IllegalArgumentException("Company number already exists in the system");
-        Supplier supplier=new Supplier(name,companyNumber,bankNumber,contactPeople,orderingCP);
+        Supplier supplier=new Supplier(name,companyNumber,bankNumber,address,contactPeople,orderingCP);
         suppliers.put(companyNumber,supplier);
         return supplier;
     }
@@ -45,7 +45,21 @@ public class Controller {
         ContactPerson contactPerson=new ContactPerson(name,Email,cellNumber);
         suppliers.get(companyNumber).addContact(contactPerson);
         return contactPerson;
-
+    }
+    public ContactPerson RemoveContactPerson(int companyNumber,String name){
+        if(!suppliers.containsKey(companyNumber))
+            throw new IllegalArgumentException("USER ERROR: no supplier with CP "+companyNumber);
+         return suppliers.get(companyNumber).RemoveContact(name);
+    }
+    public void ChangeContactPersonMail(int companyNumber,String name, String newMail){
+        if(!suppliers.containsKey(companyNumber))
+            throw new IllegalArgumentException("USER ERROR: no supplier with CP "+companyNumber);
+        suppliers.get(companyNumber).ChangeContactEmail(name,newMail);
+    }
+    public void ChangeContactPersonPhone(int companyNumber,String name, String newNum){
+        if(!suppliers.containsKey(companyNumber))
+            throw new IllegalArgumentException("USER ERROR: no supplier with CP "+companyNumber);
+        suppliers.get(companyNumber).ChangeContactPhoneNum(name,newNum);
     }
 
     public Contract SignPeriodicContract(int companyNumber, List<int[]> itemInfoList, HashMap<Integer,List<int[]>> discountsList, boolean[] deliveryDays) {
@@ -124,7 +138,7 @@ public class Controller {
         else return shortageContracts.get(companyNum);
     }
     public void ChangeContractCP(int companyNum,String newCP){
-        Contract contract=
+
     }
     public List<Contract> getContractList() {
         return new ArrayList<>(shortageContracts.values());
