@@ -168,19 +168,19 @@ public class WorkerController {
         }
     }
 
-    public List<WorkerDTO> getAllDrivers(String site) throws Exception {
+    public List<WorkerDTO> getAllDrivers() throws Exception {
         try {
             List<Worker> driversList = workers.getAllWorkers();
             List<WorkerDTO> workerToRet = new LinkedList<>();
             List<String> license = new LinkedList<>();
             for(Worker w: driversList){
-                if((!w.getWorkerJobs().contains("driver")) || (!w.getSite().equals(site))) driversList.remove(w);
+                if((!w.getWorkerJobs().contains("driver"))) driversList.remove(w);
             }
             for (Worker w: driversList){
                 license.add(licenseDAO.get(w.getId()));//if even one of the workers doesnt have license data about himself it wont return you a list of the workers
             }
             for (int i =0; i<driversList.size(); i++){
-                workerToRet.add(new WorkerDTO(driversList.get(i).getId(),license.get(i),site));
+                workerToRet.add(new WorkerDTO(driversList.get(i).getId(),license.get(i),"driver department"));
             }
             return workerToRet;
         }

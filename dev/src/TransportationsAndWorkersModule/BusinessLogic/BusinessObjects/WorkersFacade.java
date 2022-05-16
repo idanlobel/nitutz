@@ -14,9 +14,9 @@ public class WorkersFacade {
     private WorkerController workerController =WorkerController.getInstance();
     private ShiftsController shiftsController = ShiftsController.getInstance();
     //private the dal that gets data of the licensedrivers
-    public List<WorkerDTO> getAllDrivers(String site) throws Exception {//todo change worker to workerDTO include license type
+    public List<WorkerDTO> getAllDrivers() throws Exception {//todo change worker to workerDTO include license type
         try {
-            List<WorkerDTO> driversList = workerController.getAllDrivers(site);
+            List<WorkerDTO> driversList = workerController.getAllDrivers();
             //either change it to list of ids, or create a DTO that transfers the data towards them like workerSL
             return driversList;
         }
