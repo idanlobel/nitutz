@@ -1,6 +1,9 @@
 package src.TransportationsAndWorkersModule.BusinessLogic.controllers.ControllersTransportation;
 
 import src.EmpModule.EMPLOYEEFACADE;
+import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.WorkerDTO;
+import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.Worker;
+import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.WorkersFacade;
 import src.TransportationsAndWorkersModule.Service.ServiceTransportation.TransportSDTO;
 
 import java.util.List;
@@ -14,6 +17,7 @@ public class TransportsFacade {
     TrucksController trucksController;
     SitesController sitesController;
     EMPLOYEEFACADE employeefacade;
+    WorkersFacade workersFacade;
     //DriversController driversController;
     
     public TransportsFacade() {
@@ -85,5 +89,22 @@ public class TransportsFacade {
     }
     public int getTruckMaxWeightFromTransportID(String id) {
         return Integer.parseInt(trucksController.getTruckById(transportsController.getFormsById(id).getTruckLicenceNumber()).getMaxWeight());
+    }
+
+    public List<String> getDriversByShift(String date, String departureTime) {
+        try {
+            List<WorkerDTO>  lst= workersFacade.getAllDrivers();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void isLegalStieToTransportByShift(String date, String departureTime, String destinationId) {
+        try {
+            List<WorkerDTO>  lst= workersFacade.isTransportLegal();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

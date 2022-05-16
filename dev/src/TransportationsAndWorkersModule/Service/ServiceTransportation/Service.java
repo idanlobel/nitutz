@@ -68,8 +68,6 @@ public class Service {
 
                 case "showFormByDate": { transportService.showTransportFormByDate(); break;}
 
-                case "updateForm": {  transportService.updateTransport(); break;}
-
                 case "updateWeight": {  transportService.updateWeight(); break;}
 
             }

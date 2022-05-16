@@ -34,15 +34,19 @@ public class TransportService {
         transportSDTO.id = idgenarator.getId();
         transportSDTO.date = askInput("enter the transport date . for example 02/05/2022 ");
         transportSDTO.departureTime = askInput("enter the departure time. for example 13:20 ");
+        transportsFacade.getDriversByShift(transportSDTO.date,transportSDTO.departureTime);
         //get מחסנאים שעובדים באותו משמרת
         transportSDTO.driverId = askInput("choose the transport driver id from your drivers crew: " + transportsFacade.showDriversDetailsAvailable(transportSDTO.departureTime, transportSDTO.date));
         transportSDTO.truckLicensePlateId = askInput("choose the truck from your truck: " + transportsFacade.viewTrucks());//getTrucksByLicenseType(); //driverService.getDriversLicenceTypeByDriveId(transportDTO.driverid) )
         transportSDTO.source = askInput( "choose the source name and region from site list: " + transportsFacade.viewAllSites());
+
         int numberOfDest=Integer.parseInt( askInput("choose number of destinations: "));
         for (int i = 0; i < numberOfDest; i++) {
             ProductsDocumentSDTO tfD=new ProductsDocumentSDTO();
 
             tfD.destinationId = askInput("choose the destination name and region from site list: " + transportsFacade.viewAllSites());
+            transportsFacade.isLegalStieToTransportByShift(transportSDTO.date,transportSDTO.departureTime,tfD.destinationId);
+
             transportSDTO.destinations.add(tfD.destinationId);
             tfD.id= idgenarator.getId();
             int numberOfProduct=Integer.parseInt( askInput("choose number of products to add for this destination: "));
@@ -51,7 +55,6 @@ public class TransportService {
             }
             transportSDTO.productsDocumentSDTOS.add(tfD);
         }
-
         //transportForm.truck????
         //\no good. needs Service objects???? tranportForm.source = siteService. askInput("choose the transport source from following: " + siteService.getSitesNames().toString())
         transportsFacade.regTransport(transportSDTO);
