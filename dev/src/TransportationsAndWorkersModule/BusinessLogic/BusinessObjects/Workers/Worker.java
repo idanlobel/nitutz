@@ -14,9 +14,15 @@ public class Worker {
     EmploymentConditions employmentConditions;
     List<String> workerJobs;
 
+    public String getSite() {
+        return site;
+    }
+
+    String site;
+
     //Create a new worker
     public Worker(String name, int id, String password, String email_address, BankAccount bankAccount,
-                  EmploymentConditions employmentConditions, List<String> workerJobs) {
+                  EmploymentConditions employmentConditions, List<String> workerJobs, String site) {
         this.name = name;
         this.id = id;
         this.email_address = email_address;
@@ -24,6 +30,7 @@ public class Worker {
         this.workerJobs = workerJobs;
         this.password = password;
         this.employmentConditions = employmentConditions;
+        this.site=site;
     }
 
     public BankAccount getBankAccount() {

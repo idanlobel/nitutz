@@ -8,6 +8,7 @@ import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.Worker;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.Worker_Schedule;
 import src.TransportationsAndWorkersModule.Dal.Workers.JobsDAO;
+import src.TransportationsAndWorkersModule.Dal.Workers.LicenseDAO;
 import src.TransportationsAndWorkersModule.Dal.Workers.WorkerDAO;
 import src.TransportationsAndWorkersModule.Dal.Workers.WorkerScheduleDAO;
 
@@ -20,12 +21,14 @@ public class WorkerController {
     WorkerDAO workers;
     WorkerScheduleDAO workerScheduleDAO;
     JobsDAO jobsDAO;
+    LicenseDAO licenseDAO;
 
     private WorkerController() {
         //TODO:: צריך לשנות פה שיקרא מקובץ טקסט במקום ויכניס לתוך הרשימה...
         workers = new WorkerDAO();
         workerScheduleDAO = new WorkerScheduleDAO();
         jobsDAO = new JobsDAO();
+        licenseDAO = new LicenseDAO();
     }
 
     public static WorkerController getInstance() {
@@ -50,11 +53,11 @@ public class WorkerController {
     }
 
     public boolean addWorker(String name, int id, String password, String email_address,
-                             int bankID, int branch, int salary, int callerID) throws Exception {
+                             int bankID, int branch, int salary, int callerID, String site) throws Exception {
         try {
             if (workers.readHR().getId()!=callerID)throw new Exception("only HR can add a new worker to the system");
             workers.create(new Worker(name, id, password, email_address, new BankAccount(bankID, branch),
-                            new EmploymentConditions(salary, new Date()), new LinkedList<>()));
+                            new EmploymentConditions(salary, new Date()), new LinkedList<>(),site));
             workerScheduleDAO.create(new Worker_Schedule(id));
             return true;
         }catch (Exception e){
@@ -165,13 +168,21 @@ public class WorkerController {
         }
     }
 
-    public List<WorkerDTO> getAllDrivers() throws Exception {
+    public List<WorkerDTO> getAllDrivers(String site) throws Exception {
         try {
             List<Worker> driversList = workers.getAllWorkers();
+            List<WorkerDTO> workerToRet = new LinkedList<>();
+            List<String> license = new LinkedList<>();
             for(Worker w: driversList){
-                if(!w.getWorkerJobs().contains("driver")) driversList.remove(w);
+                if((!w.getWorkerJobs().contains("driver")) || (!w.getSite().equals(site))) driversList.remove(w);
             }
-            return null;
+            for (Worker w: driversList){
+                license.add(licenseDAO.get(w.getId()));//if even one of the workers doesnt have license data about himself it wont return you a list of the workers
+            }
+            for (int i =0; i<driversList.size(); i++){
+                workerToRet.add(new WorkerDTO(driversList.get(i).getId(),license.get(i),site));
+            }
+            return workerToRet;
         }
         catch(Exception e){
             throw new Exception(e.getMessage());

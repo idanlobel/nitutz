@@ -19,6 +19,7 @@ public class DatabaseManager {
                     "\t\"bank_branch\"\tINTEGER NOT NULL,\n" +
                     "\t\"salary\"\tINTEGER NOT NULL,\n" +
                     "\t\"rec_date\"\tTEXT NOT NULL,\n" +
+                    "\t\"site\"\tTEXT NOT NULL,\n" +
                     "\tPRIMARY KEY(\"id\")\n" +
                     ")");
             stmt.execute("CREATE TABLE if not exists \"workerJobs\" (\n" +
@@ -37,6 +38,7 @@ public class DatabaseManager {
                     "\t\"shift_day\"\tINTEGER NOT NULL,\n" +
                     "\t\"worker_id\"\tINTEGER NOT NULL,\n" +
                     "\t\"job\"\tTEXT\n" +
+                    "\t\"site\"\tTEXT NOT NULL,\n" +
                     ")");
             stmt.execute("CREATE TABLE if not exists \"jobs\" (\n" +
                     "\t\"job\"\tTEXT NOT NULL,\n" +
@@ -44,6 +46,7 @@ public class DatabaseManager {
                     ")");
             stmt.execute("CREATE TABLE if not exists \"weeklySchedule\" (\n" +
                     "\t\"id\"\tINTEGER,\n" +
+                    "\t\"site\"\tTEXT NOT NULL,\n"+
                     "\tPRIMARY KEY(\"id\")\n" +
                     ");");
             stmt.execute("CREATE TABLE if not exists \"driversData\" (\n" +

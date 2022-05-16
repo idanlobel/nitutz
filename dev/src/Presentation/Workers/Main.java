@@ -81,7 +81,7 @@ public class Main {
                     List<Object> l1 = addOrRemoveTransaction();
                     if (l1 == null) break;
                     Response<Boolean> ans1 = serviceLayer.addTransaction((int) l1.get(0),
-                            (int) l1.get(1), (int) l1.get(2), (int) l1.get(3), loginInfo.getWorkerID());
+                            (int) l1.get(1), (int) l1.get(2),(String) l1.get(4), (int) l1.get(3), loginInfo.getWorkerID());
                     if (ans1.ErrorOccured())System.out.println(ans1.ErrorMessage);
                     else System.out.println("The transaction has been made successfully");
                     break;
@@ -89,7 +89,7 @@ public class Main {
                     List<Object> l2 = addOrRemoveTransaction();
                     if (l2 == null) break;
                     Response<Boolean> ans2 = serviceLayer.removeTransaction(loginInfo.getWorkerID(), (int) l2.get(0),
-                            (int) l2.get(1), (int) l2.get(2), (int) l2.get(3));
+                            (int) l2.get(1), (int) l2.get(2),(String) l2.get(4), (int) l2.get(3));
                     if (ans2.ErrorOccured()) System.out.println(ans2.ErrorMessage);
                     else System.out.println("The transaction has been removed successfully");
                     break;
@@ -112,7 +112,9 @@ public class Main {
                     sc = new Scanner(System.in);
                     System.out.println("Please enter the id of the week for the weekly schedule: ");
                     int weekID = sc.nextInt();
-                    Response<Boolean> res = serviceLayer.createWeeklySchedule(loginInfo.getWorkerID(), weekID);
+                    System.out.println("Please enter the site of the weekly schedule: ");
+                    String site = sc.nextLine();
+                    Response<Boolean> res = serviceLayer.createWeeklySchedule(loginInfo.getWorkerID(), weekID, site);
                     if (res.ErrorOccured())
                         System.out.println(res.ErrorMessage);
                     else
@@ -124,14 +126,14 @@ public class Main {
                     List<Object> list1 = showShiftWorkers();
                     if (list1 == null) break;
                     Response<List<WorkerSL>> workersInShift = serviceLayer.showShiftWorkers(loginInfo.getWorkerID(), (int) list1.get(0),
-                            (int) list1.get(1), (int) list1.get(2));
+                            (int) list1.get(1), (int) list1.get(2),(String)list1.get(3));
                     if (workersInShift.ErrorOccured())
                         System.out.println(workersInShift.ErrorMessage);
                     else if (workersInShift.value.isEmpty())
                         System.out.println("There are no workers in the specified shift");
                     else System.out.println("The workers in the desired shift are: " + workersInShift.value.toString() + "\n" +
                                 "And the shift manager is: " + serviceLayer.getShiftManagerInfo(loginInfo.getWorkerID(), (int) list1.get(0),
-                                (int) list1.get(1), (int) list1.get(2)).value.toString());
+                                (int) list1.get(1), (int) list1.get(2),(String) list1.get(3)).value.toString());
                     break;
                 case 8: //viewWeeklySchedule TODO:: For now, if the Weekly Schedule will be shown only if being filled completely.
                     //TODO: FIX THIS - A LOT OF NULL POINTER EXCEPTIONS
@@ -141,7 +143,9 @@ public class Main {
                     sc = new Scanner(System.in);
                     System.out.println("Please enter the id of the week for the weekly schedule: ");
                     int weeklyID = sc.nextInt();
-                    Response<WeeklyScheduleSL> weeklySchedule = serviceLayer.viewWeeklySchedule(loginInfo.getWorkerID(), weeklyID);
+                    System.out.println("Please enter the site of the weekly schedule: ");
+                    String site1 = sc.nextLine();
+                    Response<WeeklyScheduleSL> weeklySchedule = serviceLayer.viewWeeklySchedule(loginInfo.getWorkerID(), weeklyID,site1);
                     if (weeklySchedule.ErrorOccured())
                         System.out.println(weeklySchedule.ErrorMessage);
                     else System.out.println(weeklySchedule.value.toString());
@@ -152,7 +156,7 @@ public class Main {
                     List<Object> lst = addOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (lst == null) break;
                     Response<Boolean> res2 = serviceLayer.setShiftManagerToWeeklySchedule(loginInfo.getWorkerID(), (int) lst.get(0),
-                            (int) lst.get(1), (int) lst.get(2), (int) lst.get(3));
+                            (int) lst.get(1), (int) lst.get(2),(String)lst.get(4),(int) lst.get(3));
                     if (res2.ErrorOccured())
                         System.out.println(res2.ErrorMessage);
                     else System.out.println("The workers has been added to this shift as a 'Shift Manager' successfully");
@@ -163,7 +167,7 @@ public class Main {
                     List<Object> ls = addOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (ls == null) break;
                     Response<Boolean> res3 = serviceLayer.removeWorkerFromWeeklySchedule(loginInfo.getWorkerID(), (int) ls.get(0),
-                            (int) ls.get(1), (int) ls.get(2), (int) ls.get(3));
+                            (int) ls.get(1), (int) ls.get(2),(String)ls.get(4),(int) ls.get(3));
                     if (res3.ErrorOccured())
                         System.out.println(res3.ErrorMessage);
                     else System.out.println("The worker has been remove from the desired shift in the " +
@@ -175,7 +179,7 @@ public class Main {
                     List<Object> list2 = addOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (list2 == null) break;
                     Response<Boolean> res4= serviceLayer.addWorkerToWeeklySchedule(loginInfo.getWorkerID(), (int) list2.get(0),
-                            (int) list2.get(1), (int) list2.get(2), (int) list2.get(3));
+                            (int) list2.get(1), (int) list2.get(2),(String)list2.get(4),(int) list2.get(3));
                     if (res4.ErrorOccured())
                         System.out.println(res4.ErrorMessage);
                     else System.out.println("The worker has been added to the desired shift in the " +
@@ -186,7 +190,7 @@ public class Main {
                         break;
                     List<Object> list3 = showShiftWorkers();
                     Response<Boolean> res5= serviceLayer.isShiftReady(loginInfo.getWorkerID(), (int)list3.get(0), (int)list3.get(1),
-                            (int)list3.get(2));
+                            (int)list3.get(2),(String) list3.get(3));
                     if(res5.ErrorOccured())
                         System.out.println(res5.ErrorMessage);
                     else System.out.println("The shift is ready");
@@ -196,7 +200,9 @@ public class Main {
                         break;
                     System.out.println("Please enter the id of the week for the weekly schedule: ");
                     int weekly_id_number = sc.nextInt();
-                    Response<Boolean> res6= serviceLayer.isWeeklyScheduleReady(loginInfo.getWorkerID(), weekly_id_number);
+                    System.out.println("Please enter the name of the site of the weekly schedule: ");
+                    String site2 = sc.nextLine();
+                    Response<Boolean> res6= serviceLayer.isWeeklyScheduleReady(loginInfo.getWorkerID(), weekly_id_number,site2);
                     if(res6.ErrorOccured())
                         System.out.println(res6.ErrorMessage);
                     else System.out.println("The Weekly Schedule is ready");
@@ -213,7 +219,7 @@ public class Main {
                         break;
                     List<Object> wD = registerAWorker();
                     Response<Boolean> res7= serviceLayer.registerAWorker(loginInfo.getWorkerID(), wD.get(0) + "", (int) wD.get(1),
-                            wD.get(2) + "", wD.get(3) + "", (int) wD.get(4), (int) wD.get(5), (int) wD.get(6));
+                            wD.get(2) + "", wD.get(3) + "", (int) wD.get(4), (int) wD.get(5), (int) wD.get(6),(String)wD.get(7));
                     if(res7.ErrorOccured())
                         System.out.println(res7.ErrorMessage);
                     else System.out.println("The worker has been registered successfully");
@@ -266,7 +272,7 @@ public class Main {
                     List<Object> listassign = assignOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (listassign == null) break;
                     Response<Boolean> res12= serviceLayer.assignWorkerToJobInShift(loginInfo.getWorkerID(), (int) listassign.get(0),
-                            (int) listassign.get(1), (int) listassign.get(2), (int) listassign.get(3),(String)listassign.get(4));
+                            (int) listassign.get(1), (int) listassign.get(2),(String) listassign.get(5) ,(int) listassign.get(3),(String)listassign.get(4));
                     if (res12.ErrorOccured())
                         System.out.println(res12.ErrorMessage);
                     else System.out.println("The worker has been added to the desired job in the " +
@@ -278,7 +284,7 @@ public class Main {
                     List<Object> listremove = assignOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (listremove == null) break;
                     Response<Boolean> res13= serviceLayer.removeWorkerFromJobInShift(loginInfo.getWorkerID(), (int) listremove.get(0),
-                            (int) listremove.get(1), (int) listremove.get(2), (int) listremove.get(3),(String) listremove.get(4));
+                            (int) listremove.get(1), (int) listremove.get(2),(String)listremove.get(5), (int) listremove.get(3),(String) listremove.get(4));
                     if (res13.ErrorOccured())
                         System.out.println(res13.ErrorMessage);
                     else System.out.println("The worker has been removed from the desired job in the " +
@@ -372,7 +378,9 @@ public class Main {
             System.out.println("You've entered an illegal option, please start the last process again.");
             return null;
         }
-        return Arrays.asList(weekID, shiftDay - 1, shiftType, transactionID);
+        System.out.println("Please enter the name of the site : ");
+        String siteName = sc.nextLine();
+        return Arrays.asList(weekID, shiftDay - 1, shiftType, transactionID,siteName);
     }
 
     private static List<Object> showShiftWorkers(){
@@ -397,7 +405,9 @@ public class Main {
             System.out.println("You've entered an illegal option, please start the last process again.");
             return null;
         }
-        return Arrays.asList(shiftWeek, shiftDay - 1, shiftType);
+        System.out.println("Please enter the name of the site : ");
+        String site = sc.nextLine();
+        return Arrays.asList(shiftWeek, shiftDay - 1, shiftType,site);
     }
 
     private static List<Object> addOrRemoveInWeeklySchedule(int hrID){
@@ -429,8 +439,9 @@ public class Main {
             System.out.println("An HR worker can only work morning shifts.");
             return null;
         }
-
-        return Arrays.asList(shiftWeek, shiftDay - 1, shiftType, wID);
+        System.out.println("Please enter the name of the site: ");
+        String site = sc.nextLine();
+        return Arrays.asList(shiftWeek, shiftDay - 1, shiftType, wID,site);
     }
     private static List<Object> assignOrRemoveInWeeklySchedule(int hrID) {
         List<Object> objects = new LinkedList<>();
@@ -439,6 +450,9 @@ public class Main {
         System.out.println("Please enter the job name: ");
         String job = sc.nextLine();
         objects.add(job);
+        System.out.println("Please enter the site name: ");
+        String site = sc.nextLine();
+        objects.add(site);
         return objects;
     }
 
@@ -459,8 +473,9 @@ public class Main {
         int branch = sc2.nextInt();
         System.out.println("Please enter the worker's salary: ");
         int salary = sc2.nextInt();
-
-        return Arrays.asList(name, wID, password, email_address, bankID, branch, salary);
+        System.out.println("Please enter the name of the site this worker works at: ");
+        String site = sc2.nextLine();
+        return Arrays.asList(name, wID, password, email_address, bankID, branch, salary,site);
     }
 
     private static List<Object> editAWorker() {

@@ -7,7 +7,7 @@ public class WorkerDTO {
     String licenseType;
     String name;
 
-    public WorkerDTO(){
+    public WorkerDTO(int id, String licenseType, String name){
 
     }
 

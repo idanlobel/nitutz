@@ -37,9 +37,10 @@ public class WorkerDAO {
                 int bank_branch = rs.getInt("bank_branch");
                 int salary = rs.getInt("salary");
                 String rec = rs.getString("rec_date");
+                String site = rs.getString("site");
                 Date date=format.parse(rec);
                 //need to change to date
-                worker = new Worker(name,worker_id,password,email,new BankAccount(bank_id,bank_branch),new EmploymentConditions(salary,date),new LinkedList<>());
+                worker = new Worker(name,worker_id,password,email,new BankAccount(bank_id,bank_branch),new EmploymentConditions(salary,date),new LinkedList<>(),site);
                 conn.close();
                 conn = DatabaseManager.getInstance().connect();
                 ResultSet rs2 = conn.createStatement().executeQuery("select * from workerJobs where worker_id = '"+id+"'");//read from worker jobs
@@ -105,7 +106,7 @@ public class WorkerDAO {
     public void create(Worker worker) throws Exception {
         if (cacheWorkers.containsKey(worker.getId())) throw new Exception("worker already exists");
         Connection conn=null;
-        String sql = "INSERT INTO workers(id,name,password,email,bank_id,bank_branch,salary,rec_date) VALUES(";
+        String sql = "INSERT INTO workers(id,name,password,email,bank_id,bank_branch,salary,rec_date,site) VALUES(";
         try {
             conn = DatabaseManager.getInstance().connect();
             Statement rs = conn.createStatement();
@@ -113,7 +114,7 @@ public class WorkerDAO {
             //set worker data
             sql+="'"+worker.getId()+"','"+worker.getName()+"','"+worker.getPassword()+"','"+worker.getEmail_address()+
                     "','"+worker.getBankAccount().getBankID()+"','"+worker.getBankAccount().getBranch()+
-                    "','"+worker.getEmploymentConditions().getSalary()+"','"+date+"');";
+                    "','"+worker.getEmploymentConditions().getSalary()+"','"+date+"','"+worker.getSite()+"');";
             rs.addBatch(sql);
             //set his jobs;
             for (String job:worker.getWorkerJobs()) {
@@ -213,7 +214,7 @@ public class WorkerDAO {
             try {
                 worker= get(worker_id);
                 hr = new HR(worker.getName(),worker.getId(),worker.getPassword(),
-                        worker.getEmail_address(),worker.getBankAccount(),worker.getEmploymentConditions(),worker.getWorkerJobs());
+                        worker.getEmail_address(),worker.getBankAccount(),worker.getEmploymentConditions(),worker.getWorkerJobs(),worker.getSite());
             }catch (Exception e){
                 throw new Exception(e.getMessage());
             }
