@@ -31,7 +31,7 @@ public class WeeklyScheduleDAO {
             conn.close();
             conn = DatabaseManager.getInstance().connect();
             Statement statement2 = conn.createStatement();
-            ResultSet rs = statement2.executeQuery("select * from shiftWorkerBook where week_id = '"+id+"' abd site = '"+site+"'");
+            ResultSet rs = statement2.executeQuery("select * from shiftWorkerBook where week_id = '"+id+"' and site = '"+site+"'");
             while ( rs.next() ) {
                 int shift_type = rs.getInt("shift_type");
                 int day = rs.getInt("shift_day");

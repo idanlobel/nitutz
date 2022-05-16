@@ -107,7 +107,7 @@ public class ServiceLayer {
                    shiftSLS[i][j] = new ShiftSL(workerSLS, managerID, jobToWorkers);
                }
            }
-               response = Response.FromValue(new WeeklyScheduleSL(shiftSLS));
+               response = Response.FromValue(new WeeklyScheduleSL(shiftSLS,site));
        }
        catch (Exception e){
            response = Response.FromError(e.getMessage());

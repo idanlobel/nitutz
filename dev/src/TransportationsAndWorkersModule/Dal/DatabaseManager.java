@@ -37,8 +37,8 @@ public class DatabaseManager {
                     "\t\"shift_type\"\tINTEGER NOT NULL,\n" +
                     "\t\"shift_day\"\tINTEGER NOT NULL,\n" +
                     "\t\"worker_id\"\tINTEGER NOT NULL,\n" +
-                    "\t\"job\"\tTEXT\n" +
-                    "\t\"site\"\tTEXT NOT NULL,\n" +
+                    "\t\"job\"\tTEXT,\n" +
+                    "\t\"site\"\tTEXT NOT NULL\n" +
                     ")");
             stmt.execute("CREATE TABLE if not exists \"jobs\" (\n" +
                     "\t\"job\"\tTEXT NOT NULL,\n" +
