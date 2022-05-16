@@ -20,6 +20,10 @@ public class Worker {
 
     String site;
 
+    public void setSite(String site) {
+        this.site = site;
+    }
+
     //Create a new worker
     public Worker(String name, int id, String password, String email_address, BankAccount bankAccount,
                   EmploymentConditions employmentConditions, List<String> workerJobs, String site) {

@@ -272,7 +272,7 @@ public class Main {
                     List<Object> listassign = assignOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (listassign == null) break;
                     Response<Boolean> res12= serviceLayer.assignWorkerToJobInShift(loginInfo.getWorkerID(), (int) listassign.get(0),
-                            (int) listassign.get(1), (int) listassign.get(2),(String) listassign.get(5) ,(int) listassign.get(3),(String)listassign.get(4));
+                            (int) listassign.get(1), (int) listassign.get(2),(String) listassign.get(4) ,(int) listassign.get(3),(String)listassign.get(5));
                     if (res12.ErrorOccured())
                         System.out.println(res12.ErrorMessage);
                     else System.out.println("The worker has been added to the desired job in the " +
@@ -284,7 +284,7 @@ public class Main {
                     List<Object> listremove = assignOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (listremove == null) break;
                     Response<Boolean> res13= serviceLayer.removeWorkerFromJobInShift(loginInfo.getWorkerID(), (int) listremove.get(0),
-                            (int) listremove.get(1), (int) listremove.get(2),(String)listremove.get(5), (int) listremove.get(3),(String) listremove.get(4));
+                            (int) listremove.get(1), (int) listremove.get(2),(String)listremove.get(4), (int) listremove.get(3),(String) listremove.get(5));
                     if (res13.ErrorOccured())
                         System.out.println(res13.ErrorMessage);
                     else System.out.println("The worker has been removed from the desired job in the " +
@@ -450,9 +450,6 @@ public class Main {
         System.out.println("Please enter the job name: ");
         String job = sc.nextLine();
         objects.add(job);
-        System.out.println("Please enter the site name: ");
-        String site = new Scanner(System.in).nextLine();
-        objects.add(site);
         return objects;
     }
 
@@ -495,7 +492,6 @@ public class Main {
         int salary = sc2.nextInt();
         System.out.println("Please enter the worker's ID: ");
         int wID = sc2.nextInt();
-
         return Arrays.asList(name, password, email_address, bankID, branch, salary, wID);
     }
 

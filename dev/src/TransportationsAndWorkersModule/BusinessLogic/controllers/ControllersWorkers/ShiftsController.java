@@ -2,7 +2,9 @@ package src.TransportationsAndWorkersModule.BusinessLogic.controllers.Controller
 
 
 
+import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.WorkerDTO;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.*;
+import src.TransportationsAndWorkersModule.Dal.Workers.LicenseDAO;
 import src.TransportationsAndWorkersModule.Dal.Workers.WeeklyScheduleDAO;
 import src.TransportationsAndWorkersModule.Dal.Workers.WorkerDAO;
 import src.TransportationsAndWorkersModule.Dal.Workers.WorkerScheduleDAO;
@@ -16,10 +18,12 @@ public class ShiftsController {
     WorkerScheduleDAO workerScheduleDAO;
     WeeklyScheduleDAO weeklyScheduleDAO;
     WorkerDAO workerDAO;
+    LicenseDAO licenseDAO;
     private ShiftsController() {
         weeklyScheduleDAO = new WeeklyScheduleDAO();
         workerScheduleDAO = new WorkerScheduleDAO();
         workerDAO = new WorkerDAO();
+        licenseDAO = new LicenseDAO();
     }
     public static ShiftsController getInstance()
     {
@@ -251,6 +255,29 @@ public class ShiftsController {
             List<Integer> storeKeepersIds = jobs.get("store keeper");
             if (storeKeepersIds.isEmpty())return false;
             return true;
+        }
+        catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public List<WorkerDTO> getAllDrivers(int weekId , int Day , int shiftType) throws Exception {
+        try {
+            HashMap<String, List<Integer>> jobs = weeklyScheduleDAO.get(weekId,"driver department").getShift(Day, shiftType).getJobToWorker();
+            List<Worker> driversList = new LinkedList<>();
+            List<Integer> driverIDS = jobs.get("driver");
+            List<String> license = new LinkedList<>();
+            List<WorkerDTO> workerToRet = new LinkedList<>();
+            for(int wid: driverIDS){
+                driversList.add(workerDAO.get(wid));
+            }
+            for (Worker w: driversList){
+                license.add(licenseDAO.get(w.getId()));//if even one of the workers doesnt have license data about himself it wont return you a list of the workers
+            }
+            for (int i =0; i<driversList.size(); i++){
+                workerToRet.add(new WorkerDTO(driversList.get(i).getId(),license.get(i),"driver department"));
+            }
+            return workerToRet;
         }
         catch(Exception e){
             throw new Exception(e.getMessage());
