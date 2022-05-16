@@ -1,16 +1,17 @@
 package busniess_layer;
 
 import Data_layer.DAL_controller;
-
+import ServiceLayer.SupplyModuleService;
+import BusinessLayer.Responses.*;
 import java.time.LocalDate;
 import java.util.*;
 
 public class Stock {
     private List<Products> products_list;
     private List<Sale> sales_list;
-    private  List<Periodic_Order> periodic_orders_list;
+    private List<Periodic_Order> periodic_orders_list;
     private DAL_controller dal_controller;
-
+    private ServiceLayer.SupplyModuleService supplyModuleService;
 
     public Stock() {
 
@@ -18,6 +19,7 @@ public class Stock {
         this.sales_list = new ArrayList<>();
         this.periodic_orders_list = new ArrayList<>();
         dal_controller = DAL_controller.getInstance();
+        supplyModuleService=new SupplyModuleService();
     }
 
 
@@ -40,30 +42,26 @@ public class Stock {
         boolean added = false;
         for (Products products : this.products_list) {
             if (products.getCatalog_number()== products_catalog_number) {
-
-                products.update_quantity(quantity,cost,expiry,dal_controller.getProduct_table());
-
-                  added = true;
-
+                if((supplyModuleService.OrderProduct((int) products_catalog_number,quantity)) instanceof IsValue) {
+                    products.update_quantity(quantity, cost, expiry, dal_controller.getProduct_table());
+                    added = true;
+                }
+                else
+                    added=false;
             }
         }
         if (!added) {
             //maybe we should ask the client if there is a default price for selling , for exmaple : cost * 1.5
             Products products = new Products(products_catalog_number, name, quantity, cost, cost * 1.5, expiry, manufactorer, category,sub_cat,sub_sub_cat,dal_controller.getProducts_table(),dal_controller.getProduct_table(),dal_controller.getSales_history_table());
             products_list.add(products);
-
-
         }
 
     }
-    public void define_periodic_orders(String day,long products_catalog_number, int quantity, Double cost,  String name, String manufactorer, String category,String sub_cat,String sub_sub_cat)
+    public void define_periodic_orders(int day,long products_catalog_number, int quantity, Double cost,  String name, String manufactorer, String category,String sub_cat,String sub_sub_cat)
     {
         Periodic_Order order=new Periodic_Order(day,products_catalog_number,quantity,cost,name,manufactorer,category,sub_cat,sub_sub_cat,dal_controller.getPeriodic_order_table());
+        supplyModuleService.AddPeriodicProduct((int) products_catalog_number,quantity,day);
         this.periodic_orders_list.add(order);
-
-
-
-
     }
 
 

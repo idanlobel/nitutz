@@ -1,7 +1,6 @@
 package service_layer;
 
 import busniess_layer.Stock;
-
 import java.time.LocalDate;
 
 public class Stock_Manager {
@@ -32,7 +31,7 @@ public void Auto_start() throws Exception {
         mystock.Order(Long.parseLong(product_catalog_number),Integer.parseInt(quantity),Double.parseDouble(cost),expiry,name,manufactorer,category,sub_cat,sub_sub_cat);
     }
 
-    public void create_order(String day,String product_catalog_number, String quantity, String cost,String name, String manufactorer, String category, String sub_cat, String sub_sub_cat)
+    public void create_order(int day,String product_catalog_number, String quantity, String cost,String name, String manufactorer, String category, String sub_cat, String sub_sub_cat)
     {
 
         mystock.define_periodic_orders(day,Long.parseLong(product_catalog_number),Integer.parseInt(quantity),Double.parseDouble(cost),name,manufactorer,category,sub_cat,sub_sub_cat);
