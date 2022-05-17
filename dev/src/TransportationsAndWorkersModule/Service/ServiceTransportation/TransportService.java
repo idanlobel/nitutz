@@ -1,7 +1,7 @@
 package src.TransportationsAndWorkersModule.Service.ServiceTransportation;
 
-import src.EmpModule.EMPLOYEEFACADE;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.IdGenerator;
+import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.LicenseType;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.TransportStatus;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.WorkerDTO;
 import src.TransportationsAndWorkersModule.BusinessLogic.controllers.ControllersTransportation.TransportsFacade;
@@ -16,7 +16,6 @@ import java.util.Scanner;
 public class TransportService {
 
     Scanner scanner;
-    EMPLOYEEFACADE employeefacade;
     TransportsFacade transportsFacade;
     IdGenerator idgenarator;
 
@@ -24,7 +23,6 @@ public class TransportService {
         ; //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
         this.scanner = scanner;
         // TODO: 06/05/2022   get employee facade throught emp' module
-        employeefacade = new EMPLOYEEFACADE();
         this.transportsFacade = transportsFacade;
         idgenarator = new IdGenerator();
 
@@ -36,8 +34,13 @@ public class TransportService {
         transportSDTO.date = askInput("enter the week number date . for example 41 ") +" "+ askInput("enter the day number date . 1 -sunday 2- monday ext... ");
         transportSDTO.departureTime = askInput("enter the departure time. for example 13:20 ");
         List<WorkerDTO> a=transportsFacade.getDriversByShift(transportSDTO.date,transportSDTO.departureTime);//todo
+        for (WorkerDTO worker:a) {
+            System.out.println(worker.getId()+"\t"+worker.getName()+"\t"+worker.getLicenseType());
+        }
         //get מחסנאים שעובדים באותו משמרת
-        transportSDTO.driverId = askInput("choose the transport driver id from your drivers crew: " + transportsFacade.showDriversDetailsAvailable(transportSDTO.departureTime, transportSDTO.date));
+        transportSDTO.driverId = askInput("choose the transport driver id from your drivers crew: ");
+        String licenseType=a.stream().filter(i -> i.getId().equals(transportSDTO.driverId)).findFirst().get().getLicenseType();
+
         transportSDTO.truckLicensePlateId = askInput("choose the truck from your truck: " + transportsFacade.viewTrucks());//getTrucksByLicenseType(); //driverService.getDriversLicenceTypeByDriveId(transportDTO.driverid) )
         transportSDTO.source = askInput( "choose the source name and region from site list: " + transportsFacade.viewAllSites());
 
