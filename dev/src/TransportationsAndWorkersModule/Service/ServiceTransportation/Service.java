@@ -47,9 +47,9 @@ public class Service {
         System.out.println("hello " + userName + " initiating initial values...");
         dataInit();
         System.out.println();
-
-        while(true){
-            String action = askInput("hello " + userName + ", please choose action from the following options and press enter:\n"
+        String action="";
+        while(!action.equals("end")){
+            action = askInput("hello " + userName + ", please choose action from the following options and press enter:\n"
                     + "createForm , updateForm , addSite ,addDriver ,addTruck , updateSite , updateTruck , update truck , showFormByDate , updateWeight");
 
             switch (action){
@@ -67,8 +67,6 @@ public class Service {
                 case "UpdateForm": { transportService.updateTransport(); break;}
 
                 case "showFormByDate": { transportService.showTransportFormByDate(); break;}
-
-                case "updateForm": {  transportService.updateTransport(); break;}
 
                 case "updateWeight": {  transportService.updateWeight(); break;}
 

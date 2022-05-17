@@ -3,6 +3,7 @@ package src.TransportationsAndWorkersModule.Service.ServiceTransportation;
 import src.EmpModule.EMPLOYEEFACADE;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.IdGenerator;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.TransportStatus;
+import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.WorkerDTO;
 import src.TransportationsAndWorkersModule.BusinessLogic.controllers.ControllersTransportation.TransportsFacade;
 
 import java.util.LinkedList;
@@ -32,26 +33,33 @@ public class TransportService {
     public void createTransport(){
         TransportSDTO transportSDTO = new TransportSDTO();
         transportSDTO.id = idgenarator.getId();
-        transportSDTO.date = askInput("enter the transport date . for example 02/05/2022 ");
+        transportSDTO.date = askInput("enter the week number date . for example 41 ") +" "+ askInput("enter the day number date . 1 -sunday 2- monday ext... ");
         transportSDTO.departureTime = askInput("enter the departure time. for example 13:20 ");
+        List<WorkerDTO> a=transportsFacade.getDriversByShift(transportSDTO.date,transportSDTO.departureTime);//todo
         //get מחסנאים שעובדים באותו משמרת
         transportSDTO.driverId = askInput("choose the transport driver id from your drivers crew: " + transportsFacade.showDriversDetailsAvailable(transportSDTO.departureTime, transportSDTO.date));
         transportSDTO.truckLicensePlateId = askInput("choose the truck from your truck: " + transportsFacade.viewTrucks());//getTrucksByLicenseType(); //driverService.getDriversLicenceTypeByDriveId(transportDTO.driverid) )
         transportSDTO.source = askInput( "choose the source name and region from site list: " + transportsFacade.viewAllSites());
+
         int numberOfDest=Integer.parseInt( askInput("choose number of destinations: "));
         for (int i = 0; i < numberOfDest; i++) {
             ProductsDocumentSDTO tfD=new ProductsDocumentSDTO();
 
             tfD.destinationId = askInput("choose the destination name and region from site list: " + transportsFacade.viewAllSites());
-            transportSDTO.destinations.add(tfD.destinationId);
-            tfD.id= idgenarator.getId();
-            int numberOfProduct=Integer.parseInt( askInput("choose number of products to add for this destination: "));
-            for (int j = 0; j < numberOfProduct; j++) {
-                tfD.products.put(askInput("name of product: "),Integer.parseInt(askInput("quantity: ")));
-            }
-            transportSDTO.productsDocumentSDTOS.add(tfD);
-        }
+            if(transportsFacade.isLegalStieToTransportByShift(transportSDTO.date,transportSDTO.departureTime,tfD.destinationId))
+            {
 
+                transportSDTO.destinations.add(tfD.destinationId);
+                tfD.id= idgenarator.getId();
+                int numberOfProduct=Integer.parseInt( askInput("choose number of products to add for this destination: "));
+                for (int j = 0; j < numberOfProduct; j++) {
+                    tfD.products.put(askInput("name of product: "),Integer.parseInt(askInput("quantity: ")));
+                }
+                transportSDTO.productsDocumentSDTOS.add(tfD);
+            }else{
+                System.out.println("site is not open to transport on this shift");
+            }
+        }
         //transportForm.truck????
         //\no good. needs Service objects???? tranportForm.source = siteService. askInput("choose the transport source from following: " + siteService.getSitesNames().toString())
         transportsFacade.regTransport(transportSDTO);
