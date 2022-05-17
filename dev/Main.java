@@ -15,19 +15,20 @@ public class Main {
 	System.out.println("Choose Workers Or Transport:");
     Scanner scanner = new Scanner(System.in);
     String s = scanner.nextLine();
-    if ( s.equals("Workers")){
-        try {
-            mainWorkers();
-        } catch (Exception e) {
-            System.out.println("run program again");
+    while(!s.equals("quit")) {
+        if (s.equals("Workers")) {
+            try {
+                mainWorkers();
+            } catch (Exception e) {
+                System.out.println("run program again");
+            }
+        } else if (s.equals("Transport")) {
+            mainTransport();
         }
+        s = scanner.nextLine();
     }
-    else if(s.equals("Transport")){
-        mainTransport();
-    }
-    else{
-        System.out.println("run program again");
-    }
+
+        System.out.println("end program");
 
 
     }

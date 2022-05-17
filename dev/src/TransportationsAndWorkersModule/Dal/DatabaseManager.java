@@ -85,7 +85,7 @@ public class DatabaseManager {
             String url = "jdbc:sqlite:superLee.db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);
-            conn.setAutoCommit(false);
+            conn.setAutoCommit(false); //todo delete this?
             return conn;
             //Statement statement = conn.createStatement();
             //ResultSet rs = statement.executeQuery("select * from workers");

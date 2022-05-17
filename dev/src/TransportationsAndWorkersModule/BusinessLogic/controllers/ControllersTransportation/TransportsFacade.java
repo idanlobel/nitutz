@@ -92,9 +92,13 @@ public class TransportsFacade {
         return Integer.parseInt(trucksController.getTruckById(transportsController.getFormsById(id).getTruckLicenceNumber()).getMaxWeight());
     }
 
-    public List<String> getDriversByShift(String date, String departureTime) {
+    public List<WorkerDTO> getDriversByShift(String date, String departureTime) {
         try {
-            List<WorkerDTO>  lst= workersFacade.getAllDrivers();
+            String[] time=departureTime.split(":");
+            int shiftType=Integer.parseInt(time[0])>13?1:0;
+            String[] dates=date.split(" ");
+            List<WorkerDTO>  lst= workersFacade.getAllDrivers(Integer.parseInt(dates[0]),Integer.parseInt(dates[1]),shiftType);
+            return lst;
         } catch (Exception e) {
             e.printStackTrace();
         }

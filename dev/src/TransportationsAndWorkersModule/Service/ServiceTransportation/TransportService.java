@@ -3,6 +3,7 @@ package src.TransportationsAndWorkersModule.Service.ServiceTransportation;
 import src.EmpModule.EMPLOYEEFACADE;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.IdGenerator;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.TransportStatus;
+import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.WorkerDTO;
 import src.TransportationsAndWorkersModule.BusinessLogic.controllers.ControllersTransportation.TransportsFacade;
 
 import java.util.LinkedList;
@@ -34,7 +35,7 @@ public class TransportService {
         transportSDTO.id = idgenarator.getId();
         transportSDTO.date = askInput("enter the week number date . for example 41 ") +" "+ askInput("enter the day number date . 1 -sunday 2- monday ext... ");
         transportSDTO.departureTime = askInput("enter the departure time. for example 13:20 ");
-        transportsFacade.getDriversByShift(transportSDTO.date,transportSDTO.departureTime);//todo
+        List<WorkerDTO> a=transportsFacade.getDriversByShift(transportSDTO.date,transportSDTO.departureTime);//todo
         //get מחסנאים שעובדים באותו משמרת
         transportSDTO.driverId = askInput("choose the transport driver id from your drivers crew: " + transportsFacade.showDriversDetailsAvailable(transportSDTO.departureTime, transportSDTO.date));
         transportSDTO.truckLicensePlateId = askInput("choose the truck from your truck: " + transportsFacade.viewTrucks());//getTrucksByLicenseType(); //driverService.getDriversLicenceTypeByDriveId(transportDTO.driverid) )
