@@ -290,6 +290,24 @@ public class Main {
                     else System.out.println("The worker has been removed from the desired job in the " +
                             "specified weekly schedule successfully");
                     break;
+                case 22:
+                    if (!isHR(loginInfo.isHr()))
+                        break;
+                    List<Object> listLicense = addremoveLicense();
+                    Response<Boolean> res14 = serviceLayer.addLicenseToWorker(loginInfo.getWorkerID(),(int)listLicense.get(0),(String) listLicense.get(1));
+                    if (res14.ErrorOccured())
+                        System.out.println(res14.ErrorMessage);
+                    else System.out.println("the license has been added successfully");
+                    break;
+                case 23:
+                    if (!isHR(loginInfo.isHr()))
+                        break;
+                    List<Object> listLicense2 = addremoveLicense();
+                    Response<Boolean> res15 = serviceLayer.removeLicenseFromWorker(loginInfo.getWorkerID(),(int)listLicense2.get(0),(String) listLicense2.get(1));
+                    if (res15.ErrorOccured())
+                        System.out.println(res15.ErrorMessage);
+                    else System.out.println("the license has been removed successfully");
+                    break;
                 case 99:
                     System.out.println("You've been successfully logged-out.");
                     break;
@@ -301,6 +319,14 @@ public class Main {
     }
 
 
+    private static List<Object> addremoveLicense(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Please enter the worker id: ");
+        int workerID = sc.nextInt();
+        System.out.println("Please enter the day of the License name : ");
+        String licenseName = new Scanner(System.in).nextLine();
+        return Arrays.asList(workerID,licenseName);
+    }
     private static Login Login(){
         Scanner scLogin1= new Scanner(System.in);
         System.out.println("Please enter your ID, and hit enter afterwards: ");
