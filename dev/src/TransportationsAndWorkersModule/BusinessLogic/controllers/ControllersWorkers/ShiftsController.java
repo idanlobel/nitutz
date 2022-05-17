@@ -251,7 +251,7 @@ public class ShiftsController {
 
     public boolean isTransportationLegal(int weekID,String site, int day, int shift) throws Exception {
         try {
-            HashMap<String, List<Integer>> jobs = weeklyScheduleDAO.get(weekID,site).getShift(day, shift).getJobToWorker();
+            HashMap<String, List<Integer>> jobs = weeklyScheduleDAO.get(weekID,site).getShift(day-1, shift).getJobToWorker();
             List<Integer> storeKeepersIds = jobs.get("store keeper");
             if (storeKeepersIds.isEmpty())return false;
             return true;
@@ -263,7 +263,7 @@ public class ShiftsController {
 
     public List<WorkerDTO> getAllDrivers(int weekId , int Day , int shiftType) throws Exception {
         try {
-            HashMap<String, List<Integer>> jobs = weeklyScheduleDAO.get(weekId,"driver department").getShift(Day, shiftType).getJobToWorker();
+            HashMap<String, List<Integer>> jobs = weeklyScheduleDAO.get(weekId,"driver department").getShift(Day-1, shiftType).getJobToWorker();
             List<Worker> driversList = new LinkedList<>();
             List<Integer> driverIDS = jobs.get("driver");
             List<String> license = new LinkedList<>();
