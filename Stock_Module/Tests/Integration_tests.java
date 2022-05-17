@@ -26,7 +26,7 @@ public class Integration_tests {
        stock_manager_test=new Stock_Manager();
         order_catalog_99=stock_manager_test.make_order("99","20","20.0","2022-05-08","something","something","something","something","something");
         order_catalog_88=stock_manager_test.make_order("88","20","20.0","2022-05-08","something","something","something","something","something");
-        order_catalog_72=stock_manager_test.make_order("72","5","5.5","17-08-2022","milka","something","diary","milk products","chocolate");
+        order_catalog_72=stock_manager_test.make_order("72","5","5.5","2022-07-18","milka","something","diary","milk products","chocolate");
         make_sale_99=stock_manager_test.make_sale("99","2022-05-08","2022-05-10","something","2");
         periodic_order_monday=stock_manager_test.create_order("monday","99","20","20.0","2022-05-08","something","something","something","something");
 
@@ -157,7 +157,7 @@ public class Integration_tests {
 
     @Test
     void update_periodic_order_day() throws Exception {
-        Response response=stock_manager_test.update_periodic_order_day("1","Thursday");
+        Response response=stock_manager_test.update_periodic_order_day("1","thursday");
         assertEquals(IsOk.class,response.getClass());
     }
 
@@ -175,7 +175,7 @@ public class Integration_tests {
 
     @Test
     void remove_broken_items() {
-        Response response_broken=stock_manager_test.set_broken_product("3","72");
+        Response response_broken=stock_manager_test.set_broken_product("3","99");
         Response response=stock_manager_test.remove_broken_items();
         assertEquals(IsOk.class,response.getClass());
     }

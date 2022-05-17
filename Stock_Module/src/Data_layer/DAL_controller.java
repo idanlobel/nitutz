@@ -171,6 +171,7 @@ public  class DAL_controller {
         tables_names.add("Products");
         tables_names.add("Sale");
         tables_names.add("SalesHistory");
+        tables_names.add("sqlite_sequence");
 
         for(String table:tables_names)
         {      String sql =" DELETE FROM "+table+";";

@@ -391,7 +391,7 @@ public class Stock {
         {
             if(o.getID()==id)
             {
-                if(LocalDate.now().plusDays(6).getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
+                if(LocalDate.now().plusDays(1).getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
                 {
                     throw new Exception("sorry can't update periodic order day before");
                 }
@@ -417,7 +417,7 @@ public class Stock {
         {
             if(o.getID()==id)
             {
-                if(LocalDate.parse(LocalDate.now().plusDays(6).toString()).getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
+                if(LocalDate.parse(LocalDate.now().plusDays(1).toString()).getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
                 {
                     throw new Exception("sorry can't update periodic order day before");
                 }
@@ -441,7 +441,7 @@ public class Stock {
         {
             if(o.getID()==id)
             {
-                if(LocalDate.parse(LocalDate.now().plusDays(6).toString()).getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
+                if(LocalDate.parse(LocalDate.now().plusDays(1).toString()).getDayOfWeek().toString().toLowerCase(Locale.ROOT).equals(o.getDay_of_week()))
                 {
                     throw new Exception("sorry can't remove periodic order day before");
                 }
