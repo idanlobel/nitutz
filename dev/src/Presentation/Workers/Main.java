@@ -113,7 +113,7 @@ public class Main {
                     System.out.println("Please enter the id of the week for the weekly schedule: ");
                     int weekID = sc.nextInt();
                     System.out.println("Please enter the site of the weekly schedule: ");
-                    String site = sc.nextLine();
+                    String site = new Scanner(System.in).nextLine();
                     Response<Boolean> res = serviceLayer.createWeeklySchedule(loginInfo.getWorkerID(), weekID, site);
                     if (res.ErrorOccured())
                         System.out.println(res.ErrorMessage);
@@ -144,7 +144,7 @@ public class Main {
                     System.out.println("Please enter the id of the week for the weekly schedule: ");
                     int weeklyID = sc.nextInt();
                     System.out.println("Please enter the site of the weekly schedule: ");
-                    String site1 = sc.nextLine();
+                    String site1 = new Scanner(System.in).nextLine();
                     Response<WeeklyScheduleSL> weeklySchedule = serviceLayer.viewWeeklySchedule(loginInfo.getWorkerID(), weeklyID,site1);
                     if (weeklySchedule.ErrorOccured())
                         System.out.println(weeklySchedule.ErrorMessage);
@@ -201,7 +201,7 @@ public class Main {
                     System.out.println("Please enter the id of the week for the weekly schedule: ");
                     int weekly_id_number = sc.nextInt();
                     System.out.println("Please enter the name of the site of the weekly schedule: ");
-                    String site2 = sc.nextLine();
+                    String site2 = new Scanner(System.in).nextLine();
                     Response<Boolean> res6= serviceLayer.isWeeklyScheduleReady(loginInfo.getWorkerID(), weekly_id_number,site2);
                     if(res6.ErrorOccured())
                         System.out.println(res6.ErrorMessage);
@@ -379,7 +379,7 @@ public class Main {
             return null;
         }
         System.out.println("Please enter the name of the site : ");
-        String siteName = sc.nextLine();
+        String siteName = new Scanner(System.in).nextLine();
         return Arrays.asList(weekID, shiftDay - 1, shiftType, transactionID,siteName);
     }
 
@@ -406,7 +406,7 @@ public class Main {
             return null;
         }
         System.out.println("Please enter the name of the site : ");
-        String site = sc.nextLine();
+        String site = new Scanner(System.in).nextLine();
         return Arrays.asList(shiftWeek, shiftDay - 1, shiftType,site);
     }
 
@@ -440,7 +440,7 @@ public class Main {
             return null;
         }
         System.out.println("Please enter the name of the site: ");
-        String site = sc.nextLine();
+        String site = new Scanner(System.in).nextLine();
         return Arrays.asList(shiftWeek, shiftDay - 1, shiftType, wID,site);
     }
     private static List<Object> assignOrRemoveInWeeklySchedule(int hrID) {
@@ -451,7 +451,7 @@ public class Main {
         String job = sc.nextLine();
         objects.add(job);
         System.out.println("Please enter the site name: ");
-        String site = sc.nextLine();
+        String site = new Scanner(System.in).nextLine();
         objects.add(site);
         return objects;
     }
@@ -474,7 +474,7 @@ public class Main {
         System.out.println("Please enter the worker's salary: ");
         int salary = sc2.nextInt();
         System.out.println("Please enter the name of the site this worker works at: ");
-        String site = sc2.nextLine();
+        String site = new Scanner(System.in).nextLine();
         return Arrays.asList(name, wID, password, email_address, bankID, branch, salary,site);
     }
 

@@ -86,7 +86,7 @@ public class WeeklyScheduleDAO {
                         }
                         if (!exists) {
                             sql += weekly_schedule.getId() + "','" + j + "','" + i + "','";
-                            sql += wid + "','" + "" + "');";
+                            sql += wid + "','" + "" + "','"+weekly_schedule.getSite()+"');";
                             rs.addBatch(sql);
                         }
                     }

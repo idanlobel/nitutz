@@ -69,6 +69,7 @@ public class WorkerController {
     public boolean deleteWorker(int workerID, int callerID) throws Exception{
         if(workers.readHR().getId() == workerID) throw new Exception("Can't remove HR!");
         try {
+            workers.get(workerID);
             workers.delete(workerID);
             workerScheduleDAO.delete(workerID);
             return true;
