@@ -185,7 +185,7 @@ public class ShiftsController {
             Transaction transaction = new Transaction(transactionID, workerID);
             Weekly_Schedule weekly_schedule = getWeeklySchedule(weekID,site);
             //lets do the check here
-            if(!workerDAO.get(workerID).getWorkerJobs().contains("cashier"))
+            if(!workerDAO.get(workerID).getWorkerJobs().contains("cashier") && (workerDAO.readHR().getId() != workerID))
                 throw new Exception("You're not authorized to perform this action. Only the shift manager of this shift " +
                         "or the HR manager or a cashier in this shift can perform this action.");
             weekly_schedule.getShift(day, shift).addTransaction(transaction, workerID);

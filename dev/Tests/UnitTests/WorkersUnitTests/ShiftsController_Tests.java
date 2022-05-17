@@ -8,19 +8,18 @@ import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.Worker_Schedule;
 import src.TransportationsAndWorkersModule.BusinessLogic.controllers.ControllersWorkers.ShiftsController;
 import src.TransportationsAndWorkersModule.Dal.DatabaseManager;
+import sun.awt.geom.AreaOp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ShiftsController_Tests {
     ShiftsController shiftsController;
     DatabaseManager databaseManager;
-    Worker_Schedule workerSchedule;
     Weekly_Schedule weekly_schedule;
 
-   /* @BeforeEach
+    @BeforeEach
     void setUp() {
         shiftsController = ShiftsController.getInstance();
-        workerSchedule = new Worker_Schedule(3);
         weekly_schedule = new Weekly_Schedule(1, "North");
         try {
             databaseManager = databaseManager.getInstance();
@@ -34,53 +33,96 @@ public class ShiftsController_Tests {
     //#1:
     @Test
     void editWorkerSchedule_Success() throws Exception {
-        assertEquals(true, shiftsController.editWorkerSchedule(3, true, 1, 0));
-        assertEquals(true, shiftsController.editWorkerSchedule(3, false, 1, 1));
+        try {
+            assertEquals(true, shiftsController.editWorkerSchedule(5, true, 1, 0));
+            assertEquals(true, shiftsController.editWorkerSchedule(5, false, 1, 1));
+        }
+        catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
     }
 
     @Test
-    void editWorkerSchedule_Failure() throws Exception {
-        assertEquals(false, shiftsController.editWorkerSchedule(500, false, 1, 0));
+    void editWorkerSchedule_Failure(){
+        try {
+           shiftsController.editWorkerSchedule(500, false, 1, 0);
+        } catch (Exception e) {
+            try {
+                assertEquals("Worker schedule does not exist", e.getMessage());
+                shiftsController.editWorkerSchedule(3, true, 1, 1);
+            }
+            catch(Exception e2){
+                assertEquals("The HR can only work in morning shifts", e2.getMessage());
+            }
+        }
     }
 
     //#2:
     @Test
-    void createWeeklySchedule_Success() throws Exception {
-        assertEquals(true, shiftsController.createWeeklySchedule(2,3, "South"));
-        assertEquals(true, shiftsController.createWeeklySchedule(3,3, "North"));
+    void createWeeklySchedule_Success(){
+        try {
+            assertEquals(true, shiftsController.createWeeklySchedule(5000, 3, "South"));
+        }
+        catch(Exception e){
+            System.out.println("Worker Schedule already exists in the database, delete him first");
+        }
     }
 
     @Test
-    void createWeeklySchedule_Failure() throws Exception {
-        assertEquals(false, shiftsController.createWeeklySchedule(1,3, "North"));
+    void createWeeklySchedule_Failure(){
+       try {
+           shiftsController.createWeeklySchedule(5000, 3, "North");
+       }
+       catch(Exception e){
+           assertEquals("batch entry 0: [SQLITE_CONSTRAINT_PRIMARYKEY]  A PRIMARY KEY constraint failed (UNIQUE constraint failed: weeklySchedule.id, weeklySchedule.site)", e.getMessage());
+       }
     }
 
     //#3:
     @Test
-    void addTransaction_Success() throws Exception {
-        assertEquals(true, shiftsController.addTransaction(1, 1, 0, "North", 3, 3));
+    void addTransaction_Success(){
+        try {
+            assertEquals(true, shiftsController.addTransaction(1, 1, 0, "site2", 3, 3));
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
-    void addTransaction_Failure() throws Exception {
-        shiftsController.addTransaction(1, 1, 0, "North", 576, 3);
-        assertEquals(false, shiftsController.addTransaction(1, 1, 0, "North", 576, 3));
+    void addTransaction_Failure(){
+        try {
+            assertEquals(false, shiftsController.addTransaction(1, 1, 0, "North", 576, 3));
+        }
+        catch(Exception e){
+            assertEquals("weekly schedule does not exists", e.getMessage());
+        }
     }
 
     //#4:
     @Test
-    void removeTransaction_Success() throws Exception {
-        shiftsController.addTransaction(1, 1, 0, "North", 576, 3);
-        assertEquals(true, shiftsController.removeTransaction(1, 1, 0, "North", 576, 3));
+    void removeTransaction_Success(){
+        try {
+            shiftsController.addTransaction(5000, 1, 0, "South", 576, 3);
+            assertEquals(true, shiftsController.removeTransaction(5000, 1, 0, "South", 576, 3));
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
-    void removeTransaction_Failure() throws Exception {
-        assertEquals(false, shiftsController.removeTransaction(1, 1, 0, "North", 579, 3));
+    void removeTransaction_Failure(){
+        try {
+            assertEquals(false, shiftsController.removeTransaction(1, 1, 0, "North", 579, 3));
+        }
+        catch(Exception e){
+            assertEquals("weekly schedule does not exists", e.getMessage());
+        }
     }
 
     @AfterEach
     void tearDown() { //TODO:: doesn't work properly (because it's a singleton) - NEED TO FIX THIS!
         //shiftsController = null;
-    }*/
+    }
 }
