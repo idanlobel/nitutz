@@ -62,8 +62,8 @@ public class TransportsFacade {
         sitesController.addSite(name, address, contactPersonName, contactPersonNamePhone, region);
     }
 
-    public String viewTrucks() {
-        return trucksController.viewTrucks();
+    public String viewTrucks(String licenseType) {
+        return trucksController.viewTrucks(licenseType);
     }
 
 

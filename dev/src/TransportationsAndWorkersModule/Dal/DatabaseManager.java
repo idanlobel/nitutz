@@ -47,7 +47,7 @@ public class DatabaseManager {
             stmt.execute("CREATE TABLE if not exists \"weeklySchedule\" (\n" +
                     "\t\"id\"\tINTEGER,\n" +
                     "\t\"site\"\tTEXT NOT NULL,\n"+
-                    "\tPRIMARY KEY(\"id\")\n" +
+                    "\tPRIMARY KEY (id,site)\n" +
                     ");");
             stmt.execute("CREATE TABLE if not exists \"driversData\" (\n" +
                     "\t\"id\"\tINTEGER,\n" +

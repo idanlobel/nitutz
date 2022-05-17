@@ -34,14 +34,19 @@ public class TransportService {
         transportSDTO.date = askInput("enter the week number date . for example 41 ") +" "+ askInput("enter the day number date . 1 -sunday 2- monday ext... ");
         transportSDTO.departureTime = askInput("enter the departure time. for example 13:20 ");
         List<WorkerDTO> a=transportsFacade.getDriversByShift(transportSDTO.date,transportSDTO.departureTime);//todo
+        if(a.isEmpty()){
+            System.out.println("No driver in shift please try again");
+            return;
+        }
         for (WorkerDTO worker:a) {
             System.out.println(worker.getId()+"\t"+worker.getName()+"\t"+worker.getLicenseType());
+
         }
         //get מחסנאים שעובדים באותו משמרת
         transportSDTO.driverId = askInput("choose the transport driver id from your drivers crew: ");
-        String licenseType=a.stream().filter(i -> i.getId().equals(transportSDTO.driverId)).findFirst().get().getLicenseType();
+        WorkerDTO worker=a.stream().filter(i -> (i.getId()+"").equals(transportSDTO.driverId)).findFirst().get();
 
-        transportSDTO.truckLicensePlateId = askInput("choose the truck from your truck: " + transportsFacade.viewTrucks());//getTrucksByLicenseType(); //driverService.getDriversLicenceTypeByDriveId(transportDTO.driverid) )
+        transportSDTO.truckLicensePlateId = askInput("choose the truck from your trucks: " + transportsFacade.viewTrucks(worker.getLicenseType()));//getTrucksByLicenseType(); //driverService.getDriversLicenceTypeByDriveId(transportDTO.driverid) )
         transportSDTO.source = askInput( "choose the source name and region from site list: " + transportsFacade.viewAllSites());
 
         int numberOfDest=Integer.parseInt( askInput("choose number of destinations: "));

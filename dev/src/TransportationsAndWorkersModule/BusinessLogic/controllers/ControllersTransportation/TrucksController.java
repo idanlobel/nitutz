@@ -60,10 +60,11 @@ public class TrucksController {
         trucksRep.getTruck(truckId).update(toChangeField, newVal);
     }
 
-    public String viewTrucks() {
+    public String viewTrucks(String licenseType) {
         String ans = "";
         for (Truck t : trucksRep.getAllTrucks()){
-            ans = ans + t.toString() + "\n";
+            if(licenseType.equals(t.getLicenseType().toString()))
+                ans = ans + t.toString() + "\n";
         }
         return ans;
     }

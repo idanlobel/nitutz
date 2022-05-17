@@ -7,11 +7,8 @@ public class WorkerDTO {
     String licenseType;
     String name;
 
-    public WorkerDTO(int id, String licenseType, String name){
 
-    }
-
-    public WorkerDTO(Integer id, String licenseType, String name) {
+    public WorkerDTO(int id, String licenseType, String name) {
         this.id = id;
         this.licenseType = licenseType;
         this.name = name;

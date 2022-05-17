@@ -95,12 +95,7 @@ public class TrucksRep {
                 //    String model;
                 //    String weight;
                 //    String maxWeight;
-                System.out.println(rs.getString("number") +  "\t" +
-                        rs.getString("licenseType") + "\t" +
-                        rs.getString("licenseNumber") + "\t" +
-                        rs.getString("model") + "\t" +
-                        rs.getString("weight") + "\t" +
-                        rs.getString("maxWeight"));
+
                 Truck tr =new Truck(rs.getString("number"), LicenseType.valueOf(rs.getString("licenseType")),rs.getString("licenseNumber"),
                         rs.getString("model"),rs.getString("weight"),rs.getString("maxWeight"));
                 if(!trucksCache.containsKey(tr.getNumber()))
