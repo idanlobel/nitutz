@@ -54,7 +54,7 @@ public class DatabaseManager {
                     "\t\"license\"\tTEXT NOT NULL,\n" +
                     "\tPRIMARY KEY(\"id\")\n" +
                     ");");
-            stmt.execute("CREATE TABLE \"transactions\" (\n" +
+            stmt.execute("CREATE TABLE if not exists \"transactions\" (\n" +
                     "\t\"week_id\"\tINTEGER NOT NULL,\n" +
                     "\t\"site\"\tTEXT NOT NULL,\n" +
                     "\t\"id\"\tINTEGER,\n" +

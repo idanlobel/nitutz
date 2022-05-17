@@ -3,6 +3,8 @@ package src.Presentation.Workers;
 
 
 
+import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.WorkerDTO;
+import src.TransportationsAndWorkersModule.BusinessLogic.controllers.ControllersWorkers.ShiftsController;
 import src.TransportationsAndWorkersModule.Service.ServiceWorkers.*;
 
 import java.util.Arrays;
@@ -290,7 +292,7 @@ public class Main {
                     else System.out.println("The worker has been removed from the desired job in the " +
                             "specified weekly schedule successfully");
                     break;
-                case 22:
+                case 22://add license
                     if (!isHR(loginInfo.isHr()))
                         break;
                     List<Object> listLicense = addremoveLicense();
@@ -299,7 +301,7 @@ public class Main {
                         System.out.println(res14.ErrorMessage);
                     else System.out.println("the license has been added successfully");
                     break;
-                case 23:
+                case 23://remove license
                     if (!isHR(loginInfo.isHr()))
                         break;
                     List<Object> listLicense2 = addremoveLicense();
