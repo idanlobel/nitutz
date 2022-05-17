@@ -12,10 +12,11 @@ import static src.TransportationsAndWorkersModule.Dal.Transportation.CreateTable
 public class Main {
 
     public static void main(String[] args) {
-	System.out.println("Choose Workers Or Transport:");
     Scanner scanner = new Scanner(System.in);
-    String s = scanner.nextLine();
+    String s = "start";
     while(!s.equals("quit")) {
+        System.out.println("Choose Workers Or Transport:");
+        s = scanner.nextLine();
         if (s.equals("Workers")) {
             try {
                 mainWorkers();
@@ -25,7 +26,6 @@ public class Main {
         } else if (s.equals("Transport")) {
             mainTransport();
         }
-        s = scanner.nextLine();
     }
 
         System.out.println("end program");

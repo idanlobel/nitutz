@@ -310,6 +310,14 @@ public class Main {
                         System.out.println(res15.ErrorMessage);
                     else System.out.println("the license has been removed successfully");
                     break;
+                case 24://remove license
+                    if (!isHR(loginInfo.isHr()))
+                        break;
+                    List<WorkerDTO> res16 = ShiftsController.getInstance().getAllDrivers(1,0,0);
+                    for (int i =0; i<res16.size(); i++){
+                        System.out.println(res16.get(i).getName());
+                    }
+                    break;
                 case 99:
                     System.out.println("You've been successfully logged-out.");
                     break;

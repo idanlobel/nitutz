@@ -5,6 +5,7 @@ import java.sql.*;
 public class DatabaseManager {
 
     private static DatabaseManager instance = null;
+    String url = "jdbc:sqlite:superLee.db";
     private void createWorkersModuleTables() throws Exception {
         Connection connection = null;
         try {
@@ -63,7 +64,6 @@ public class DatabaseManager {
                     "\t\"shift\"\tINTEGER,\n" +
                     "\tPRIMARY KEY(\"week_id\",\"site\",\"data\",\"day\",\"shift\",\"id\")\n" +
                     ");");
-
             connection.commit();
         }
         catch (Exception e){
@@ -91,23 +91,16 @@ public class DatabaseManager {
         Connection conn = null;
         try {
             // db parameters
-
-            String url = "jdbc:sqlite:superLee.db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);
             conn.setAutoCommit(false); //todo delete this?
             return conn;
-            //Statement statement = conn.createStatement();
-            //ResultSet rs = statement.executeQuery("select * from workers");
-            //System.out.println("ID\t Name\t\t");
-            //while ( rs.next() ) {
-            //    int id = rs.getInt("id");
-            //    String name = rs.getString("name");
-             //   System.out.println(id + "\t " + name );
-            //}
-            //System.out.println("Connection to SQLite has been established.");
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+    }
+
+    public void ChangeURL(String url){//this is for testing convenience so we can create another db for testings
+        this.url=url;
     }
 }

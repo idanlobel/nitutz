@@ -33,7 +33,7 @@ public class CreateTable {
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         }
 
     }
@@ -65,7 +65,7 @@ public class CreateTable {
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         }
     }
     public static void createNewTransportDocumentTable() {
@@ -110,7 +110,7 @@ public class CreateTable {
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         }
     }
 
@@ -136,7 +136,7 @@ public class CreateTable {
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         }
     }
     /**

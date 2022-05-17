@@ -1,6 +1,5 @@
 package src.TransportationsAndWorkersModule.BusinessLogic.controllers.ControllersTransportation;
 
-import src.EmpModule.EMPLOYEEFACADE;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.WorkerDTO;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.Worker;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.WorkersFacade;
@@ -16,7 +15,6 @@ public class TransportsFacade {
     TransportsController transportsController;
     TrucksController trucksController;
     SitesController sitesController;
-    EMPLOYEEFACADE employeefacade;
     WorkersFacade workersFacade;
     //DriversController driversController;
     
@@ -25,15 +23,11 @@ public class TransportsFacade {
         trucksController = new TrucksController();
         sitesController = new SitesController();
         // TODO: 07/05/2022  
-        employeefacade = new EMPLOYEEFACADE();
         workersFacade = new WorkersFacade();
 
     }
 
-    public void setEmployeefacade(EMPLOYEEFACADE employeefacade) {
-        this.employeefacade = employeefacade;
-    }
-    
+
 
     /**
      * create a new transportation form a transport DTO object .
@@ -68,13 +62,10 @@ public class TransportsFacade {
         sitesController.addSite(name, address, contactPersonName, contactPersonNamePhone, region);
     }
 
-    public String viewTrucks() {
-        return trucksController.viewTrucks();
+    public String viewTrucks(String licenseType) {
+        return trucksController.viewTrucks(licenseType);
     }
 
-    public String showDriversDetailsAvailable(String departureTime, String date) {
-        return employeefacade.showDriversDetails();//get all drivers לפי המשמרת
-    }
 
     public List<String> showTransportByDate(String date) {
         return transportsController.getFormsByDate(date);
