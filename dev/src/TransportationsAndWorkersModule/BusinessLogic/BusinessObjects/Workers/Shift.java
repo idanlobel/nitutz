@@ -7,6 +7,10 @@ import src.TransportationsAndWorkersModule.BusinessLogic.controllers.Controllers
 import java.util.*;
 
 public class Shift {
+    public void addTransactionData(Transaction transaction) {
+        this.shift_transactions.add(transaction);
+    }
+
     enum Type {Morning, Evening};
     private boolean shiftIsReady;
     int[] mustJobs_Counter;
@@ -25,14 +29,19 @@ public class Shift {
     }
 
     static List<String> mustJobs = new ArrayList<String>(Arrays.asList("store keeper", "steward", "cashier", "driver"));
-    List<Transaction> shift_transactions;
-    public Shift(int shift_manager, List<Integer> workers, List<Transaction> transactions) {
+    List<Transaction> shift_transactions = new LinkedList<>();
+
+    public List<Transaction> getShift_transactions() {
+        return shift_transactions;
+    }
+
+    public Shift(int shift_manager, List<Integer> workers, HashMap<String, List<Integer>> jobToWorker ) {
         //For when we have a database to read from...
         this.shift_manager = shift_manager;
         this.workers = workers;
-        this.shift_transactions = transactions;
+        this.shift_transactions = new LinkedList<>();
         mustJobs_Counter = new int [4]; //initialized by default
-        jobToWorker = new HashMap<>();
+        this.jobToWorker = jobToWorker;
         updateShiftIsReady();
     }
 

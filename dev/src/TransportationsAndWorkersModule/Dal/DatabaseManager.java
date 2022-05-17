@@ -62,6 +62,7 @@ public class DatabaseManager {
                     "\t\"data\"\tINTEGER,\n" +
                     "\t\"day\"\tINTEGER,\n" +
                     "\t\"shift\"\tINTEGER,\n" +
+                    "\t\"worker_id\"\tINTEGER,\n" +
                     "\tPRIMARY KEY(\"week_id\",\"site\",\"data\",\"day\",\"shift\",\"id\")\n" +
                     ");");
             connection.commit();
