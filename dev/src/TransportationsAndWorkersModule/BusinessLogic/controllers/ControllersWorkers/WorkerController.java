@@ -180,4 +180,26 @@ public class WorkerController {
             throw new Exception(e.getMessage());
         }
     }
+
+    public boolean addLicnese(int callerID,int ID, String name) throws Exception{
+        try {
+            if (!isHR(callerID)) throw new Exception("ONLY HR CAN ADD LICENSE");
+            if (!workers.get(ID).getWorkerJobs().contains("driver"))throw new Exception("worker isnt a driver");
+            licenseDAO.create(ID,name);
+            return true;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+    public boolean removeLicense(int callerID, int ID, String name)throws Exception{
+        try {
+            if (!isHR(callerID)) throw new Exception("ONLY HR CAN REMOVE LICENSE");
+
+            if (!workers.get(ID).getWorkerJobs().contains("driver"))throw new Exception("worker isnt a driver");
+            licenseDAO.delete(ID);
+            return true;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
 }

@@ -275,7 +275,7 @@ public class ShiftsController {
                 license.add(licenseDAO.get(w.getId()));//if even one of the workers doesnt have license data about himself it wont return you a list of the workers
             }
             for (int i =0; i<driversList.size(); i++){
-                workerToRet.add(new WorkerDTO(driversList.get(i).getId(),license.get(i),"driver department"));
+                workerToRet.add(new WorkerDTO(driversList.get(i).getId(),license.get(i),driversList.get(i).getName()));
             }
             return workerToRet;
         }

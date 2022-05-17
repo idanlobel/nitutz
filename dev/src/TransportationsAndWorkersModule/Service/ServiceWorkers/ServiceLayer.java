@@ -295,4 +295,25 @@ public class ServiceLayer {
         }
         return response;
     }
+    public Response<Boolean> addLicenseToWorker(int callerID, int workerID, String license){
+        Response<Boolean> response;
+        try {
+            response = Response.FromValue(workerController.addLicnese(callerID,workerID,license));
+        }
+        catch(Exception e){
+            response = Response.FromError(e.getMessage());
+        }
+        return response;
+    } public Response<Boolean> removeLicenseFromWorker(int callerID, int workerID, String license){
+        Response<Boolean> response;
+        try {
+            response = Response.FromValue(workerController.removeLicense(callerID,workerID,license));
+        }
+        catch(Exception e){
+            response = Response.FromError(e.getMessage());
+        }
+        return response;
+    }
+
+
 }
