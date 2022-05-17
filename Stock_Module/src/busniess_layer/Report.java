@@ -26,8 +26,7 @@ public class Report {
         this.products=products;
         this.sales=sales;
         this.every_product=every_product;
-     //   this.report_dao=rd;
-        //report_dao.insert(id,s.toString());
+
 
     }
 

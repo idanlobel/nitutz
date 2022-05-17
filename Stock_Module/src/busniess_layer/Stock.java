@@ -22,6 +22,7 @@ public class Stock {
         this.periodic_orders_list = new ArrayList<>();
         dal_controller = DAL_controller.getInstance();
         supplyModuleService=new SupplyModuleService();
+
     }
 
 

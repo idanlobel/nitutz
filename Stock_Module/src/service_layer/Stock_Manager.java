@@ -189,7 +189,9 @@ public Response Auto_start() throws Exception {
     public Response<String> check_shortage_order() {
 
         try {
+
             String str=mystock.shortage_order();
+
             return new IsOk(str,"done successfully");
         }
         catch (Exception e){

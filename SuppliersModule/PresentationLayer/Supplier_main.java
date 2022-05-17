@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main { //note: this code is assumed to be made as a placeholder till we have a gui, a such is written quick and dirty
+public class Supplier_main { //note: this code is assumed to be made as a placeholder till we have a gui, a such is written quick and dirty
 
     public static void main(String[] args) {
         SupplyModuleService serviceObj=new SupplyModuleService();

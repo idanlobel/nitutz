@@ -28,7 +28,7 @@ public class Product_DAO {
     }
 
     private Product readProduct(int id) {
-        String sql = "SELECT * FROM "+table_name+ "WHERE ="+id;
+        String sql = "SELECT * FROM "+table_name+ " WHERE ="+id;
 
         try{
             Connection conn = DriverManager.getConnection(connection_string);
