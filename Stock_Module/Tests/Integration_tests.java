@@ -14,7 +14,7 @@ public class Integration_tests {
     Stock_Manager stock_manager_test;
     Response order_catalog_99;
     Response order_catalog_88;
-
+    Response order_catalog_72;
     Response make_sale_99;
     Response periodic_order_monday;
 
@@ -26,7 +26,7 @@ public class Integration_tests {
        stock_manager_test=new Stock_Manager();
         order_catalog_99=stock_manager_test.make_order("99","20","20.0","2022-05-08","something","something","something","something","something");
         order_catalog_88=stock_manager_test.make_order("88","20","20.0","2022-05-08","something","something","something","something","something");
-
+        order_catalog_72=stock_manager_test.make_order("72","5","5.5","17-08-2022","milka","something","diary","milk products","chocolate");
         make_sale_99=stock_manager_test.make_sale("99","2022-05-08","2022-05-10","something","2");
         periodic_order_monday=stock_manager_test.create_order("monday","99","20","20.0","2022-05-08","something","something","something","something");
 
@@ -102,55 +102,82 @@ public class Integration_tests {
 
     @Test
     void make_stock_report() {
+        Response response=stock_manager_test.make_stock_report();
 
+        assertEquals(IsOk.class,response.getClass());
     }
 
     @Test
     void make_prices_report() {
+        Response response=stock_manager_test.make_prices_report();
+        assertEquals(IsOk.class,response.getClass());
     }
 
     @Test
     void make_sales_report() {
+        Response response=stock_manager_test.make_sales_report();
+        assertEquals(IsOk.class,response.getClass());
     }
 
     @Test
     void make_defective_report() {
+        Response response=stock_manager_test.make_defective_report();
+        assertEquals(IsOk.class,response.getClass());
     }
 
     @Test
     void make_expiry_report() {
+        Response response=stock_manager_test.make_expiry_report();
+        assertEquals(IsOk.class,response.getClass());
     }
 
     @Test
     void set_broken_product() {
+        Response response=stock_manager_test.set_broken_product("3","72");
+        assertEquals(IsOk.class,response.getClass());
     }
 
     @Test
     void check_shortage_order() {
+        Response response=stock_manager_test.check_shortage_order();
+        assertEquals(IsOk.class,response.getClass());
     }
 
     @Test
     void check_periodic_order() {
+        Response response=stock_manager_test.check_periodic_order();
+        assertEquals(IsOk.class,response.getClass());
     }
 
     @Test
-    void update_periodic_order_quantity() {
+    void update_periodic_order_quantity() throws Exception {
+        Response response=stock_manager_test.update_periodic_order_quantity("1","30");
+        assertEquals(IsOk.class,response.getClass());
     }
 
     @Test
-    void update_periodic_order_day() {
+    void update_periodic_order_day() throws Exception {
+        Response response=stock_manager_test.update_periodic_order_day("1","Thursday");
+        assertEquals(IsOk.class,response.getClass());
     }
 
     @Test
-    void remove_periodic_order() {
+    void remove_periodic_order() throws Exception {
+        Response response=stock_manager_test.remove_periodic_order("1");
+        assertEquals(IsOk.class,response.getClass());
     }
 
     @Test
-    void remove_sale() {
+    void remove_sale() throws Exception {
+        Response response=stock_manager_test.remove_sale("1");
+        assertEquals(IsOk.class,response.getClass());
     }
 
     @Test
     void remove_broken_items() {
+        Response response_broken=stock_manager_test.set_broken_product("3","72");
+        Response response=stock_manager_test.remove_broken_items();
+        assertEquals(IsOk.class,response.getClass());
     }
 
 
