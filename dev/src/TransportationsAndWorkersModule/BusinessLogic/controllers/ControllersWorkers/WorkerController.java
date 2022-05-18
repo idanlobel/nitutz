@@ -2,7 +2,6 @@ package src.TransportationsAndWorkersModule.BusinessLogic.controllers.Controller
 
 
 
-import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.WorkerDTO;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.BankAccount;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.EmploymentConditions;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.Worker;
@@ -13,7 +12,6 @@ import src.TransportationsAndWorkersModule.Dal.Workers.WorkerDAO;
 import src.TransportationsAndWorkersModule.Dal.Workers.WorkerScheduleDAO;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -193,10 +191,10 @@ public class WorkerController {
         }
     }
 
-    public boolean addLicnese(int callerID,int ID, String name) throws Exception{
+    public boolean addLicense(int callerID, int ID, String name) throws Exception{
         try {
             if (!isHR(callerID)) throw new Exception("ONLY HR CAN ADD LICENSE");
-            if (!workers.get(ID).getWorkerJobs().contains("driver"))throw new Exception("worker isnt a driver");
+            if (!workers.get(ID).getWorkerJobs().contains("driver"))throw new Exception("worker isn't a driver");
             licenseDAO.create(ID,name);
             return true;
         }catch (Exception e){

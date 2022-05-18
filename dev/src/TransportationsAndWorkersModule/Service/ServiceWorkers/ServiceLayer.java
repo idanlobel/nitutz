@@ -298,7 +298,7 @@ public class ServiceLayer {
     public Response<Boolean> addLicenseToWorker(int callerID, int workerID, String license){
         Response<Boolean> response;
         try {
-            response = Response.FromValue(workerController.addLicnese(callerID,workerID,license));
+            response = Response.FromValue(workerController.addLicense(callerID,workerID,license));
         }
         catch(Exception e){
             response = Response.FromError(e.getMessage());

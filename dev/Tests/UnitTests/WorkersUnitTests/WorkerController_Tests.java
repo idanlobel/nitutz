@@ -8,6 +8,7 @@ import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers
 import src.TransportationsAndWorkersModule.BusinessLogic.controllers.ControllersWorkers.WorkerController;
 import src.TransportationsAndWorkersModule.Dal.DatabaseManager;
 import src.TransportationsAndWorkersModule.Dal.Workers.WorkerDAO;
+import sun.awt.windows.WPrinterJob;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -54,7 +55,7 @@ public class WorkerController_Tests {
                 System.out.println(e2.getMessage());
             }
         } catch (Exception e) {
-            System.out.println("remove the workers from the database and try again.");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -103,8 +104,8 @@ public class WorkerController_Tests {
     @Test
     void addJob_Success(){
         try {
-            workerController.removeJob("CLEANER",3);
             assertEquals(true, workerController.addJob("CLEANER", 3));
+            workerController.removeJob("CLEANER", 3);
         }
         catch(Exception e) {
             System.out.println(e.getMessage());
@@ -114,12 +115,18 @@ public class WorkerController_Tests {
     @Test
     void addJob_Failure(){
         try {
-            workerController.removeJob("cashier",3);
             assertEquals(true, workerController.addJob("cashier", 3));
             assertEquals(false, workerController.addJob("cashier", 3));
+            assertEquals(false, workerController.addJob("cashier", 5));
         }
         catch(Exception e) {
             assertEquals("job already exists",e.getMessage());
+            try {
+                workerController.removeJob("cashier", 3);
+            }
+            catch(Exception e2){
+                System.out.println(e2.getMessage());
+            }
         }
     }
 
@@ -135,7 +142,7 @@ public class WorkerController_Tests {
             workerController.deleteWorker(5,3);
         }
         catch(Exception e){
-            assertEquals("", e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -154,8 +161,11 @@ public class WorkerController_Tests {
     @Test
     void addJobForAWorker_Success(){
         try {
+            workerController.addJob("cashier", 3);
             assertEquals(true, workerController.addJobForAWorker(3, "cashier", 3));
-            assertEquals(true,workerController.removeJobFromAWorker(3, "cashier", 3));
+            workerController.removeJobFromAWorker(3, "cashier", 3);
+            workerController.removeJob("cashier", 3);
+
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -170,37 +180,21 @@ public class WorkerController_Tests {
         catch(Exception e){
             assertEquals("worker doesn't exist", e.getMessage());
         }
-        try{
-            assertEquals(true,workerController.addWorker("",15,"","",1,1,1,3,""));
-            assertEquals(false, workerController.addJobForAWorker(15, "driver", 3));
-        }
-        catch(Exception e2){
-            assertEquals("This job is problematic", e2.getMessage());
-            try{
-                assertEquals(false, workerController.addJobForAWorker(15, "pizza maker", 3));
-            }
-            catch(Exception e3){
-                assertEquals("This job is problematic", e3.getMessage());
-                try {
-                    assertEquals(true, workerController.deleteWorker(15,3));
-                }
-                catch (Exception e){
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
-
     }
 
     //#6:
     @Test
     void removeJobFromAWorker_Success(){
         try {
-            workerController.addJobForAWorker(15, "driver", 3);
-            assertEquals(true, workerController.removeJobFromAWorker(15, "driver", 3));
+            workerController.addWorker("",5,"bbb","bb",1,1,1,3,"North");
+            workerController.addJob("cashier", 3);
+            workerController.addJobForAWorker(5, "cashier", 3);
+            assertEquals(true, workerController.removeJobFromAWorker(5, "cashier", 3));
+            workerController.deleteWorker(5, 3);
+            workerController.removeJob("cashier", 3);
         }
         catch(Exception e){
-            System.out.println(e.getMessage());//doesnt really work becasue it prints a message
+            System.out.println(e.getMessage());
         }
     }
 
@@ -212,13 +206,105 @@ public class WorkerController_Tests {
         catch(Exception e){
             assertEquals("worker doesn't exist", e.getMessage());
             try{
-                assertEquals(false, workerController.removeJobFromAWorker(15, "cashier", 3));
+                assertEquals(false, workerController.removeJobFromAWorker(3, "cashier", 3));
             }
             catch(Exception e2){
                 assertEquals("job doesn't exist", e2.getMessage());
             }
         }
     }
+
+    //#7:
+    @Test
+    void Login_Success() {
+        try {
+            assertEquals(true, workerController.Login(3,"123"));
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
+    void Login_Failure() {
+        try {
+            workerController.Login(5,"123");
+        }
+        catch (Exception e) {
+            assertEquals("worker doesn't exist", e.getMessage());
+        }
+    }
+
+    //#8:
+    @Test
+    void addLicense_Success() {
+        try {
+            workerController.addWorker("",5,"bbb","bb",1,1,1,3,"North");
+            workerController.addJob("driver", 3);
+            workerController.addJobForAWorker(5, "driver", 3);
+            assertEquals(true, workerController.addLicense(3,5, "A"));
+            workerController.removeJobFromAWorker(5, "driver", 3);
+            workerController.removeLicense(3, 5, "A");
+            workerController.deleteWorker(5, 3);
+            workerController.removeJob("driver", 3);
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
+    void addLicense_Failure() {
+        try {
+            workerController.addWorker("",5,"bbb","bb",1,1,1,3,"North");
+            workerController.addLicense(3,5, "A");
+        }
+        catch (Exception e) {
+            assertEquals("worker isn't a driver", e.getMessage());
+            try {
+                workerController.deleteWorker(5, 3);
+            }
+            catch(Exception e2){
+                System.out.println(e2.getMessage());
+            }
+        }
+    }
+
+    //#9:
+    @Test
+    void removeLicense_Success() {
+        try {
+            workerController.addWorker("",5,"bbb","bb",1,1,1,3,"North");
+            workerController.addJob("driver", 3);
+            workerController.addJobForAWorker(5, "driver", 3);
+            workerController.addLicense(3,5, "A");
+            assertEquals(true, workerController.removeLicense(3,5, "A"));
+            workerController.removeJobFromAWorker(5, "driver", 3);
+            workerController.deleteWorker(5, 3);
+            workerController.removeJob("driver", 3);
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
+    void removeLicense_Failure() {
+        try {
+            workerController.addWorker("",5,"bbb","bb",1,1,1,3,"North");
+            workerController.removeLicense(3,5, "A");
+        }
+        catch (Exception e) {
+            assertEquals("worker isnt a driver", e.getMessage());
+            try {
+                workerController.deleteWorker(5, 3);
+            }
+            catch(Exception e2){
+                System.out.println(e2.getMessage());
+            }
+        }
+    }
+
 
     @AfterEach
     void tearDown() { //TODO:: doesn't work properly (because it's a singleton) - NEED TO FIX THIS!
