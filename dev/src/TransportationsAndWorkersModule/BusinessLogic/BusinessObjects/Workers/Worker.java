@@ -93,4 +93,8 @@ public class Worker {
     public void addJob(String job){
         workerJobs.add(job);
     }
+
+    public void removeJob(String job) {
+        workerJobs.remove(job);
+    }
 }

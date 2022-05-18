@@ -243,8 +243,8 @@ public class WorkerController_Tests {
             workerController.addJob("driver", 3);
             workerController.addJobForAWorker(5, "driver", 3);
             assertEquals(true, workerController.addLicense(3,5, "A"));
-            workerController.removeJobFromAWorker(5, "driver", 3);
             workerController.removeLicense(3, 5, "A");
+            workerController.removeJobFromAWorker(5, "driver", 3);
             workerController.deleteWorker(5, 3);
             workerController.removeJob("driver", 3);
         }

@@ -156,7 +156,7 @@ public class WorkerController {
             Worker worker = getWorker(workerID);
             if (workers.readHR().getId()!=callerID)throw new Exception("only HR can add a job to a worker");
             if(jobsDAO.exists(job.toLowerCase()) && !worker.getWorkerJobs().contains(job.toLowerCase())){
-                worker.getWorkerJobs().add(job.toLowerCase());
+                worker.addJob(job.toLowerCase());
                 workers.update(worker);
                 return true;
             }
@@ -171,7 +171,7 @@ public class WorkerController {
         Worker worker = getWorker(workerID);
         try {
             if (worker.getWorkerJobs().contains(job.toLowerCase())){
-                worker.getWorkerJobs().remove(job.toLowerCase());
+                worker.removeJob(job.toLowerCase());
                 workers.update(worker);
                 return true;
             }
