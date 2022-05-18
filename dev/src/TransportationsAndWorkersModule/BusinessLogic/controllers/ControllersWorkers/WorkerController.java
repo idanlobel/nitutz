@@ -58,6 +58,7 @@ public class WorkerController {
                              int bankID, int branch, int salary, int callerID, String site) throws Exception {
         try {
             if (workers.readHR().getId()!=callerID)throw new Exception("only HR can add a new worker to the system");
+            if (workers.exists(id))throw new Exception("worker already exists");
             workers.create(new Worker(name, id, password, email_address, new BankAccount(bankID, branch),
                             new EmploymentConditions(salary, new Date()), new LinkedList<>(),site));
             workerScheduleDAO.create(new Worker_Schedule(id));
@@ -70,6 +71,7 @@ public class WorkerController {
 
     public boolean deleteWorker(int workerID, int callerID) throws Exception{
         if(workers.readHR().getId() == workerID) throw new Exception("Can't remove HR!");
+        if (workers.readHR().getId()!=callerID) throw new Exception("only HR can remove workers");
         try {
             workers.get(workerID);
             workers.delete(workerID);
@@ -107,6 +109,7 @@ public class WorkerController {
     public boolean addJob(String job, int callerID) throws Exception {
         try {
             if (workers.readHR().getId()!=callerID)throw new Exception("only HR can add jobs");
+            if (jobsDAO.exists(job)) throw new Exception("job already exists");
             jobsDAO.add(job);
             return true;
         }catch (Exception e){

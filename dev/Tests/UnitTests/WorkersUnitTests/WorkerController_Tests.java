@@ -2,11 +2,18 @@ package Tests.UnitTests.WorkersUnitTests;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
+import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.BankAccount;
+import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.EmploymentConditions;
+import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.Worker;
 import src.TransportationsAndWorkersModule.BusinessLogic.controllers.ControllersWorkers.WorkerController;
 import src.TransportationsAndWorkersModule.Dal.DatabaseManager;
+import src.TransportationsAndWorkersModule.Dal.Workers.WorkerDAO;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkerController_Tests {
     WorkerController workerController;
@@ -16,12 +23,18 @@ public class WorkerController_Tests {
     void setUp() {
         workerController = WorkerController.getInstance();
         try {
+            DatabaseManager.ChangeURL("jdbc:sqlite:superLeeTests.db");
             databaseManager = databaseManager.getInstance();
+            WorkerDAO workerDAO = new WorkerDAO();
+            List<String> jobs = new LinkedList<>();
+            jobs.add("HR");
+            Worker HR = new Worker("ori",3,"123","gev",new BankAccount(1,1),new EmploymentConditions(1,new Date()),jobs,"human resources");
+            workerDAO.create(HR);
         }
         catch(Exception e){
             //shouldn't happen...
         }
-        databaseManager.ChangeURL("jdbc:sqlite:superLeeTests.db");
+
     }
 
 
@@ -72,7 +85,7 @@ public class WorkerController_Tests {
             assertEquals(true, workerController.deleteWorker(6, 3));
         }
         catch(Exception e){
-            System.out.println("shouldn't have failed........");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -90,6 +103,7 @@ public class WorkerController_Tests {
     @Test
     void addJob_Success(){
         try {
+            workerController.removeJob("CLEANER",3);
             assertEquals(true, workerController.addJob("CLEANER", 3));
         }
         catch(Exception e) {
@@ -100,10 +114,12 @@ public class WorkerController_Tests {
     @Test
     void addJob_Failure(){
         try {
+            workerController.removeJob("cashier",3);
+            assertEquals(true, workerController.addJob("cashier", 3));
             assertEquals(false, workerController.addJob("cashier", 3));
         }
         catch(Exception e) {
-            
+            assertEquals("job already exists",e.getMessage());
         }
     }
 
@@ -111,13 +127,15 @@ public class WorkerController_Tests {
     @Test
     void edit_Worker_Success(){
         try {
+            assertEquals(true,workerController.addWorker("",5,"","",1,1,1,3,""));
             assertEquals(true, workerController.editWorker("", "", "yossi9700@gmail.com",
                     0, 0, 500, 5, 3));
             assertEquals(true, workerController.editWorker("", "", "Ori77@gmail.com",
                     0, 0, 100000, 3, 3));
+            workerController.deleteWorker(5,3);
         }
         catch(Exception e){
-            System.out.println(e.getMessage());
+            assertEquals("", e.getMessage());
         }
     }
 
@@ -137,7 +155,7 @@ public class WorkerController_Tests {
     void addJobForAWorker_Success(){
         try {
             assertEquals(true, workerController.addJobForAWorker(3, "cashier", 3));
-            workerController.removeJobFromAWorker(3, "cashier", 3);
+            assertEquals(true,workerController.removeJobFromAWorker(3, "cashier", 3));
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -151,31 +169,38 @@ public class WorkerController_Tests {
         }
         catch(Exception e){
             assertEquals("worker doesn't exist", e.getMessage());
-            try{
-                assertEquals(false, workerController.addJobForAWorker(15, "driver", 3));
-            }
-            catch(Exception e2){
-                assertEquals("This job is problematic", e2.getMessage());
-            }
-
+        }
+        try{
+            assertEquals(true,workerController.addWorker("",15,"","",1,1,1,3,""));
+            assertEquals(false, workerController.addJobForAWorker(15, "driver", 3));
+        }
+        catch(Exception e2){
+            assertEquals("This job is problematic", e2.getMessage());
             try{
                 assertEquals(false, workerController.addJobForAWorker(15, "pizza maker", 3));
             }
             catch(Exception e3){
                 assertEquals("This job is problematic", e3.getMessage());
+                try {
+                    assertEquals(true, workerController.deleteWorker(15,3));
+                }
+                catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
             }
         }
+
     }
 
     //#6:
     @Test
     void removeJobFromAWorker_Success(){
         try {
-            assertEquals(true, workerController.removeJobFromAWorker(15, "driver", 3));
             workerController.addJobForAWorker(15, "driver", 3);
+            assertEquals(true, workerController.removeJobFromAWorker(15, "driver", 3));
         }
         catch(Exception e){
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage());//doesnt really work becasue it prints a message
         }
     }
 
@@ -190,7 +215,7 @@ public class WorkerController_Tests {
                 assertEquals(false, workerController.removeJobFromAWorker(15, "cashier", 3));
             }
             catch(Exception e2){
-                assertEquals("", e2.getMessage());
+                assertEquals("job doesn't exist", e2.getMessage());
             }
         }
     }

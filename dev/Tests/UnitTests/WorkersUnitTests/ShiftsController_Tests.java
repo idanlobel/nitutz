@@ -22,12 +22,13 @@ public class ShiftsController_Tests {
         shiftsController = ShiftsController.getInstance();
         weekly_schedule = new Weekly_Schedule(1, "North");
         try {
+            DatabaseManager.ChangeURL("jdbc:sqlite:superLeeTests.db");
             databaseManager = databaseManager.getInstance();
         }
         catch(Exception e){
             //shouldn't happen...
         }
-        databaseManager.ChangeURL("jdbc:sqlite:superLeeTests.db");
+
     }
 
     //#1:

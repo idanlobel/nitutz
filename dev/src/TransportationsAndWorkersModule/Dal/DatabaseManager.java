@@ -5,7 +5,7 @@ import java.sql.*;
 public class DatabaseManager {
 
     private static DatabaseManager instance = null;
-    String url = "jdbc:sqlite:superLee.db";
+    private static  String url = "jdbc:sqlite:superLee.db";
     private void createWorkersModuleTables() throws Exception {
         Connection connection = null;
         try {
@@ -101,7 +101,7 @@ public class DatabaseManager {
         }
     }
 
-    public void ChangeURL(String url){//this is for testing convenience so we can create another db for testings
-        this.url=url;
+    public static void ChangeURL(String url2){//this is for testing convenience so we can create another db for testings
+        url=url2;
     }
 }

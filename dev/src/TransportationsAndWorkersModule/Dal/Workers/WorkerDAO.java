@@ -229,7 +229,7 @@ public class WorkerDAO {
         try {
             conn = DatabaseManager.getInstance().connect();
             Statement statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery("select * from workers where id = "+id);
+            ResultSet rs = statement.executeQuery("select * from workers where id = '"+id+"'");
             if ( rs.next() ) return true;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
