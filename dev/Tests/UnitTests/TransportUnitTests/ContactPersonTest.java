@@ -1,4 +1,4 @@
-package src.TransportationsAndWorkersModule.BusinessLogic.test;
+package Tests.UnitTests.TransportUnitTests;
 
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Transportation.ContactPerson;
 
