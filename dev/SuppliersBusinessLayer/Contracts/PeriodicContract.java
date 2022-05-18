@@ -21,4 +21,9 @@ public class PeriodicContract extends Contract {
     public void setDeliveryDays(boolean[] deliveryDays) {
         this.deliveryDays = deliveryDays;
     }
+
+    @Override
+    public boolean isPeriodic(){
+        return true;
+    }
 }

@@ -58,10 +58,11 @@ public class Contract {
     public boolean ContainsProduct(int id){
         return productIds.contains(id);
     }
-    public void addProduct(int catalogNumber, int supplierId,int price){
+    public void addProduct(int catalogNumber, int supplierId,int price, List<int[]> discounts){
         if(ContainsProduct(catalogNumber))
             throw new IllegalArgumentException("product numbered "+catalogNumber+" is already sold in contract");
         products.put(catalogNumber,new SupplierProduct(supplierId,price,catalogNumber));
+        this.discounts.put(catalogNumber,discounts);
     }
     public void ChangeProductPrice(int catalogNumber,int price){
         if(!ContainsProduct(catalogNumber))
@@ -90,8 +91,8 @@ public class Contract {
         if(!replaced)
             discounts.get(catalogNumber).add(new int[] {amount,discount});
     }
-    public void removeDiscount(int catalogNumber,int amount, int discount) {
-        discounts.get(catalogNumber).removeIf(pair -> pair[0] == amount & pair[1] == discount);
+    public void removeDiscount(int catalogNumber,int amount) {
+        discounts.get(catalogNumber).removeIf(pair -> pair[0] == amount);
     }
     public void putGeneralDiscount(int amount, int discount){
         boolean replaced=false;
@@ -108,7 +109,10 @@ public class Contract {
         if(!replaced)
             generalDiscounts.add(new int[] {amount,discount});
     }
-    public void removeGeneralDiscount(int amount, int discount) {
-        generalDiscounts.removeIf(pair -> pair[0] == amount & pair[1] == discount);
+    public void removeGeneralDiscount(int amount) {
+        generalDiscounts.removeIf(pair -> pair[0] == amount);
+    }
+    public boolean isPeriodic(){
+        return false;
     }
 }

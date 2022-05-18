@@ -64,7 +64,7 @@ public class SupplyModuleService {
             return new IsError(e.getMessage());
         }
     }
-    public Response RemoveContractPerson(int companyNumber,String name){
+    public Response removeContractPerson(int companyNumber,String name){
         try {
             controller.RemoveContactPerson(companyNumber,name);
             return new IsValue<>(null,"Contact added");
@@ -73,20 +73,31 @@ public class SupplyModuleService {
             return new IsError(e.getMessage());
         }
     }
-    public void ChangeContractPersonEmail(int companyNumber,String name,String newEmail){
+    public Response changeContractPersonEmail(int companyNumber,String name,String newEmail){
         try{
             controller.ChangeContactPersonMail(companyNumber,name,newEmail);
+            return new IsValue<>(null,"Contact added");
         }
         catch (Exception e){
-            System.out.println(e.getMessage());
+            return new IsError(e.getMessage());
         }
     }
-    public void ChangeContractPersonNum(int companyNumber,String name,String newNum){
+    public Response changeContractPersonNum(int companyNumber,String name,String newNum){
         try{
                 controller.ChangeContactPersonPhone(companyNumber,name,newNum);
+            return new IsValue<>(null,"Contact added");
         }
         catch (Exception e){
-            System.out.println(e.getMessage());
+            return new IsError(e.getMessage());
+        }
+    }
+    public Response changeSupplierOrderingCP(int companyNumber,String name){
+        try{
+            controller.ChangeContractCP(companyNumber,name);
+            return new IsValue<>(null,"Contact added");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
         }
     }
     public Response<Contract> SignShortageContract(int companyNumber, List<int[]> idPairsList, HashMap<Integer,List<int[]>> discountsList,List<int[]> generalDiscountsList){
@@ -105,15 +116,6 @@ public class SupplyModuleService {
             return new IsError(e.getMessage());
         }
     }
-    public Response ChangeDeliveryDays(int companyNumber,boolean[] days){
-        try {
-            return null;
-        }
-        catch (Exception e){
-            return new IsError(e.getMessage());
-        }
-    }
-
     public Response<Contract> getContract(int companyNum) {
 
         try {
@@ -122,11 +124,75 @@ public class SupplyModuleService {
             return new IsError(e.getMessage());
         }
     }
-    public Response<List<Contract>> getContractList() {
-
+    public Response addProductToContract(int companyNumber,int catalogNumber,int supplierId,int price, List<int[]> discounts){
         try {
-            return new IsValue<List<Contract>>(controller.getContractList(), "contract fetch successful");
-        } catch (Exception e) {
+            controller.addProduct(companyNumber,catalogNumber,supplierId,price,discounts);
+            return new IsValue(null,"Ordering successful");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
+    public Response removeProductToContract(int companyNumber,int catalogNumber){
+        try {
+            controller.removeProduct(companyNumber,catalogNumber);
+            return new IsValue(null,"Ordering successful");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
+    public Response changeProductPrice(int companyNumber,int catalogNumber,int price){
+        try {
+            controller.changeProductPrice(companyNumber,catalogNumber,price);
+            return new IsValue(null,"Ordering successful");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
+    public Response putDiscount(int companyNumber,int catalogNumber,int amount, int discount){
+        try {
+            controller.putDiscount(companyNumber,catalogNumber,amount,discount);
+            return new IsValue(null,"Ordering successful");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
+    public Response putGeneralDiscount(int companyNumber,int amount, int discount){
+        try {
+            controller.putGeneralDiscount(companyNumber,amount,discount);
+            return new IsValue(null,"Ordering successful");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
+    public Response removeDiscount(int companyNumber,int catalogNumber,int amount){
+        try {
+            controller.removeDiscount(companyNumber,catalogNumber,amount);
+            return new IsValue(null,"Ordering successful");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
+    public Response removeGeneralDiscount(int companyNumber,int amount){
+        try {
+            controller.removeGeneralDiscount(companyNumber,amount);
+            return new IsValue(null,"Ordering successful");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
+    public Response putDeliveryDays(int companyNumber,boolean[] days){
+        try {
+            controller.changeDeliveryDays(companyNumber,days);
+            return new IsValue(null,"Ordering successful");
+        }
+        catch (Exception e){
             return new IsError(e.getMessage());
         }
     }

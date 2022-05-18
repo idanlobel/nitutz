@@ -15,31 +15,26 @@ import java.util.Scanner;
 
 public class Main { //note: this code is assumed to be made as a placeholder till we have a gui, a such is written quick and dirty
 
-    public static void main(String[] args) {
-        SupplyModuleService serviceObj=new SupplyModuleService();
+    public  void RunSuppliers(SupplyModuleService serviceObj) {
+     //   SupplyModuleService serviceObj=new SupplyModuleService();
         Scanner scanner=new Scanner(System.in);
         int choice=-1;
         while(choice!=5) {
-            String line = "choose action (type the numeration to execute):\n" +
-                    "1: Manage Suppliers\n" +
-                    "2: Manage contact people\n" +
-                    "3: Manage Contracts\n" +
-                    "4: View Orders\n" +
-                    "5: Back to main menu\n" +
-                    "note: at any point input -1 to cancel operation and go back here";
+            String line = """
+                    choose action (type the numeration to execute):
+                    1: Manage Suppliers
+                    2: Manage contact people
+                    3: Manage Contracts
+                    4: View Orders
+                    5: Back to main menu
+                    note: at any point input -1 to cancel operation and go back here
+                    """;
             try {
-                choice = requestNumberInput(line, scanner, 11, 1);
-                if (choice == 1) addSupplierChain(serviceObj, scanner);
-                if (choice == 2) getSupplierChain(serviceObj, scanner);
-
-                if (choice == 3) getSupplierListChain(serviceObj, scanner);
-                if (choice == 4) addContactChain(serviceObj, scanner);
-                if (choice == 5) signContractChain(serviceObj, scanner);
-                if (choice == 6) getContractChain(serviceObj, scanner);
-                if (choice == 7) getContractListChain(serviceObj, scanner);
-            //    if (choice == 8) commitOrderChain(serviceObj, scanner);
-                if (choice == 9) getOrderChain(serviceObj, scanner);
-                if (choice == 10) getSupplierOrderListChain(serviceObj, scanner);
+                choice = requestNumberInput(line, scanner, 5, 1);
+                if (choice == 1) ManageSuppliersChain(serviceObj, scanner);
+                if (choice == 2) ManageContactPeople(serviceObj, scanner);
+                if (choice == 3) ManageContractsChain(serviceObj, scanner);
+                if (choice == 4) ViewOrders(serviceObj, scanner);
             }
             catch (Exception e){
                 System.out.println(e.getMessage());
@@ -55,8 +50,8 @@ public class Main { //note: this code is assumed to be made as a placeholder til
             System.out.print(string);
             try {
                 choice = scanner.nextInt();
-                if (max!=-1 && choice > max | choice < min)
-                    throw new RuntimeException("ignore");
+                if ((max!=-1 && choice > max) | choice < min)
+                    throw new IllegalArgumentException("ignore");
                 validChoice = true;
             } catch (IllegalArgumentException e) {
                 if(choice==-1)
@@ -70,12 +65,14 @@ public class Main { //note: this code is assumed to be made as a placeholder til
         return choice;
     }
     public static void ManageSuppliersChain(SupplyModuleService serviceObj,Scanner scanner){
-        String line="1: Add a supplier\n" +
-                "2: Change supplier address\n" +
-                "3: Change supplier bank number\n" +
-                "4: View a suppliers\n" +
-                "5: View all suppliers\n" +
-                "6: <-- Back\n";
+        String line= """
+                1: Add a supplier
+                2: Change supplier address
+                3: Change supplier bank number
+                4: View a suppliers
+                5: View all suppliers
+                6: <-- Back
+                """;
         int choice=requestNumberInput(line,scanner,6,1);
         if(choice==1) addSupplierChain(serviceObj, scanner);
         if(choice==2) setSupplierAddress(serviceObj,scanner);
@@ -84,36 +81,128 @@ public class Main { //note: this code is assumed to be made as a placeholder til
         if(choice==5) getSupplierListChain(serviceObj,scanner);
     }
     public static void ManageContractsChain(SupplyModuleService serviceObj,Scanner scanner){
-        String line="1: Sign a contract\n" +
-                "2: Add an item\n" +
-                "3: Remove an item\n" +
-                "4: Put a discount (add or replace)\n" +
-                "5: Remove a discount\n" +
-                "6: Change Delivery Days (only applicble to periodic contracts)\n" +
-                "7: Remove a contract\n" +
-                "6: <-- Back\n";
+        String line= """
+                1: Sign a contract
+                2: Add an item
+                3: Remove an item
+                4: Change product price
+                5: Put a discount (add or replace)
+                6: Remove a discount
+                7: Change Delivery Days (only applicable to periodic contracts)
+                8: <-- Back
+                """;
+
+        int choice=requestNumberInput(line,scanner,8,1);
+        if(choice==1) signContractChain(serviceObj, scanner);
+        if(choice==2) addProductToContractChaim(serviceObj,scanner);
+        if(choice==3) removeProductToContractChain(serviceObj,scanner);
+        if(choice==4) changeProductPriceChain(serviceObj,scanner);
+        if(choice==5) putDiscountChain(serviceObj,scanner);
+        if(choice==6) removeDiscount(serviceObj,scanner);
+        if(choice==7) changeDeliveryDays(serviceObj,scanner);
+    }
+    public static void ManageContactPeople(SupplyModuleService serviceObj,Scanner scanner){
+        String line= """
+                ----Managing Supplier's Contact People----note: a supplier may not have two contact people with the same name,mix in their family names to avoid duplicates.
+                1: Add a contract person
+                2: Remove a contract person
+                3: Change contact phone number
+                4: Change contact Email
+                5: Change the designated order contact person
+                6: <-- Back
+                """;
+        int choice=requestNumberInput(line,scanner,6,1);
+        if(choice==1) addContactChain(serviceObj, scanner);
+        if(choice==2) removeContactChain(serviceObj,scanner);
+        if(choice==3) changeContactPhoneNum(serviceObj,scanner);
+        if(choice==4) changeContactEmailChain(serviceObj,scanner);
+        if(choice==5) changeSupplierOrderingCP(serviceObj,scanner);
+    }
+    public static void ViewOrders(SupplyModuleService serviceObj,Scanner scanner){
+        String line= """
+                ----Viewing Orders----
+                1: View an order by id
+                2: View all suppliers orders
+                3: <-- Back
+                """;
+        int choice=requestNumberInput(line,scanner,3,1);
+        if(choice==1) getOrderChain(serviceObj, scanner);
+        if(choice==2) getSupplierOrderListChain(serviceObj,scanner);
 
 
     }
-    public static void ManageContactPeople(SupplyModuleService serviceObj,Scanner scanner){
-        String line="----Managing Supplier's Contact People----" +
-                "note: a supplier may not have two contact people with the same name," +
-                "mix in their family names to avoid duplicates." +
-                "1: Add a contract person\n" +
-                "2: Remove a contract person\n" +
-                "3: Change contact phone number\n" +
-                "4: Change contact Email\n" +
-                "5: Change the designated order contact person\n" +
-                "6: <-- Back\n";
+    private static void addProductToContractChaim(SupplyModuleService serviceObj, Scanner scanner) {
+        int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,0);
+        int catalogNumber=requestNumberInput("Please state the product catalog number: ",scanner,-1,0);
+        int price=requestNumberInput("Please state the product price: ",scanner,-1,0);
+        int supplierId=requestNumberInput("Please state the product id in the supplier's stock: ",scanner,-1,0);
+        int disAmount=requestNumberInput("Please state the amount of product discounts: ",scanner,-1,0);
+        ArrayList<int[]> discounts=new ArrayList<>();
+        for(int i=0;i<disAmount;i++){
+            int amount=requestNumberInput("Please state the minimal amount for a discount: ",scanner,-1,0);
+            int discount=requestNumberInput("Please state the discount: ",scanner,99,1);
+            discounts.add(new int[]{amount,discount});
+        }
+        handleResponse(serviceObj.addProductToContract(companyNumber,catalogNumber,supplierId,price,discounts));
+    }
+    private static void removeProductToContractChain(SupplyModuleService serviceObj, Scanner scanner) {
+        int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,0);
+        int catalogNumber=requestNumberInput("Please state the product catalog number: ",scanner,-1,0);
+        handleResponse(serviceObj.removeProductToContract(companyNumber,catalogNumber));
+    }
+    private static void changeProductPriceChain(SupplyModuleService serviceObj, Scanner scanner){
+        int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,0);
+        int catalogNumber=requestNumberInput("Please state the product catalog number: ",scanner,-1,0);
+        int price=requestNumberInput("Please state the new product price: ",scanner,-1,0);
+        handleResponse(serviceObj.changeProductPrice(companyNumber,catalogNumber,price));
+    }
+    private static void putDiscountChain(SupplyModuleService serviceObj, Scanner scanner){
+        int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,0);
+        int catalogNumber=requestNumberInput("Please state the product catalog number (0 for general order discount): ",scanner,-1,0);
+        int amount=requestNumberInput("Please state the minimal amount for a discount: ",scanner,-1,0);
+        int discount=requestNumberInput("Please state the discount: ",scanner,99,1);
+        if(discount==0)
+            handleResponse(serviceObj.putGeneralDiscount(companyNumber,amount,discount));
+        else handleResponse(serviceObj.putDiscount(companyNumber,catalogNumber,amount,discount));
+    }
+    private static void removeDiscount(SupplyModuleService serviceObj, Scanner scanner){
+        int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,0);
+        int catalogNumber=requestNumberInput("Please state the product catalog number (0 for general order discount): ",scanner,-1,0);
+        int amount=requestNumberInput("Please state the minimal amount for a discount: ",scanner,-1,0);
+        if(catalogNumber==0)
+            handleResponse(serviceObj.removeGeneralDiscount(companyNumber,amount));
+        else handleResponse(serviceObj.removeDiscount(companyNumber,catalogNumber,amount));
+    }
+    private static void changeDeliveryDays(SupplyModuleService serviceObj, Scanner scanner) {
+        int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,0);
+        boolean done=false;
+        while (!done) {
+            try {
 
-
+                System.out.println("Enter delivery days(eg. 1,2,3 for Sun,Mon,Tue): ");
+                String days = scanner.next();
+                boolean[] par = new boolean[7];
+                String[] split = days.split(",");
+                for (String day : split)
+                    par[Integer.parseInt(day) - 1] = true;
+                handleResponse(serviceObj.putDeliveryDays(companyNumber, par));
+                done = true;
+            } catch (Exception e) {
+                System.out.print("Invalid syntax");
+            }
+        }
     }
     public static void addSupplierChain(SupplyModuleService service,Scanner scanner){
         int companyNumber=requestNumberInput("Company number: ",scanner,-1,0);
         System.out.print("Company name: ");
         String companyName=scanner.next();
+        checkCancel(companyName);
+        System.out.print("Address: ");
+        String address=scanner.next();
+        checkCancel(address);
         System.out.print("Bank number: ");
         String bankNum=scanner.next();
+        checkCancel(bankNum);
         ArrayList<ContactPerson> contactPeople=new ArrayList<>();
         int amount=requestNumberInput("Please state the amount of contact people (at least one): ",scanner,-1,1);
         for(int i=1;i<=amount;i++){
@@ -126,13 +215,19 @@ public class Main { //note: this code is assumed to be made as a placeholder til
             String Email=scanner.next();
             contactPeople.add(new ContactPerson(cName,Email,cellNum));
         }
-    //    handleResponse(service.AddSupplier(companyNumber,companyName,bankNum,contactPeople));
+        System.out.printf("please state the name of the contact person to handle orders: ");
+        String name=scanner.next();
+        checkCancel(name);
+        handleResponse(service.AddSupplier(companyNumber,companyName,bankNum,address,contactPeople,name));
+    }
+    public static void checkCancel(String str){
+        if(str.equals("-1")) throw new RuntimeException("Operation Canceled.");
     }
     public static void setSupplierBankNumber(SupplyModuleService service,Scanner scanner) {
         int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,1);
         System.out.println("Please state the new bank number (make sure no one is looking):\n");
         String in=scanner.nextLine();
-        if(in.equals("-1")) throw new RuntimeException("Operation Canceled.");
+        checkCancel(in);
         handleResponse(service.ChangeSupplierBankNumber(companyNumber,in));
     }
     public static void setSupplierAddress(SupplyModuleService service,Scanner scanner) {
@@ -165,6 +260,34 @@ public class Main { //note: this code is assumed to be made as a placeholder til
         String Email=scanner.next();
         handleResponse(service.AddContactPerson(companyNumber,cName,Email,cellNum));
     }
+    public static void removeContactChain(SupplyModuleService service,Scanner scanner){
+        int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,1);
+        System.out.print("Contact name: ");
+        String cName=scanner.next();
+        handleResponse(service.removeContractPerson(companyNumber,cName));
+    }
+    public static void changeContactEmailChain(SupplyModuleService service,Scanner scanner){
+        int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,1);
+        System.out.print("Contact name: ");
+        String cName=scanner.next();
+        System.out.print("Contact Email: ");
+        String Email=scanner.next();
+        handleResponse(service.changeContractPersonEmail(companyNumber,cName,Email));
+    }
+    public static void changeContactPhoneNum(SupplyModuleService service,Scanner scanner){
+        int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,1);
+        System.out.print("Contact name: ");
+        String cName=scanner.next();
+        System.out.print("Contact cell number: ");
+        String cellNum=scanner.next();
+        handleResponse(service.changeContractPersonNum(companyNumber,cName,cellNum));
+    }
+    public static void changeSupplierOrderingCP(SupplyModuleService service,Scanner scanner){
+        int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,1);
+        System.out.print("Contact name: ");
+        String cName=scanner.next();
+        handleResponse(service.changeSupplierOrderingCP(companyNumber,cName));
+    }
     public static void signContractChain(SupplyModuleService service,Scanner scanner){
         int companyNumber=requestNumberInput("Please state the company number with which the contract is signed with: ",scanner,-1,1);
         int amount=requestNumberInput("Enter item amount: ",scanner,-1,1);
@@ -193,14 +316,22 @@ public class Main { //note: this code is assumed to be made as a placeholder til
             genDisPairs.add(new int[]{num,dis});
         }
         int isPer=requestNumberInput("is the contract for periodic orders or shortage? (0-shortage, 1-periodic)",scanner,1,0);
+        boolean done=false;
         if(isPer==1) {
-            System.out.println("Enter delivery days(eg. 1,2,3 for Sun,Mon,Tue): ");
-            String days = scanner.next();
-            boolean[] par = new boolean[7];
-            String[] split = days.split(",");
-            for (String day : split)
-                par[Integer.parseInt(day) - 1] = true;
-            handleResponse(service.SignPeriodicContract(companyNumber,idPairs,discounts,genDisPairs,par));
+            while(!done)
+            try {
+                System.out.println("Enter delivery days(eg. 1,2,3 for Sun,Mon,Tue): ");
+                String days = scanner.next();
+                boolean[] par = new boolean[7];
+                String[] split = days.split(",");
+                for (String day : split)
+                    par[Integer.parseInt(day) - 1] = true;
+                handleResponse(service.SignPeriodicContract(companyNumber, idPairs, discounts, genDisPairs, par));
+                done=true;
+            }
+            catch (Exception e){
+                System.out.print("Invalid syntax");
+            }
         }
         else {
             handleResponse(service.SignShortageContract(companyNumber,idPairs,discounts,genDisPairs));
@@ -213,12 +344,6 @@ public class Main { //note: this code is assumed to be made as a placeholder til
         if(!response.isError())
             System.out.println(response.getValue().toString());
 
-    }
-    public static void getContractListChain(SupplyModuleService service,Scanner scanner){
-        Response<List<Contract>> response=service.getContractList();
-        handleResponse(response);
-        if(!response.isError())
-            System.out.println(response.getValue().toString());
     }
 //    public static void commitOrderChain(SupplyModuleService service,Scanner scanner){
 //        int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,1);
