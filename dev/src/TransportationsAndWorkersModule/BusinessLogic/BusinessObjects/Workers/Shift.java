@@ -199,7 +199,7 @@ public class Shift {
             if (shift_transactions == null) {
                 shift_transactions = new LinkedList<>();
             }
-            if (((shift_manager != -1 && shift_manager == workerID) || WorkerController.getInstance().isHR(workerID)) &&
+            if ((shift_manager == workerID || WorkerController.getInstance().isHR(workerID)) &&
                     !hasTransaction(transaction.getTransactionID())) {
                 this.shift_transactions.add(transaction);
                 return true;
