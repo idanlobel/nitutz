@@ -27,12 +27,6 @@ public class ShiftsController_Tests {
         shiftsController = ShiftsController.getInstance();
         workerController = WorkerController.getInstance();
         try {
-            shiftsController.createWeeklySchedule(1, 3, "North");
-        }
-        catch(Exception e){
-            //shouldn't happen
-        }
-        try {
             DatabaseManager.ChangeURL("jdbc:sqlite:superLeeTests.db");
             databaseManager = databaseManager.getInstance();
             WorkerDAO workerDAO = new WorkerDAO();
@@ -40,6 +34,7 @@ public class ShiftsController_Tests {
             jobs.add("HR");
             Worker HR = new Worker("ori",3,"123","gev",new BankAccount(1,1),new EmploymentConditions(1,new Date()),jobs,"human resources");
             workerDAO.create(HR);
+            shiftsController.createWeeklySchedule(1, 3, "North");
         }
         catch(Exception e){
             //shouldn't happen...
@@ -86,10 +81,10 @@ public class ShiftsController_Tests {
     @Test
     void createWeeklySchedule_Failure(){
        try {
-           shiftsController.createWeeklySchedule(5000, 3, "North");
+           assertEquals(false,shiftsController.createWeeklySchedule(1, 3, "North"));
        }
        catch(Exception e){
-           assertEquals("batch entry 0: [SQLITE_CONSTRAINT_PRIMARYKEY]  A PRIMARY KEY constraint failed (UNIQUE constraint failed: weeklySchedule.id, weeklySchedule.site)", e.getMessage());
+           assertEquals("week already exists", e.getMessage());
        }
     }
 
@@ -137,10 +132,8 @@ public class ShiftsController_Tests {
         }
     }
 
-
-
     @AfterEach
     void tearDown() { //TODO:: doesn't work properly (because it's a singleton) - NEED TO FIX THIS!
-        //shiftsController = null;
+
     }
 }
