@@ -25,6 +25,11 @@ public class WeeklyScheduleDAO {
         //take from the db and insert to the cache then return
         List<Integer> worker_ids = new LinkedList<>();
         Shift[][] shifts = new Shift[5][2];
+        for (int i =0; i<5; i++){
+            for (int j =0; j<2; j++){
+                shifts[i][j] = new Shift();
+            }
+        }
         Connection conn=null;
         try {
             conn = DatabaseManager.getInstance().connect();
@@ -40,7 +45,6 @@ public class WeeklyScheduleDAO {
                 int day = rs.getInt("shift_day");
                 int worker_id = rs.getInt("worker_id");
                 String job = rs.getString("job");
-                if (shifts[day][shift_type]==null)shifts[day][shift_type] = new Shift();
                 if (!shifts[day][shift_type].getWorkers().contains(worker_id))shifts[day][shift_type].addWorkerToShift(worker_id);
                 if (!job.equals("")){
                     shifts[day][shift_type].assignWorkerToJob(worker_id,job);
@@ -48,6 +52,7 @@ public class WeeklyScheduleDAO {
                 }
                 if (!shifts[day][shift_type].getShiftWorkers().contains(worker_id))shifts[day][shift_type].addWorkerToShift(worker_id);
             }
+
             conn.close();
             conn = DatabaseManager.getInstance().connect();
             Statement statement3 = conn.createStatement();
@@ -58,8 +63,8 @@ public class WeeklyScheduleDAO {
                 int trans_id = rs3.getInt("id");
                 int wid = rs3.getInt("worker_id");
                 String data = rs3.getString("data");
-                if (shifts[day][shift_type] == null) shifts[day][shift_type] = new Shift();
                 if (shifts[day][shift_type].getShift_transactions() == null) shifts[day][shift_type].addTransactionData(new Transaction(trans_id,wid));
+                shifts[day][shift_type].addTransaction(new Transaction(trans_id,wid),wid);
             }
             worker_schedule = new Weekly_Schedule(shifts,id,site);
             if (cacheWeeklySchedules.get(id)==null)cacheWeeklySchedules.put(id,new HashMap<>());

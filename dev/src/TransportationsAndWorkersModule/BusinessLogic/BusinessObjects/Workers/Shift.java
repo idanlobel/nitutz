@@ -176,12 +176,12 @@ public class Shift {
     }
     public boolean removeTransaction(int transactionID, int workerID) throws Exception {
         try {
-            if ((shift_manager == -1 || shift_manager != workerID) && !WorkerController.getInstance().isHR(workerID))
+            if (shift_manager != workerID && !WorkerController.getInstance().isHR(workerID))
                 throw new Exception("You're not authorized to perform this action. Only the shift manager of this shift " +
                         "or the HR manager can perform this action.");
             if (shift_transactions != null) {
                 for (Transaction tran : shift_transactions)
-                    if (tran.getTransactionID() == transactionID && tran.getWorkerID() == workerID) {
+                    if (tran.getTransactionID() == transactionID) {
                         shift_transactions.remove(tran);
                         return true;
                     }
@@ -214,7 +214,7 @@ public class Shift {
                         }
                     }
                 }
-                return false;
+                 throw new Exception("this worker is not working on this shift");
             }
         }
         catch(Exception e){

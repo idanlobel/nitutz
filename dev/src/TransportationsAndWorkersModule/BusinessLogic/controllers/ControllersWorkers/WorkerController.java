@@ -113,6 +113,15 @@ public class WorkerController {
             throw new Exception(e.getMessage());
         }
     }
+    public boolean removeJob(String job, int callerID) throws Exception{
+        try {
+            if (workers.readHR().getId()!=callerID)throw new Exception("only HR can remove jobs");
+            jobsDAO.delete(job);
+            return true;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
 
     public String getWorkerName(int id) throws Exception {
         try {

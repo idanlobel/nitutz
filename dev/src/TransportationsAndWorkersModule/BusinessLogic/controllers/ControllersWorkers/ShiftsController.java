@@ -180,6 +180,16 @@ public class ShiftsController {
             throw new Exception(e.getMessage());
         }
     }
+
+    public boolean removeWeeklySchedule(int weekID, int callerID, String site) throws Exception{
+        try {
+            if (workerDAO.readHR().getId()!=callerID)throw new Exception("only HR can remove weekly schedule");
+            weeklyScheduleDAO.delete(weekID,site);
+            return true;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
     public boolean addTransaction(int weekID, int day, int shift,String site, int transactionID, int workerID) throws Exception {
         try {
             Transaction transaction = new Transaction(transactionID, workerID);
