@@ -68,7 +68,7 @@ public class JobsDAO {
         return cacheJobs;
     }
     public void add(String job) throws Exception {
-        if (cacheJobs.contains(job)) throw new Exception("worker already exists");
+        if (cacheJobs.contains(job)) throw new Exception("job already exists");
         Connection conn=null;
         try {
             conn = DatabaseManager.getInstance().connect();
@@ -95,7 +95,7 @@ public class JobsDAO {
         Connection conn=null;
         try {
             conn = DatabaseManager.getInstance().connect();
-            PreparedStatement rs = conn.prepareStatement("delete from jobs where job ="+job);
+            PreparedStatement rs = conn.prepareStatement("delete from jobs where job = '"+job+"'");
             rs.execute();
             conn.commit();
         } catch (Exception e) {

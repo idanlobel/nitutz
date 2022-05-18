@@ -46,7 +46,7 @@ public class WorkerDAO {
                 ResultSet rs2 = conn.createStatement().executeQuery("select * from workerJobs where worker_id = '"+id+"'");//read from worker jobs
                 while (rs2.next()){
                     String job = rs2.getString("job");
-                    worker.getWorkerJobs().add(job);
+                    worker.addJob(job);
                 }
             }
         } catch (Exception e) {
@@ -229,7 +229,7 @@ public class WorkerDAO {
         try {
             conn = DatabaseManager.getInstance().connect();
             Statement statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery("select * from workers where id = "+id);
+            ResultSet rs = statement.executeQuery("select * from workers where id = '"+id+"'");
             if ( rs.next() ) return true;
         } catch (Exception e) {
             throw new Exception(e.getMessage());

@@ -22,6 +22,7 @@ class WorkersFacadeTest {
         }
         catch (Exception e)
         {
+            fail(e.getMessage());
 
         }
 
@@ -38,11 +39,17 @@ class WorkersFacadeTest {
         try {
             workersFacade.getAllDrivers(2,2,2);
         } catch (Exception e) {
-            fail(e.getMessage());
+            assertEquals("weekly schedule does not exists",e.getMessage());
+
         }
     }
 
     @Test
     void isTransportLegal() {
+        try {
+            workersFacade.isTransportLegal(2,2,2,"super1");
+        } catch (Exception e) {
+            assertEquals("weekly schedule does not exists",e.getMessage());
+        }
     }
 }

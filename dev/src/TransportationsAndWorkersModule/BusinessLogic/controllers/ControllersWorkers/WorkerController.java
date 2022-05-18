@@ -2,7 +2,6 @@ package src.TransportationsAndWorkersModule.BusinessLogic.controllers.Controller
 
 
 
-import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.WorkerDTO;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.BankAccount;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.EmploymentConditions;
 import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers.Worker;
@@ -13,7 +12,6 @@ import src.TransportationsAndWorkersModule.Dal.Workers.WorkerDAO;
 import src.TransportationsAndWorkersModule.Dal.Workers.WorkerScheduleDAO;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,6 +56,7 @@ public class WorkerController {
                              int bankID, int branch, int salary, int callerID, String site) throws Exception {
         try {
             if (workers.readHR().getId()!=callerID)throw new Exception("only HR can add a new worker to the system");
+            if (workers.exists(id))throw new Exception("worker already exists");
             workers.create(new Worker(name, id, password, email_address, new BankAccount(bankID, branch),
                             new EmploymentConditions(salary, new Date()), new LinkedList<>(),site));
             workerScheduleDAO.create(new Worker_Schedule(id));
@@ -70,6 +69,7 @@ public class WorkerController {
 
     public boolean deleteWorker(int workerID, int callerID) throws Exception{
         if(workers.readHR().getId() == workerID) throw new Exception("Can't remove HR!");
+        if (workers.readHR().getId()!=callerID) throw new Exception("only HR can remove workers");
         try {
             workers.get(workerID);
             workers.delete(workerID);
@@ -107,6 +107,7 @@ public class WorkerController {
     public boolean addJob(String job, int callerID) throws Exception {
         try {
             if (workers.readHR().getId()!=callerID)throw new Exception("only HR can add jobs");
+            if (jobsDAO.exists(job)) throw new Exception("job already exists");
             jobsDAO.add(job);
             return true;
         }catch (Exception e){
@@ -155,7 +156,7 @@ public class WorkerController {
             Worker worker = getWorker(workerID);
             if (workers.readHR().getId()!=callerID)throw new Exception("only HR can add a job to a worker");
             if(jobsDAO.exists(job.toLowerCase()) && !worker.getWorkerJobs().contains(job.toLowerCase())){
-                worker.getWorkerJobs().add(job.toLowerCase());
+                worker.addJob(job.toLowerCase());
                 workers.update(worker);
                 return true;
             }
@@ -170,7 +171,7 @@ public class WorkerController {
         Worker worker = getWorker(workerID);
         try {
             if (worker.getWorkerJobs().contains(job.toLowerCase())){
-                worker.getWorkerJobs().remove(job.toLowerCase());
+                worker.removeJob(job.toLowerCase());
                 workers.update(worker);
                 return true;
             }
@@ -190,10 +191,10 @@ public class WorkerController {
         }
     }
 
-    public boolean addLicnese(int callerID,int ID, String name) throws Exception{
+    public boolean addLicense(int callerID, int ID, String name) throws Exception{
         try {
             if (!isHR(callerID)) throw new Exception("ONLY HR CAN ADD LICENSE");
-            if (!workers.get(ID).getWorkerJobs().contains("driver"))throw new Exception("worker isnt a driver");
+            if (!workers.get(ID).getWorkerJobs().contains("driver"))throw new Exception("worker isn't a driver");
             licenseDAO.create(ID,name);
             return true;
         }catch (Exception e){

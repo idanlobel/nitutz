@@ -19,12 +19,12 @@ public class Shift_Tests {
         shift = new Shift();
         workerController = WorkerController.getInstance();
         try {
+            DatabaseManager.ChangeURL("jdbc:sqlite:superLeeTests.db");
             databaseManager = databaseManager.getInstance();
         }
         catch(Exception e){
             //shouldn't happen...
         }
-        databaseManager.ChangeURL("jdbc:sqlite:superLeeTests.db");
     }
 
     //#1:
