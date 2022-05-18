@@ -90,4 +90,7 @@ public class Worker {
     public List<String> getWorkerJobs() {
         return workerJobs;
     }
+    public void addJob(String job){
+        workerJobs.add(job);
+    }
 }

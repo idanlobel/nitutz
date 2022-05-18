@@ -46,7 +46,7 @@ public class WorkerDAO {
                 ResultSet rs2 = conn.createStatement().executeQuery("select * from workerJobs where worker_id = '"+id+"'");//read from worker jobs
                 while (rs2.next()){
                     String job = rs2.getString("job");
-                    worker.getWorkerJobs().add(job);
+                    worker.addJob(job);
                 }
             }
         } catch (Exception e) {
