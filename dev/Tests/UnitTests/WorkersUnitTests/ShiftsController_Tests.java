@@ -27,7 +27,6 @@ public class ShiftsController_Tests {
         catch(Exception e){
             //shouldn't happen...
         }
-        databaseManager.ChangeURL("jdbc:sqlite:superLeeTests.db");
     }
 
     //#1:
