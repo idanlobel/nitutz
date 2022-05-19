@@ -185,7 +185,7 @@ public class WorkerController_Tests {
     @Test
     void removeJobFromAWorker_Success(){
         try {
-            workerController.addWorker("",5,"bbb","bb",1,1,1,3,"North");
+            workerController.addWorker("pap",5,"bbb","bb",1,1,1,3,"North");
             workerController.addJob("cashier", 3);
             workerController.addJobForAWorker(5, "cashier", 3);
             assertEquals(true, workerController.removeJobFromAWorker(5, "cashier", 3));
