@@ -323,9 +323,9 @@ public class Main {
 
     private static List<Object> addremoveLicense(){
         Scanner sc = new Scanner(System.in);
-        System.out.println("Please enter the worker id: ");
+        System.out.println("Please enter the driver id: ");
         int workerID = sc.nextInt();
-        System.out.println("Please enter the day of the License name : ");
+        System.out.println("Please enter the License name : ");
         String licenseName = new Scanner(System.in).nextLine();
         return Arrays.asList(workerID,licenseName);
     }
