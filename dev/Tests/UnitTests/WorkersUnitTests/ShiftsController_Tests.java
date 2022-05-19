@@ -9,7 +9,6 @@ import src.TransportationsAndWorkersModule.BusinessLogic.controllers.Controllers
 import src.TransportationsAndWorkersModule.BusinessLogic.controllers.ControllersWorkers.WorkerController;
 import src.TransportationsAndWorkersModule.Dal.DatabaseManager;
 import src.TransportationsAndWorkersModule.Dal.Workers.WorkerDAO;
-import sun.awt.geom.AreaOp;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -32,14 +31,18 @@ public class ShiftsController_Tests {
             WorkerDAO workerDAO = new WorkerDAO();
             List<String> jobs = new LinkedList<>();
             jobs.add("HR");
-            Worker HR = new Worker("ori",3,"123","gev",new BankAccount(1,1),new EmploymentConditions(1,new Date()),jobs,"human resources");
+            Worker HR = new Worker("ori",3,"123","gev",new BankAccount(1,1),new EmploymentConditions(1,new Date()),jobs,"driver department");
             workerDAO.create(HR);
             shiftsController.createWeeklySchedule(1, 3, "North");
         }
         catch(Exception e){
-            //shouldn't happen...
+            try {
+                shiftsController.createWeeklySchedule(1, 3, "North");
+            }
+            catch(Exception e2){
+                // do nothing
+            }
         }
-
     }
 
     //#1:
@@ -60,7 +63,7 @@ public class ShiftsController_Tests {
     @Test
     void editWorkerSchedule_Failure(){
         try {
-           shiftsController.editWorkerSchedule(500, false, 1, 0);
+           shiftsController.editWorkerSchedule(50000, false, 1, 0);
         } catch (Exception e) {
             assertEquals("Worker schedule does not exist", e.getMessage());
         }

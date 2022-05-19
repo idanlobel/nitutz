@@ -263,7 +263,7 @@ public class ShiftsController {
         try {
             HashMap<String, List<Integer>> jobs = weeklyScheduleDAO.get(weekID,site).getShift(day-1, shift).getJobToWorker();
             List<Integer> storeKeepersIds = jobs.get("store keeper");
-            if (storeKeepersIds.isEmpty())return false;
+            if (storeKeepersIds == null || storeKeepersIds.isEmpty())return false;
             return true;
         }
         catch(Exception e){

@@ -28,11 +28,17 @@ public class WorkerController_Tests {
             WorkerDAO workerDAO = new WorkerDAO();
             List<String> jobs = new LinkedList<>();
             jobs.add("HR");
-            Worker HR = new Worker("ori",3,"123","gev",new BankAccount(1,1),new EmploymentConditions(1,new Date()),jobs,"human resources");
+            Worker HR = new Worker("ori",3,"123","gev",new BankAccount(1,1),new EmploymentConditions(1,new Date()),jobs,"driver department");
             workerDAO.create(HR);
+            workerController.addJob("driver", 3);
         }
         catch(Exception e){
-            //shouldn't happen...
+            try{
+                workerController.addJob("driver", 3);
+            }
+            catch(Exception e2) {
+                //do nothing..
+            }
         }
 
     }
@@ -133,12 +139,12 @@ public class WorkerController_Tests {
     @Test
     void edit_Worker_Success(){
         try {
-            assertEquals(true,workerController.addWorker("",5,"","",1,1,1,3,""));
+            assertEquals(true,workerController.addWorker("",77,"","",1,1,1,3,""));
             assertEquals(true, workerController.editWorker("", "", "yossi9700@gmail.com",
-                    0, 0, 500, 5, 3));
+                    0, 0, 500, 77, 3));
             assertEquals(true, workerController.editWorker("", "", "Ori77@gmail.com",
                     0, 0, 100000, 3, 3));
-            workerController.deleteWorker(5,3);
+            workerController.deleteWorker(77,3);
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -185,11 +191,11 @@ public class WorkerController_Tests {
     @Test
     void removeJobFromAWorker_Success(){
         try {
-            workerController.addWorker("pap",5,"bbb","bb",1,1,1,3,"North");
+            workerController.addWorker("pap",66,"bbb","bb",1,1,1,3,"North");
             workerController.addJob("cashier", 3);
-            workerController.addJobForAWorker(5, "cashier", 3);
-            assertEquals(true, workerController.removeJobFromAWorker(5, "cashier", 3));
-            workerController.deleteWorker(5, 3);
+            workerController.addJobForAWorker(66, "cashier", 3);
+            assertEquals(true, workerController.removeJobFromAWorker(66, "cashier", 3));
+            workerController.deleteWorker(66, 3);
             workerController.removeJob("cashier", 3);
         }
         catch(Exception e){
@@ -200,7 +206,7 @@ public class WorkerController_Tests {
     @Test
     void removeJobFromAWorker_Failure(){
         try {
-            assertEquals(false, workerController.removeJobFromAWorker(99, "cashier", 3));
+            assertEquals(false, workerController.removeJobFromAWorker(9999, "cashier", 3));
         }
         catch(Exception e){
             assertEquals("worker doesn't exist", e.getMessage());
@@ -227,7 +233,7 @@ public class WorkerController_Tests {
     @Test
     void Login_Failure() {
         try {
-            workerController.Login(5,"123");
+            workerController.Login(5899,"123");
         }
         catch (Exception e) {
             assertEquals("worker doesn't exist", e.getMessage());
@@ -238,14 +244,12 @@ public class WorkerController_Tests {
     @Test
     void addLicense_Success() {
         try {
-            workerController.addWorker("",5,"bbb","bb",1,1,1,3,"North");
-            workerController.addJob("driver", 3);
-            workerController.addJobForAWorker(5, "driver", 3);
-            assertEquals(true, workerController.addLicense(3,5, "A"));
-            workerController.removeLicense(3, 5, "A");
-            workerController.removeJobFromAWorker(5, "driver", 3);
-            workerController.deleteWorker(5, 3);
-            workerController.removeJob("driver", 3);
+            workerController.addWorker("",57,"bbb","bb",1,1,1,3,"North");
+            workerController.addJobForAWorker(57, "driver", 3);
+            assertEquals(true, workerController.addLicense(3,57, "A"));
+            workerController.removeLicense(3, 57, "A");
+            workerController.removeJobFromAWorker(57, "driver", 3);
+            workerController.deleteWorker(57, 3);
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -255,13 +259,13 @@ public class WorkerController_Tests {
     @Test
     void addLicense_Failure() {
         try {
-            workerController.addWorker("",5,"bbb","bb",1,1,1,3,"North");
-            workerController.addLicense(3,5, "A");
+            workerController.addWorker("",507,"bbb","bb",1,1,1,3,"North");
+            workerController.addLicense(3,507, "A");
         }
         catch (Exception e) {
             assertEquals("worker isn't a driver", e.getMessage());
             try {
-                workerController.deleteWorker(5, 3);
+                workerController.deleteWorker(507, 3);
             }
             catch(Exception e2){
                 System.out.println(e2.getMessage());
@@ -273,14 +277,12 @@ public class WorkerController_Tests {
     @Test
     void removeLicense_Success() {
         try {
-            workerController.addWorker("",5,"bbb","bb",1,1,1,3,"North");
-            workerController.addJob("driver", 3);
-            workerController.addJobForAWorker(5, "driver", 3);
-            workerController.addLicense(3,5, "A");
-            assertEquals(true, workerController.removeLicense(3,5, "A"));
-            workerController.removeJobFromAWorker(5, "driver", 3);
-            workerController.deleteWorker(5, 3);
-            workerController.removeJob("driver", 3);
+            workerController.addWorker("",9,"bbb","bb",1,1,1,3,"North");
+            workerController.addJobForAWorker(9, "driver", 3);
+            workerController.addLicense(3,9, "A");
+            assertEquals(true, workerController.removeLicense(3,9, "A"));
+            workerController.removeJobFromAWorker(9, "driver", 3);
+            workerController.deleteWorker(9, 3);
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -290,16 +292,16 @@ public class WorkerController_Tests {
     @Test
     void removeLicense_Failure() {
         try {
-            workerController.addWorker("",5,"bbb","bb",1,1,1,3,"North");
-            workerController.removeLicense(3,5, "A");
+            workerController.addWorker("",50000,"bbb","bb",1,1,1,3,"North");
+            workerController.removeLicense(3,50000, "A");
         }
         catch (Exception e) {
             assertEquals("worker isnt a driver", e.getMessage());
             try {
-                workerController.deleteWorker(5, 3);
+                workerController.deleteWorker(50000, 3);
             }
             catch(Exception e2){
-                System.out.println(e2.getMessage());
+                //do nothing
             }
         }
     }
