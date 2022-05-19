@@ -85,7 +85,9 @@ public class Controller {
         return contract;
     }
     public void changeDeliveryDays(int companyNumber,boolean[] days){
-
+        Contract contract=getContract(companyNumber);
+        if(contract.isPeriodic())
+            ((PeriodicContract) contract).setDeliveryDays(days);
     }
     public Contract SignShortageContract(int companyNumber, List<int[]> itemInfoList, HashMap<Integer, List<int[]>> discountsList,List<int[]> generalDiscountsList) {
         if(!suppliers.containsKey(companyNumber))
@@ -99,8 +101,8 @@ public class Controller {
         shortageContracts.put(companyNumber,contract);
         return contract;
     }
-    public void addProduct(int companyNumber,int catalogNumber,int supplierId,int price){
-        getContract(companyNumber).addProduct(catalogNumber,supplierId,price);
+    public void addProduct(int companyNumber,int catalogNumber,int supplierId,int price,List<int[]> discounts){
+        getContract(companyNumber).addProduct(catalogNumber,supplierId,price,discounts);
     }
     public void changeProductPrice(int companyNumber,int catalogNumber,int price){
         getContract(companyNumber).ChangeProductPrice(catalogNumber,price);
@@ -111,14 +113,14 @@ public class Controller {
     public void putDiscount(int companyNumber,int catalogNumber,int amount, int discount){
         getContract(companyNumber).putDiscount(catalogNumber, amount, discount);
     }
-    public void removeDiscount(int companyNumber,int catalogNumber,int amount, int discount){
-        getContract(companyNumber).removeDiscount(catalogNumber, amount, discount);
+    public void removeDiscount(int companyNumber,int catalogNumber,int amount){
+        getContract(companyNumber).removeDiscount(catalogNumber, amount);
     }
     public void putGeneralDiscount(int companyNumber,int amount, int discount){
         getContract(companyNumber).putGeneralDiscount(amount, discount);
     }
-    public void removeGeneralDiscount(int companyNumber,int amount, int discount){
-        getContract(companyNumber).removeGeneralDiscount(amount, discount);
+    public void removeGeneralDiscount(int companyNumber,int amount){
+        getContract(companyNumber).removeGeneralDiscount(amount);
     }
     //public Order OrderProducts(int companyNumber, List<int[]> productsAndAmounts, String contactPerson, LocalDate arrivalTime) { //product[0]=supplierId, [1]=amount
     //    if(!contracts.containsKey(companyNumber))
@@ -179,9 +181,6 @@ public class Controller {
             throw new RuntimeException("USER ERROR: Supplier"+suppliers.get(companyNum).getName()+" does not" +
                     "contain contact named " + newCP);
         suppliers.get(companyNum).setOrderingCP(newCP);
-    }
-    public List<Contract> getContractList() {
-        return new ArrayList<>(shortageContracts.values());
     }
     public Supplier getSupplier(int companyNum) {
         if(!suppliers.containsKey(companyNum))
