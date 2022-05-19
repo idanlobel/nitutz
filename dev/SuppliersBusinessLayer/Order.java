@@ -11,13 +11,13 @@ public class Order {
     private final int id;
     private final int supplyCompanyNumber;
     private final HashMap<Product,int[]> itemInfos; //[0]=amount,[1]=initial price [2]=discount
-    private final ContactPerson contactPerson;
+    private final String contactPerson;
     private int totalPrice;
     private final LocalDate orderDate;
     private final LocalDate arrivalDate;
     private int generalDiscount;
     private int totalItemAmount;
-    public Order(int id, int supplyCompanyNumber,ContactPerson contactPerson, LocalDate arrivalDate) {
+    public Order(int id, int supplyCompanyNumber,String contactPerson, LocalDate arrivalDate) {
         this.supplyCompanyNumber= supplyCompanyNumber;
         this.id=id;
         //   this.contract = contract;
@@ -51,7 +51,7 @@ public class Order {
     @Override
     public String toString() {
         StringBuilder acc= new StringBuilder();
-        acc.append("Order number ").append(id).append("\nContact Person: ").append(contactPerson.getName()).append("\nTotal Price: ").append(getTotalPrice()).append("\nOrder Date: ").append(orderDate).append("\nArrival Date: ").append(arrivalDate);
+        acc.append("Order number ").append(id).append("\nContact Person: ").append(contactPerson).append("\nTotal Price: ").append(getTotalPrice()).append("\nOrder Date: ").append(orderDate).append("\nArrival Date: ").append(arrivalDate);
         acc.append("\n----------Item List---------=\n");
         int count=1;
         for(Product product: itemInfos.keySet()){
@@ -68,5 +68,30 @@ public class Order {
 
     public int getTotalPrice() {
         return totalPrice*generalDiscount;
+    }
+
+    public int getId(){
+        return id;
+    }
+    public String getOrderDate(){
+        return orderDate.toString();
+    }
+    public String getArrivalDate(){
+        return arrivalDate.toString();
+    }
+    public String getContactPerson(){
+        return contactPerson;
+    }
+    public int getCompanyNumber(){
+        return supplyCompanyNumber;
+    }
+    public int getPrice(){
+        return totalPrice;
+    }
+    public int getTotalItemAmount(){
+        return totalItemAmount;
+    }
+    public int getTotalDiscount(){
+        return generalDiscount;
     }
 }

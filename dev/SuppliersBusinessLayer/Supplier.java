@@ -75,6 +75,7 @@ public class Supplier {
         return "name='" + name + '\'' +
                 ", companyNumber=" + companyNumber +
                 ", bankNumber='" + bankNumber + '\'' +
+                ", Address='" + address + '\'' +
                 ", contactList=" + contactList+"\n";
     }
     public ContactPerson getOrderingCP(){
@@ -99,5 +100,9 @@ public class Supplier {
 
     public String getName() {
         return name;
+    }
+
+    public HashMap<String, ContactPerson> getContactList(){
+        return contactList;
     }
 }

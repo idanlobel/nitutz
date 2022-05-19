@@ -21,4 +21,8 @@ public class PeriodicContract extends Contract {
     public void setDeliveryDays(boolean[] deliveryDays) {
         this.deliveryDays = deliveryDays;
     }
+
+    public int getType(){
+        return 1;
+    }
 }

@@ -10,31 +10,31 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class Controller {
-    private final Hashtable<Integer,Supplier> suppliers;
+    private final Hashtable<Integer, Supplier> suppliers;
     private final Hashtable<Integer, Contract> shortageContracts;
-    private final HashMap<Integer,Order> toDeliverOrders;
-    private final HashMap<Integer,Collection<PeriodicProduct>> periodicProducts; //0-sunday, 6-saturday
-    private final HashMap<Integer,Collection<PeriodicContract>> periodicSuppliers; //0-sunday, 6-saturday
-    private int orderIdTracker=0;
-    private final Hashtable<Integer,Order> orderHistory;
+    private final HashMap<Integer, Order> toDeliverOrders;
+    private final HashMap<Integer, Collection<PeriodicProduct>> periodicProducts; //0-sunday, 6-saturday
+    private final HashMap<Integer, Collection<PeriodicContract>> periodicSuppliers; //0-sunday, 6-saturday
+    private int orderIdTracker = 0;
+    private final Hashtable<Integer, Order> orderHistory;
     public Controller(){
-        toDeliverOrders=new HashMap<>();
-        suppliers=new Hashtable<>();
-        shortageContracts=new Hashtable<>();
-        orderHistory=new Hashtable<>();
-        periodicProducts=new HashMap<>();
-        periodicSuppliers=new HashMap<>();
-        for(int i=0;i<7;i++){
-            periodicProducts.put(i,new ArrayList<>());
-            periodicSuppliers.put(i,new ArrayList<>());
+        toDeliverOrders = new HashMap<>();
+        suppliers = new Hashtable<>();
+        shortageContracts = new Hashtable<>();
+        orderHistory = new Hashtable<>();
+        periodicProducts = new HashMap<>();
+        periodicSuppliers = new HashMap<>();
+        for(int i = 0; i < 7; i++){
+            periodicProducts.put(i, new ArrayList<>());
+            periodicSuppliers.put(i, new ArrayList<>());
         }
     }
 
-    public Supplier AddSupplier(String name, Integer companyNumber, String bankNumber,String address, List<ContactPerson> contactPeople,String orderingCP) {
+    public Supplier AddSupplier(String name, Integer companyNumber, String bankNumber, String address, List<ContactPerson> contactPeople, String orderingCP){
         if(suppliers.containsKey(companyNumber))
             throw new IllegalArgumentException("Company number already exists in the system");
-        Supplier supplier=new Supplier(name,companyNumber,bankNumber,address,contactPeople,orderingCP);
-        suppliers.put(companyNumber,supplier);
+        Supplier supplier = new Supplier(name, companyNumber, bankNumber, address, contactPeople, orderingCP);
+        suppliers.put(companyNumber, supplier);
         return supplier;
     }
     public void changeAddress(int companyNumber, String address){
@@ -43,29 +43,29 @@ public class Controller {
     public void changeBankNum(int companyNumber, String bankNum){
         suppliers.get(companyNumber).setBankNumber(bankNum);
     }
-    public ContactPerson AddContact(Integer companyNumber,String name, String Email,String cellNumber){
-        if(companyNumber==null | name==null | Email==null)
+    public ContactPerson AddContact(Integer companyNumber, String name, String Email, String cellNumber){
+        if(companyNumber == null || name == null || Email == null)
             throw new IllegalArgumentException("Parameter can not ne empty");
         if(!suppliers.containsKey(companyNumber))
             throw new IllegalArgumentException("No Supplier with this company number");
-        ContactPerson contactPerson=new ContactPerson(name,Email,cellNumber);
+        ContactPerson contactPerson = new ContactPerson(name ,Email ,cellNumber);
         suppliers.get(companyNumber).addContact(contactPerson);
         return contactPerson;
     }
-    public ContactPerson RemoveContactPerson(int companyNumber,String name){
+    public ContactPerson RemoveContactPerson(int companyNumber, String name){
         if(!suppliers.containsKey(companyNumber))
-            throw new IllegalArgumentException("USER ERROR: no supplier with CP "+companyNumber);
+            throw new IllegalArgumentException("USER ERROR: no supplier with company number" + companyNumber);
          return suppliers.get(companyNumber).RemoveContact(name);
     }
-    public void ChangeContactPersonMail(int companyNumber,String name, String newMail){
+    public void ChangeContactPersonMail(int companyNumber, String name, String newMail){
         if(!suppliers.containsKey(companyNumber))
-            throw new IllegalArgumentException("USER ERROR: no supplier with CP "+companyNumber);
-        suppliers.get(companyNumber).ChangeContactEmail(name,newMail);
+            throw new IllegalArgumentException("USER ERROR: no supplier with company number" + companyNumber);
+        suppliers.get(companyNumber).ChangeContactEmail(name, newMail);
     }
-    public void ChangeContactPersonPhone(int companyNumber,String name, String newNum){
+    public void ChangeContactPersonPhone(int companyNumber, String name, String newNum){
         if(!suppliers.containsKey(companyNumber))
-            throw new IllegalArgumentException("USER ERROR: no supplier with CP "+companyNumber);
-        suppliers.get(companyNumber).ChangeContactPhoneNum(name,newNum);
+            throw new IllegalArgumentException("USER ERROR: no supplier with company number" + companyNumber);
+        suppliers.get(companyNumber).ChangeContactPhoneNum(name, newNum);
     }
 
     public Contract SignPeriodicContract(int companyNumber, List<int[]> itemInfoList, HashMap<Integer,List<int[]>> discountsList,List<int[]> generalDiscountsList, boolean[] deliveryDays) {
@@ -177,7 +177,7 @@ public class Controller {
     public void ChangeContractCP(int companyNum,String newCP){
         if(!suppliers.get(companyNum).ContainsContact(newCP))
             throw new RuntimeException("USER ERROR: Supplier"+suppliers.get(companyNum).getName()+" does not" +
-                    "contain contact named "+newCP);
+                    "contain contact named " + newCP);
         suppliers.get(companyNum).setOrderingCP(newCP);
     }
     public List<Contract> getContractList() {
@@ -247,7 +247,7 @@ public class Controller {
         SupplierProduct supplierProduct=chosenContract.getProduct(id);
         if(!toDeliverOrders.containsKey(chosenSupp)) {
             order = new Order(orderIdTracker, chosenContract.getSupplier().getCompanyNumber(),
-                    chosenContract.getSupplier().getOrderingCP(), LocalDate.now().plusDays(1)); //TODO: PLACEHOLDER. CALC ARRIVAL DATE??
+                    chosenContract.getSupplier().getOrderingCP().getName(), LocalDate.now().plusDays(1)); //TODO: PLACEHOLDER. CALC ARRIVAL DATE??
             toDeliverOrders.put(chosenSupp, order);
             order.AddProduct(supplierProduct, amount, supplierProduct.getPrice(), discount,chosenContract.getGeneralDiscounts());
         }

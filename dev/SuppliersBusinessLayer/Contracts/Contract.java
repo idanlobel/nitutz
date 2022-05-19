@@ -11,12 +11,12 @@ public class Contract {
     private final HashMap<Integer, SupplierProduct> products;
     private final HashMap<Integer, List<int[]>> discounts; //[0]=amount, [1]=percent (itemId is our system's id, not the supplier's)
     private final List<int[]> generalDiscounts;
-    public Contract(Supplier supplier, List<SupplierProduct> products, HashMap<Integer, List<int[]>> discounts,List<int[]> geeneralDiscounts) {
+    public Contract(Supplier supplier, List<SupplierProduct> products, HashMap<Integer, List<int[]>> discounts,List<int[]> generalDiscounts) {
         this.productIds=new HashSet<>();
         this.supplier = supplier;
         this.products = new HashMap<>();
         this.discounts = discounts;
-        this.generalDiscounts=geeneralDiscounts;
+        this.generalDiscounts=generalDiscounts;
         for (SupplierProduct product : products) {
             this.products.put(product.getId(), product);
             this.productIds.add(product.getId());
@@ -110,5 +110,13 @@ public class Contract {
     }
     public void removeGeneralDiscount(int amount, int discount) {
         generalDiscounts.removeIf(pair -> pair[0] == amount & pair[1] == discount);
+    }
+
+    public int getType(){
+        return 0;
+    }
+
+    public HashMap<Integer, SupplierProduct> getAllProducts(){
+        return products;
     }
 }
