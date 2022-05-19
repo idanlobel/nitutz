@@ -2,7 +2,7 @@ package Stock_Module.busniess_layer;
 
 
 import Stock_Module.Data_layer.DAL_controller;
-import SuppliersModule.ServiceLayer.SupplyModuleService;
+import SuppliersModule.SuppliersServiceLayer.SupplyModuleService;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

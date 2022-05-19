@@ -1,7 +1,8 @@
 package Stock_Module.stock_presntation_layer;
 
 import Stock_Module.stock_service_layer.Stock_Manager;
-import SuppliersModule.ServiceLayer.SupplyModuleService;
+import SuppliersModule.SuppliersPresentationLayer.SuppliersMain;
+import SuppliersModule.SuppliersServiceLayer.SupplyModuleService;
 
 import java.util.Locale;
 import java.util.Scanner;
@@ -11,12 +12,10 @@ public class Merged_main {
         Stock_Manager stock_manager=new Stock_Manager();
         SupplyModuleService serviceObj=new SupplyModuleService();
         Stock_main stock_main=new Stock_main(stock_manager);
-
-
         Scanner scanner=new Scanner(System.in);
         String current_order="";
         String[] order_in_array=new String[200];
-
+        SuppliersMain suppliersMain=new SuppliersMain();
         System.out.println("if you want to load stock data please type yes");
         current_order=scanner.nextLine();
         if(current_order.equals("yes"))
@@ -46,7 +45,7 @@ public class Merged_main {
             {
                 if(order_in_array[0].toLowerCase(Locale.ROOT).equals("supplier"))
                 {
-
+                    suppliersMain.RunSuppliers(serviceObj);
                 }
                 else
                 {
