@@ -3,6 +3,7 @@ package SupplierDataAccessLayer.DataAccessObjects;
 import SupplierDataAccessLayer.DatabaseManager;
 import SuppliersBusinessLayer.ContactPerson;
 import SuppliersBusinessLayer.Contracts.Contract;
+import SuppliersBusinessLayer.Contracts.PeriodicContract;
 import SuppliersBusinessLayer.Products.SupplierProduct;
 import SuppliersBusinessLayer.Supplier;
 
@@ -10,10 +11,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ContractDAO {
     private boolean readAll = false;
@@ -52,7 +50,14 @@ public class ContractDAO {
                 String deliveryDays = rs.getString("DeliveryDays");
                 int contractType = rs.getInt("ContractType");
                 int deliveryType = rs.getInt("DeliveredBySupplier");
-                contract = new Contract(splr, supplierProductList, discountsMap, generalDiscounts);
+                String[] arrDeliveryDays = deliveryDays.split(",");
+                boolean[] boolDeliveryDay = new boolean[7];
+                for(int i = 0; i < arrDeliveryDays.length; i++)
+                    boolDeliveryDay[i] = Boolean.parseBoolean(arrDeliveryDays[i]);
+                if(contractType == 0)
+                    contract = new Contract(splr, supplierProductList, discountsMap, generalDiscounts);
+                else
+                    contract = new PeriodicContract(splr, supplierProductList, discountsMap, generalDiscounts, boolDeliveryDay);
             }
         } catch (Exception e) {
             if (!retry){retry=true; get(companyNumber);}
@@ -117,7 +122,8 @@ public class ContractDAO {
             conn = DatabaseManager.getInstance().connect();
             Statement rs = conn.createStatement();
             //set Contract data
-            sql+="'"+contract.getSupplier().getCompanyNumber()+"','"+""+"','"+contract.getType()+"','"+contract.getType()+
+            String deliveryDays = Arrays.toString(contract.getDeliveryDays());
+            sql+="'"+contract.getSupplier().getCompanyNumber()+"','"+deliveryDays+"','"+contract.getType()+"','"+contract.getType()+
                     "');";
             rs.addBatch(sql);
             //set his productss;

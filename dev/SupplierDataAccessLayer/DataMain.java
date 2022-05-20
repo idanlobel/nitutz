@@ -1,8 +1,10 @@
 package SupplierDataAccessLayer;
 import SupplierDataAccessLayer.DataAccessObjects.ContractDAO;
+import SupplierDataAccessLayer.DataAccessObjects.OrderDAO;
 import SupplierDataAccessLayer.DataAccessObjects.SupplierDAO;
 import SuppliersBusinessLayer.ContactPerson;
 import SuppliersBusinessLayer.Contracts.Contract;
+import SuppliersBusinessLayer.Order;
 import SuppliersBusinessLayer.Products.SupplierProduct;
 import SuppliersBusinessLayer.Supplier;
 
@@ -14,7 +16,14 @@ import java.util.List;
 
 public class DataMain {
     public static void main(String[] args) throws Exception {
-        SupplierDAO supplierDAO = new SupplierDAO();
+
+        OrderDAO orderDAO = new OrderDAO();
+        /*Order simpleOrder = new Order(1, "2018-11-01", "2018-11-02", "Yoav", 1, "milk", 10, 15, 20);
+        orderDAO.create(simpleOrder);*/ //LocalDate.parse("2018-11-01");
+        Order getMe = orderDAO.get(1);
+        System.out.println(getMe.getItemsDetails());
+        //Order order = orderDAO.get(0);
+        /*SupplierDAO supplierDAO = new SupplierDAO();
         Supplier newSupplier = supplierDAO.get(10);
         List<SupplierProduct> products = new ArrayList<>();
         products.add(new SupplierProduct(101,100, 3));
