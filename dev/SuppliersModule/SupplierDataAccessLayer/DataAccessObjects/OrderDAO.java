@@ -39,9 +39,14 @@ public class OrderDAO {
                 int companyNumber = rs.getInt("CompanyNumber");
                 String contactPersonName = rs.getString("ContactPerson");
                 String arrivalDate = rs.getString("ArrivalDate");
-                LocalDate localDate = LocalDate.parse(arrivalDate);
-                order =  new Order(id, companyNumber, contactPersonName, localDate);
-                //TODO: addProducts
+                int itemAmount = rs.getInt("TotalItemAmount");
+                String itemS = rs.getString("OrderedItems");
+                String orderDate = rs.getString("OrderDate");
+                int price = rs.getInt("TotalPrice");
+                int discount = rs.getInt("TotalDiscount");
+                //LocalDate localDate = LocalDate.parse(arrivalDate);
+                //order =  new Order(id, companyNumber, contactPersonName, localDate);
+                order = new Order(id, orderDate, arrivalDate, contactPersonName, companyNumber, itemS, price, itemAmount, discount);
             }
         } catch (Exception e) {
             if (!retry){retry=true; get(id);}
@@ -107,7 +112,7 @@ public class OrderDAO {
             Statement rs = conn.createStatement();
             //set order data
             sql+="'"+order.getId()+"','"+order.getOrderDate()+"','"+order.getArrivalDate()+"','"+order.getContactPerson()+
-                    "','"+order.getCompanyNumber()+"','"+"ITEMS"+"','"+order.getPrice()+
+                    "','"+order.getCompanyNumber()+"','"+order.getItemsDetails()+"','"+order.getPrice()+
                     "','"+order.getTotalItemAmount()+ "','"+order.getTotalDiscount()+"');";
             rs.addBatch(sql);
             //set his CPs;

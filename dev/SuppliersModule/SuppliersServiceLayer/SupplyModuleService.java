@@ -12,8 +12,8 @@ import java.util.List;
 public class SupplyModuleService {
     private final Controller controller;
 
-    public SupplyModuleService(){
-        controller=new Controller();
+    public SupplyModuleService() throws Exception {
+        controller = new Controller();
     }
 
     public Response<Supplier> AddSupplier(Integer companyNumber, String name,  String bankNumber,String address, List<ContactPerson> contactPeople,String orderingCP){

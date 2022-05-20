@@ -123,4 +123,8 @@ public class Contract {
     public HashMap<Integer, SupplierProduct> getAllProducts(){
         return products;
     }
+
+    public boolean[] getDeliveryDays(){
+        return new boolean[]{false,false,false,false,false,false,false};
+    }
 }

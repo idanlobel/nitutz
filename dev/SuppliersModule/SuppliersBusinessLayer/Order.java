@@ -17,6 +17,7 @@ public class Order {
     private final LocalDate arrivalDate;
     private int generalDiscount;
     private int totalItemAmount;
+    private String itemsDetails;
     public Order(int id, int supplyCompanyNumber,String contactPerson, LocalDate arrivalDate) {
         this.supplyCompanyNumber= supplyCompanyNumber;
         this.id=id;
@@ -28,7 +29,20 @@ public class Order {
         this.arrivalDate = arrivalDate;
         this.generalDiscount=100;
         this.totalItemAmount=0;
+        this.itemsDetails = "";
 
+    }
+    public Order(int id, String orderDateS, String arrivalDateS, String contactPersonS, int companyNumber, String itemS, int price, int itemAmount, int discount){
+        this.id = id;
+        this.orderDate = LocalDate.parse(orderDateS);
+        this.arrivalDate = LocalDate.parse(arrivalDateS);
+        this.contactPerson = contactPersonS;
+        this.supplyCompanyNumber = companyNumber;
+        this.itemInfos = new HashMap<>(); //no need for the objects
+        this.itemsDetails = itemS;
+        this.totalPrice = price;
+        this.totalItemAmount = itemAmount;
+        this.generalDiscount = discount;
     }
     public void AddProduct(SupplierProduct product, int amount, int initPrice, int discount,List<int[]> generalDiscounts){
         if(itemInfos.containsKey(product))
@@ -43,6 +57,7 @@ public class Order {
             if(totalItemAmount>discountPair[0] & generalDiscount>discountPair[1])
                 generalDiscount=discountPair[1];
         totalPrice+=initPrice*amount*((double)discount/100);
+        stringItems();
     }
 
     public int getSupplyCompanyNumber() {
@@ -64,6 +79,17 @@ public class Order {
 
 
         return acc.toString();
+    }
+    public void stringItems(){
+        StringBuilder output = new StringBuilder();
+        for(Product product: itemInfos.keySet()){
+            int[] details = itemInfos.get(product);
+            output.append("Product ID: ").append(product.getId()).append(" ");
+            output.append("Product amount: ").append(details[0]).append(" ");
+            output.append("Product price: ").append(details[1]).append(" ");
+            output.append("Product discount: ").append(details[2]).append(" ");
+            itemsDetails = output.toString();
+        }
     }
 
     public int getTotalPrice() {
@@ -93,5 +119,8 @@ public class Order {
     }
     public int getTotalDiscount(){
         return generalDiscount;
+    }
+    public String getItemsDetails(){
+        return itemsDetails;
     }
 }

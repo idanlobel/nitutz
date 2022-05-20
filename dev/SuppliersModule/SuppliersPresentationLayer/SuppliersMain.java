@@ -19,7 +19,14 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
         Scanner scanner=new Scanner(System.in);
         int choice=-1;
         while(choice!=5) {
-            String line = """
+            String line = "choose action (type the numeration to execute):\n" +
+                    "                    1: Manage Suppliers\n" +
+                    "                    2: Manage contact people\n" +
+                    "                    3: Manage Contracts\n" +
+                    "                    4: View Orders\n" +
+                    "                    5: Back to main menu\n" +
+                    "                    note: at any point input -1 to cancel operation and go back here";
+            /*String line = """
                     choose action (type the numeration to execute):
                     1: Manage Suppliers
                     2: Manage contact people
@@ -27,7 +34,7 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
                     4: View Orders
                     5: Back to main menu
                     note: at any point input -1 to cancel operation and go back here
-                    """;
+                    """;*/
             try {
                 choice = requestNumberInput(line, scanner, 5, 1);
                 if (choice == 1) ManageSuppliersChain(serviceObj, scanner);
@@ -64,14 +71,12 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
         return choice;
     }
     public static void ManageSuppliersChain(SupplyModuleService serviceObj,Scanner scanner){
-        String line= """
-                1: Add a supplier
-                2: Change supplier address
-                3: Change supplier bank number
-                4: View a suppliers
-                5: View all suppliers
-                6: <-- Back
-                """;
+        String line= "1: Add a supplier\n" +
+                "                2: Change supplier address\n" +
+                "                3: Change supplier bank number\n" +
+                "                4: View a suppliers\n" +
+                "                5: View all suppliers\n" +
+                "                6: <-- Back";
         int choice=requestNumberInput(line,scanner,6,1);
         if(choice==1) addSupplierChain(serviceObj, scanner);
         if(choice==2) setSupplierAddress(serviceObj,scanner);
@@ -80,16 +85,14 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
         if(choice==5) getSupplierListChain(serviceObj,scanner);
     }
     public static void ManageContractsChain(SupplyModuleService serviceObj,Scanner scanner){
-        String line= """
-                1: Sign a contract
-                2: Add an item
-                3: Remove an item
-                4: Change product price
-                5: Put a discount (add or replace)
-                6: Remove a discount
-                7: Change Delivery Days (only applicable to periodic contracts)
-                8: <-- Back
-                """;
+        String line= "1: Sign a contract\n" +
+                "                2: Add an item\n" +
+                "                3: Remove an item\n" +
+                "                4: Change product price\n" +
+                "                5: Put a discount (add or replace)\n" +
+                "                6: Remove a discount\n" +
+                "                7: Change Delivery Days (only applicable to periodic contracts)\n" +
+                "                8: <-- Back";
 
         int choice=requestNumberInput(line,scanner,8,1);
         if(choice==1) signContractChain(serviceObj, scanner);
@@ -101,15 +104,13 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
         if(choice==7) changeDeliveryDays(serviceObj,scanner);
     }
     public static void ManageContactPeople(SupplyModuleService serviceObj,Scanner scanner){
-        String line= """
-                ----Managing Supplier's Contact People----note: a supplier may not have two contact people with the same name,mix in their family names to avoid duplicates.
-                1: Add a contract person
-                2: Remove a contract person
-                3: Change contact phone number
-                4: Change contact Email
-                5: Change the designated order contact person
-                6: <-- Back
-                """;
+        String line= "----Managing Supplier's Contact People----note: a supplier may not have two contact people with the same name,mix in their family names to avoid duplicates.\n" +
+                "                1: Add a contract person\n" +
+                "                2: Remove a contract person\n" +
+                "                3: Change contact phone number\n" +
+                "                4: Change contact Email\n" +
+                "                5: Change the designated order contact person\n" +
+                "                6: <-- Back";
         int choice=requestNumberInput(line,scanner,6,1);
         if(choice==1) addContactChain(serviceObj, scanner);
         if(choice==2) removeContactChain(serviceObj,scanner);
@@ -118,12 +119,10 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
         if(choice==5) changeSupplierOrderingCP(serviceObj,scanner);
     }
     public static void ViewOrders(SupplyModuleService serviceObj,Scanner scanner){
-        String line= """
-                ----Viewing Orders----
-                1: View an order by id
-                2: View all suppliers orders
-                3: <-- Back
-                """;
+        String line= "----Viewing Orders----\n" +
+                "                1: View an order by id\n" +
+                "                2: View all suppliers orders\n" +
+                "                3: <-- Back";
         int choice=requestNumberInput(line,scanner,3,1);
         if(choice==1) getOrderChain(serviceObj, scanner);
         if(choice==2) getSupplierOrderListChain(serviceObj,scanner);
