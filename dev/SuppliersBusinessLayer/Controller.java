@@ -1,5 +1,8 @@
 package SuppliersBusinessLayer;
 
+import SupplierDataAccessLayer.DataAccessObjects.ContractDAO;
+import SupplierDataAccessLayer.DataAccessObjects.OrderDAO;
+import SupplierDataAccessLayer.DataAccessObjects.SupplierDAO;
 import SuppliersBusinessLayer.Contracts.Contract;
 import SuppliersBusinessLayer.Contracts.PeriodicContract;
 import SuppliersBusinessLayer.Products.PeriodicProduct;
@@ -10,6 +13,9 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class Controller {
+    private SupplierDAO supplierDAO = new SupplierDAO();
+    private ContractDAO contractDAO = new ContractDAO();
+    private OrderDAO orderDAO = new OrderDAO();
     private final Hashtable<Integer, Supplier> suppliers;
     private final Hashtable<Integer, Contract> shortageContracts;
     private final HashMap<Integer, Order> toDeliverOrders;
@@ -30,46 +36,54 @@ public class Controller {
         }
     }
 
-    public Supplier AddSupplier(String name, Integer companyNumber, String bankNumber, String address, List<ContactPerson> contactPeople, String orderingCP){
+    public Supplier AddSupplier(String name, Integer companyNumber, String bankNumber, String address, List<ContactPerson> contactPeople, String orderingCP) throws Exception {
         if(suppliers.containsKey(companyNumber))
             throw new IllegalArgumentException("Company number already exists in the system");
         Supplier supplier = new Supplier(name, companyNumber, bankNumber, address, contactPeople, orderingCP);
         suppliers.put(companyNumber, supplier);
+        supplierDAO.create(supplier);
         return supplier;
     }
-    public void changeAddress(int companyNumber, String address){
+    public void changeAddress(int companyNumber, String address) throws Exception {
         suppliers.get(companyNumber).setAddress(address);
+        supplierDAO.update(suppliers.get(companyNumber));
     }
-    public void changeBankNum(int companyNumber, String bankNum){
+    public void changeBankNum(int companyNumber, String bankNum) throws Exception {
         suppliers.get(companyNumber).setBankNumber(bankNum);
+        supplierDAO.update(suppliers.get(companyNumber));
     }
-    public ContactPerson AddContact(Integer companyNumber, String name, String Email, String cellNumber){
+    public ContactPerson AddContact(Integer companyNumber, String name, String Email, String cellNumber) throws Exception {
         if(companyNumber == null || name == null || Email == null)
             throw new IllegalArgumentException("Parameter can not ne empty");
-        if(!suppliers.containsKey(companyNumber))
+        if(!suppliers.containsKey(companyNumber)) //TODO: doesn't have to be in business
             throw new IllegalArgumentException("No Supplier with this company number");
         ContactPerson contactPerson = new ContactPerson(name ,Email ,cellNumber);
         suppliers.get(companyNumber).addContact(contactPerson);
+        supplierDAO.update(suppliers.get(companyNumber));
         return contactPerson;
     }
-    public ContactPerson RemoveContactPerson(int companyNumber, String name){
-        if(!suppliers.containsKey(companyNumber))
+    public ContactPerson RemoveContactPerson(int companyNumber, String name) throws Exception {
+        if(!suppliers.containsKey(companyNumber)) //TODO: doesn't have to be in business
             throw new IllegalArgumentException("USER ERROR: no supplier with company number" + companyNumber);
-         return suppliers.get(companyNumber).RemoveContact(name);
+        ContactPerson contactPerson = suppliers.get(companyNumber).RemoveContact(name);
+        supplierDAO.update(suppliers.get(companyNumber));
+        return contactPerson;
     }
-    public void ChangeContactPersonMail(int companyNumber, String name, String newMail){
-        if(!suppliers.containsKey(companyNumber))
+    public void ChangeContactPersonMail(int companyNumber, String name, String newMail) throws Exception {
+        if(!suppliers.containsKey(companyNumber)) //TODO: doesn't have to be in business
             throw new IllegalArgumentException("USER ERROR: no supplier with company number" + companyNumber);
         suppliers.get(companyNumber).ChangeContactEmail(name, newMail);
+        supplierDAO.update(suppliers.get(companyNumber));
     }
-    public void ChangeContactPersonPhone(int companyNumber, String name, String newNum){
-        if(!suppliers.containsKey(companyNumber))
+    public void ChangeContactPersonPhone(int companyNumber, String name, String newNum) throws Exception {
+        if(!suppliers.containsKey(companyNumber)) //TODO: doesn't have to be in business
             throw new IllegalArgumentException("USER ERROR: no supplier with company number" + companyNumber);
         suppliers.get(companyNumber).ChangeContactPhoneNum(name, newNum);
+        supplierDAO.update(suppliers.get(companyNumber));
     }
 
-    public Contract SignPeriodicContract(int companyNumber, List<int[]> itemInfoList, HashMap<Integer,List<int[]>> discountsList,List<int[]> generalDiscountsList, boolean[] deliveryDays) {
-        if(!suppliers.containsKey(companyNumber))
+    public Contract SignPeriodicContract(int companyNumber, List<int[]> itemInfoList, HashMap<Integer,List<int[]>> discountsList,List<int[]> generalDiscountsList, boolean[] deliveryDays) throws Exception {
+        if(!suppliers.containsKey(companyNumber)) //TODO: doesn't have to be in business
             throw new IllegalArgumentException("USER ERROR: supplier with id "+companyNumber+" does not exist");
         if(deliveryDays.length != 7)
             throw new IllegalArgumentException("SYSTEM ERROR: Delivery days must be 7 days array");
@@ -82,45 +96,55 @@ public class Controller {
         for(int i=0;i<7;i++)
             if(deliveryDays[i])
                 periodicSuppliers.get(i).add(contract);
+        contractDAO.create(contract);
         return contract;
     }
-    public void changeDeliveryDays(int companyNumber,boolean[] days){
-        Contract contract=getContract(companyNumber);
+    public void changeDeliveryDays(int companyNumber,boolean[] days) throws Exception {
+        Contract contract = getContract(companyNumber);
         if(contract.isPeriodic())
             ((PeriodicContract) contract).setDeliveryDays(days);
+        contractDAO.update(getContract(companyNumber));
     }
-    public Contract SignShortageContract(int companyNumber, List<int[]> itemInfoList, HashMap<Integer, List<int[]>> discountsList,List<int[]> generalDiscountsList) {
-        if(!suppliers.containsKey(companyNumber))
+    public Contract SignShortageContract(int companyNumber, List<int[]> itemInfoList, HashMap<Integer, List<int[]>> discountsList,List<int[]> generalDiscountsList) throws Exception {
+        if(!suppliers.containsKey(companyNumber)) //TODO: doesn't have to be in business
             throw new IllegalArgumentException("USER ERROR: supplier with id "+companyNumber+" does not exist");
-        Supplier supplier=suppliers.get(companyNumber);
-        ArrayList<SupplierProduct> SupplierItems=new ArrayList<>();
+        Supplier supplier = suppliers.get(companyNumber);
+        ArrayList<SupplierProduct> SupplierItems = new ArrayList<>();
         for(int[] itemInfo: itemInfoList){
             SupplierItems.add(new SupplierProduct(itemInfo[0],itemInfo[1],itemInfo[2]));
         }
-        Contract contract=new Contract(supplier,SupplierItems,discountsList,generalDiscountsList);
+        Contract contract = new Contract(supplier,SupplierItems,discountsList,generalDiscountsList);
         shortageContracts.put(companyNumber,contract);
+        contractDAO.create(contract);
         return contract;
     }
-    public void addProduct(int companyNumber,int catalogNumber,int supplierId,int price,List<int[]> discounts){
-        getContract(companyNumber).addProduct(catalogNumber,supplierId,price,discounts);
+    public void addProduct(int companyNumber,int catalogNumber,int supplierId,int price,List<int[]> discounts) throws Exception {
+        getContract(companyNumber).addProduct(catalogNumber,supplierId,price,discounts); //TODO: check for real update in business or DB
+        contractDAO.update(getContract(companyNumber));
     }
-    public void changeProductPrice(int companyNumber,int catalogNumber,int price){
+    public void changeProductPrice(int companyNumber,int catalogNumber,int price) throws Exception {
         getContract(companyNumber).ChangeProductPrice(catalogNumber,price);
+        contractDAO.update(getContract(companyNumber));
     }
-    public void removeProduct(int companyNumber,int catalogNumber){
+    public void removeProduct(int companyNumber,int catalogNumber) throws Exception {
         getContract(companyNumber).RemoveProduct(catalogNumber);
+        contractDAO.update(getContract(companyNumber));
     }
-    public void putDiscount(int companyNumber,int catalogNumber,int amount, int discount){
+    public void putDiscount(int companyNumber,int catalogNumber,int amount, int discount) throws Exception {
         getContract(companyNumber).putDiscount(catalogNumber, amount, discount);
+        contractDAO.update(getContract(companyNumber));
     }
-    public void removeDiscount(int companyNumber,int catalogNumber,int amount){
+    public void removeDiscount(int companyNumber,int catalogNumber,int amount) throws Exception {
         getContract(companyNumber).removeDiscount(catalogNumber, amount);
+        contractDAO.update(getContract(companyNumber));
     }
-    public void putGeneralDiscount(int companyNumber,int amount, int discount){
+    public void putGeneralDiscount(int companyNumber,int amount, int discount) throws Exception {
         getContract(companyNumber).putGeneralDiscount(amount, discount);
+        contractDAO.update(getContract(companyNumber));
     }
-    public void removeGeneralDiscount(int companyNumber,int amount){
+    public void removeGeneralDiscount(int companyNumber,int amount) throws Exception {
         getContract(companyNumber).removeGeneralDiscount(amount);
+        contractDAO.update(getContract(companyNumber));
     }
     //public Order OrderProducts(int companyNumber, List<int[]> productsAndAmounts, String contactPerson, LocalDate arrivalTime) { //product[0]=supplierId, [1]=amount
     //    if(!contracts.containsKey(companyNumber))
@@ -149,24 +173,29 @@ public class Controller {
     //    return order;
     //}
 
-    public Order getOrder(int orderId) {
-        if(!orderHistory.containsKey(orderId))
-            throw new IllegalArgumentException("USER ERROR: Order with id "+orderId+" not in system");
+    public Order getOrder(int orderId) throws Exception {//TODO: doesn't have to be in business
+        if(!orderHistory.containsKey(orderId)) {
+            return orderDAO.get(orderId);
+            //throw new IllegalArgumentException("USER ERROR: Order with id "+orderId+" not in system");
+        }
         else return orderHistory.get(orderId);
     }
-    public List<Order> getOrderList(int companyNum){
-        ArrayList<Order> acc= new ArrayList<>();
+    public List<Order> getOrderList(int companyNum) throws Exception {
+        ArrayList<Order> acc= new ArrayList<>(); //TODO: only one, data or business
+        for(Order order:orderDAO.getAllOrders())
+            if(order.getSupplyCompanyNumber()==companyNum)
+                acc.add(order);
         for(Order order:orderHistory.values())
             if(order.getSupplyCompanyNumber()==companyNum)
                 acc.add(order);
         return acc;
     }
 
-    public Contract getContract(int companyNum) {
-        if(!suppliers.containsKey(companyNum))
+    public Contract getContract(int companyNum) throws Exception {
+        if(!suppliers.containsKey(companyNum)) //TODO: doesn't have to be in business
             throw new IllegalArgumentException("USER ERROR: Supplier with company number "+companyNum+" not in system");
-        Contract contract=null;
-        if(shortageContracts.containsKey(companyNum))
+        Contract contract = null;
+        if(shortageContracts.containsKey(companyNum)) //TODO: doesn't have to be in business
             return shortageContracts.get(companyNum);
         for(int i=0;i<6;i++){
             for(PeriodicContract periodicContract: periodicSuppliers.get(i)){
@@ -174,22 +203,28 @@ public class Controller {
                     return periodicContract;
             }
         }
-        throw new IllegalArgumentException("USER ERROR: Supplier "+companyNum+" has no contract");
+        return contractDAO.get(companyNum);
+        //throw new IllegalArgumentException("USER ERROR: Supplier "+companyNum+" has no contract");
     }
-    public void ChangeContractCP(int companyNum,String newCP){
-        if(!suppliers.get(companyNum).ContainsContact(newCP))
+    public void ChangeContractCP(int companyNum,String newCP) throws Exception {
+        if(!suppliers.get(companyNum).ContainsContact(newCP)) //TODO: doesn't have to be in business
             throw new RuntimeException("USER ERROR: Supplier"+suppliers.get(companyNum).getName()+" does not" +
                     "contain contact named " + newCP);
         suppliers.get(companyNum).setOrderingCP(newCP);
+        supplierDAO.update(suppliers.get(companyNum));
     }
-    public Supplier getSupplier(int companyNum) {
-        if(!suppliers.containsKey(companyNum))
-            throw new IllegalArgumentException("USER ERROR: Supplier with company number "+companyNum+" not in system");
+    public Supplier getSupplier(int companyNum) throws Exception {
+        if(!suppliers.containsKey(companyNum)){
+            return supplierDAO.get(companyNum);
+            //throw new IllegalArgumentException("USER ERROR: Supplier with company number "+companyNum+" not in system");
+        }
+
         else return suppliers.get(companyNum);
     }
 
-    public List<Supplier> getSupplierList() {
-        return new ArrayList<>(suppliers.values());
+    public List<Supplier> getSupplierList() throws Exception {
+        return supplierDAO.getAllSuppliers();
+        //return new ArrayList<>(suppliers.values());
     }
 
     public List<Order> FetchOrders() {
