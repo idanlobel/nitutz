@@ -92,10 +92,14 @@ public class Contract {
             discounts.get(catalogNumber).add(new int[] {amount,discount});
     }
     public void removeDiscount(int catalogNumber,int amount) {
+        boolean failed = true;
         for(int[] disPair:discounts.get(catalogNumber))
-            if(disPair[0]==amount)
+            if(disPair[0]==amount){
                 discounts.get(catalogNumber).removeIf(pair -> pair[0] == amount);
-        throw new IllegalArgumentException("ERROR: no discount exists with specified amount");
+                failed = false;
+            }
+        if (failed)
+            throw new IllegalArgumentException("ERROR: no discount exists with specified amount");
     }
     public void putGeneralDiscount(int amount, int discount){
         boolean replaced=false;

@@ -2,6 +2,7 @@ package SuppliersModule.SupplierDataAccessLayer.DataAccessObjects;
 
 import SuppliersModule.SupplierDataAccessLayer.DatabaseManager;
 import SuppliersModule.SuppliersBusinessLayer.Contracts.Contract;
+import SuppliersModule.SuppliersBusinessLayer.Contracts.PeriodicContract;
 import SuppliersModule.SuppliersBusinessLayer.Products.SupplierProduct;
 import SuppliersModule.SuppliersBusinessLayer.Supplier;
 
@@ -9,10 +10,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ContractDAO {
     private boolean readAll = false;
@@ -37,9 +35,11 @@ public class ContractDAO {
                 int price = rs3.getInt("Price");
                 String discounts = rs3.getString("Discounts");
                 List<int[]> productDiscounts = new ArrayList<>();
-                for (String part:discounts.split("l")) {
-                    String[] pair = part.split("v");
-                    productDiscounts.add(new int[]{Integer.parseInt(pair[0]), Integer.parseInt(pair[1])});
+                if(!Objects.equals(discounts, "")){
+                    for (String part:discounts.split("l")) {
+                        String[] pair = part.split("v");
+                        productDiscounts.add(new int[]{Integer.parseInt(pair[0]), Integer.parseInt(pair[1])});
+                    }
                 }
                 discountsMap.put(id, productDiscounts);
                 supplierProductList.add(new SupplierProduct(supplierId, price, id));
@@ -51,7 +51,15 @@ public class ContractDAO {
                 String deliveryDays = rs.getString("DeliveryDays");
                 int contractType = rs.getInt("ContractType");
                 int deliveryType = rs.getInt("DeliveredBySupplier");
-                contract = new Contract(splr, supplierProductList, discountsMap, generalDiscounts);
+                String[] arrDeliveryDays = deliveryDays.split(",");
+                boolean[] boolDeliveryDay = new boolean[7];
+                for(int i = 0; i < arrDeliveryDays.length; i++)
+                    boolDeliveryDay[i] = Boolean.parseBoolean(arrDeliveryDays[i].substring(1));
+                if(contractType == 0)
+                    contract = new Contract(splr, supplierProductList, discountsMap, generalDiscounts);
+                else
+                    contract = new PeriodicContract(splr, supplierProductList, discountsMap, generalDiscounts, boolDeliveryDay);
+
             }
         } catch (Exception e) {
             if (!retry){retry=true; get(companyNumber);}
@@ -116,7 +124,8 @@ public class ContractDAO {
             conn = DatabaseManager.getInstance().connect();
             Statement rs = conn.createStatement();
             //set Contract data
-            sql+="'"+contract.getSupplier().getCompanyNumber()+"','"+""+"','"+contract.getType()+"','"+contract.getType()+
+            String deliveryDays = Arrays.toString(contract.getDeliveryDays());
+            sql+="'"+contract.getSupplier().getCompanyNumber()+"','"+deliveryDays+"','"+contract.getType()+"','"+contract.getType()+
                     "');";
             rs.addBatch(sql);
             //set his productss;

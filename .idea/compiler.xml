@@ -9,8 +9,8 @@
         <module name="adss_group_j" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="adss_group_j" target="18" />
+    <bytecodeTargetLevel target="8">
+      <module name="adss_group_j" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
