@@ -5,7 +5,7 @@ import java.sql.*;
 public class DatabaseManager {
 
     private static DatabaseManager instance = null;
-    private static  String url = "jdbc:sqlite:suppliersDB.db";
+    private static  String url = "jdbc:sqlite:"+System.getProperty("user.dir")+"\\dev\\suppliersDB.db";
     private void createSuppliersModuleTables() throws Exception {
         Connection connection = null;
         try {

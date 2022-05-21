@@ -6,6 +6,8 @@ import Stock_Module.stock_service_layer.Responses.IsError;
 import Stock_Module.stock_service_layer.Responses.IsOk;
 import Stock_Module.stock_service_layer.Responses.Response;
 
+import java.util.List;
+
 public class Stock_Manager {
 
     private Stock mystock;
@@ -36,6 +38,14 @@ public Response Auto_start() throws Exception {
         return new IsError(e.getMessage());
     }
 
+}
+public Response<Boolean> ValidateCatalogNumber(List<Long> catalogNumbers){
+    try {
+        return new IsOk(mystock.ValidateCatalogNum(catalogNumbers),"done successfully");
+    }
+    catch (Exception e){
+        return new IsError(e.getMessage());
+    }
 }
     public Response make_order(String product_catalog_number, String quantity, String cost, String expiry, String name, String manufactorer, String category, String sub_cat, String sub_sub_cat)
     {

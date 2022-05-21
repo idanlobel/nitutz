@@ -45,7 +45,7 @@ public class Merged_main {
             {
                 if(order_in_array[0].toLowerCase(Locale.ROOT).equals("supplier"))
                 {
-                    suppliersMain.RunSuppliers(serviceObj);
+                    suppliersMain.RunSuppliers(serviceObj,stock_manager);
                 }
                 else
                 {

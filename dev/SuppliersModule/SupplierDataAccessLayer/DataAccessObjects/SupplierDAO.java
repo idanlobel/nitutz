@@ -195,37 +195,39 @@ public class SupplierDAO {
         }
         return false;
     }
-    public void deleteAllData() throws Exception{
-        Connection conn=null;
-        String sql1 = "DELETE FROM ContactPeople;";
-        String sql2 = "DELETE FROM Contracts;";
-        String sql3 = "DELETE FROM Orders;";
-        String sql4 = "DELETE FROM SupplierProducts;";
-        String sql5 = "DELETE FROM Suppliers;";
-        try {
-            conn = DatabaseManager.getInstance().connect();
-            Statement rs = conn.createStatement();
-            rs.addBatch(sql1);
-            rs.addBatch(sql2);
-            rs.addBatch(sql3);
-            rs.addBatch(sql4);
-            rs.addBatch(sql5);
-            rs.executeBatch();
-            conn.commit();
-        } catch(Exception e) {
-            if (!retry){retry=true; deleteAllData();}
-            else{
-                retry=false;
-                throw new Exception(e.getMessage());
-            }
-        } finally {
+
+    public void deleteAllData() throws Exception {
+            Connection conn=null;
+            String sql1 = "DELETE FROM ContactPeople;";
+            String sql2 = "DELETE FROM Contracts;";
+            String sql3 = "DELETE FROM Orders;";
+            String sql4 = "DELETE FROM SupplierProducts;";
+            String sql5 = "DELETE FROM Suppliers;";
             try {
-                if (conn != null) {
-                    conn.close();
+                conn = DatabaseManager.getInstance().connect();
+                Statement rs = conn.createStatement();
+                rs.addBatch(sql1);
+                rs.addBatch(sql2);
+                rs.addBatch(sql3);
+                rs.addBatch(sql4);
+                rs.addBatch(sql5);
+                rs.executeBatch();
+                conn.commit();
+            } catch(Exception e) {
+                if (!retry){retry=true; deleteAllData();}
+                else{
+                    retry=false;
+                    throw new Exception(e.getMessage());
                 }
-            } catch (SQLException ex) {
-                throw new Exception(ex.getMessage());
+            } finally {
+                try {
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } catch (SQLException ex) {
+                    throw new Exception(ex.getMessage());
+                }
             }
-        }
+
     }
 }

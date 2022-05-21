@@ -92,7 +92,10 @@ public class Contract {
             discounts.get(catalogNumber).add(new int[] {amount,discount});
     }
     public void removeDiscount(int catalogNumber,int amount) {
-        discounts.get(catalogNumber).removeIf(pair -> pair[0] == amount);
+        for(int[] disPair:discounts.get(catalogNumber))
+            if(disPair[0]==amount)
+                discounts.get(catalogNumber).removeIf(pair -> pair[0] == amount);
+        throw new IllegalArgumentException("ERROR: no discount exists with specified amount");
     }
     public void putGeneralDiscount(int amount, int discount){
         boolean replaced=false;
@@ -110,7 +113,10 @@ public class Contract {
             generalDiscounts.add(new int[] {amount,discount});
     }
     public void removeGeneralDiscount(int amount) {
-        generalDiscounts.removeIf(pair -> pair[0] == amount);
+        for(int[] pair: generalDiscounts)
+            if(pair[0]==amount)
+                generalDiscounts.removeIf(disPair -> disPair[0] == amount);
+        throw new IllegalArgumentException("ERROR: no discount amount in contract");
     }
     public boolean isPeriodic(){
         return false;

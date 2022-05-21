@@ -1,5 +1,6 @@
 package SuppliersModule.SuppliersPresentationLayer;
 
+import Stock_Module.stock_service_layer.Stock_Manager;
 import SuppliersModule.SuppliersBusinessLayer.ContactPerson;
 import SuppliersModule.SuppliersBusinessLayer.Contracts.Contract;
 import SuppliersModule.SuppliersBusinessLayer.Order;
@@ -14,7 +15,7 @@ import java.util.Scanner;
 
 public class SuppliersMain { //note: this code is assumed to be made as a placeholder till we have a gui, a such is written quick and dirty
 
-    public  void RunSuppliers(SupplyModuleService serviceObj) {
+    public  void RunSuppliers(SupplyModuleService serviceObj, Stock_Manager stock_manager) {
      //   SupplyModuleService serviceObj=new SupplyModuleService();
         Scanner scanner=new Scanner(System.in);
         int choice=-1;
@@ -39,14 +40,14 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
                 choice = requestNumberInput(line, scanner, 5, 1);
                 if (choice == 1) ManageSuppliersChain(serviceObj, scanner);
                 if (choice == 2) ManageContactPeople(serviceObj, scanner);
-                if (choice == 3) ManageContractsChain(serviceObj, scanner);
+                if (choice == 3) ManageContractsChain(serviceObj,stock_manager, scanner);
                 if (choice == 4) ViewOrders(serviceObj, scanner);
             }
             catch (Exception e){
                 System.out.println(e.getMessage());
             }
         }
-        System.out.println("Program end. goodbye :(");
+        System.out.println("Exiting Supplier System...");
 
     }
     public static int requestNumberInput(String string,Scanner scanner,int max,int min){
@@ -84,7 +85,7 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
         if(choice==4) getSupplierChain(serviceObj,scanner);
         if(choice==5) getSupplierListChain(serviceObj,scanner);
     }
-    public static void ManageContractsChain(SupplyModuleService serviceObj,Scanner scanner){
+    public static void ManageContractsChain(SupplyModuleService serviceObj,Stock_Manager stock_manager,Scanner scanner){
         String line= "1: Sign a contract\n" +
                 "2: Add an item\n" +
                 "3: Remove an item\n" +
@@ -95,7 +96,7 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
                 "8: <-- Back\n";
 
         int choice=requestNumberInput(line,scanner,8,1);
-        if(choice==1) signContractChain(serviceObj, scanner);
+        if(choice==1) signContractChain(serviceObj,stock_manager, scanner);
         if(choice==2) addProductToContractChaim(serviceObj,scanner);
         if(choice==3) removeProductToContractChain(serviceObj,scanner);
         if(choice==4) changeProductPriceChain(serviceObj,scanner);
@@ -226,15 +227,15 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
     }
     public static void setSupplierBankNumber(SupplyModuleService service,Scanner scanner) {
         int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,1);
-        System.out.println("Please state the new bank number (make sure no one is looking):\n");
-        String in=scanner.nextLine();
+        System.out.print("Please state the new bank number (make sure no one is looking): ");
+        String in=scanner.next();
         checkCancel(in);
         handleResponse(service.ChangeSupplierBankNumber(companyNumber,in));
     }
     public static void setSupplierAddress(SupplyModuleService service,Scanner scanner) {
         int companyNumber=requestNumberInput("Please state the company number: ",scanner,-1,1);
-        System.out.println("Please state the new address:\n");
-        String in=scanner.nextLine();
+        System.out.print("Please state the new address: ");
+        String in=scanner.next();
         if(in.equals("-1")) throw new RuntimeException("Operation Canceled.");
         handleResponse(service.ChangeSupplierAddress(companyNumber,in));
     }
@@ -289,15 +290,18 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
         String cName=scanner.next();
         handleResponse(service.changeSupplierOrderingCP(companyNumber,cName));
     }
-    public static void signContractChain(SupplyModuleService service,Scanner scanner){
+    public static void signContractChain(SupplyModuleService service,Stock_Manager stock_manager,Scanner scanner){
+        ArrayList<Long> catalogNumberList=new ArrayList<>();
         int companyNumber=requestNumberInput("Please state the company number with which the contract is signed with: ",scanner,-1,1);
         int amount=requestNumberInput("Enter item amount: ",scanner,-1,1);
         ArrayList<int[]> idPairs=new ArrayList<>();
         HashMap<Integer,List<int[]>> discounts=new HashMap<>();
         for(int i=1;i<=amount;i++){
-            int id=requestNumberInput("Item "+i+" id: ",scanner,-1,1);
+            int id=requestNumberInput("Item "+i+" supplier's id: ",scanner,-1,1);
             int price=requestNumberInput("Item "+i+" price: ",scanner,-1,1);
-            idPairs.add(new int[]{id, price,-1}); //second id is -1 cause we have to internal stock sorting yet
+            int catalogNumber=requestNumberInput("Item "+i+" catalog number: ",scanner,-1,1);
+            idPairs.add(new int[]{id, price,catalogNumber}); //second id is -1 cause we have to internal stock sorting yet
+            catalogNumberList.add((long) catalogNumber);
             int disAmount=requestNumberInput("Enter amount of discounts: ",scanner,-1,0);
             ArrayList<int[]> itemDisList=new ArrayList<>();
             for(int j=1;j<=disAmount;j++) {
@@ -306,9 +310,9 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
                 int disMult=requestNumberInput("Enter percent(eg 20,30,40 - no %): ",scanner,99,1);
                 itemDisList.add(new int[]{minDisAmount,disMult});
             }
-            discounts.put(id,itemDisList);
+            discounts.put(catalogNumber,itemDisList);
             }
-        int genDis=requestNumberInput("Enter General quantity discount amount",scanner,-1,0);
+        int genDis=requestNumberInput("Enter General quantity discount amount: ",scanner,-1,0);
         ArrayList<int[]> genDisPairs=new ArrayList<>();
         for(int i=0;i<genDis;i++){
             System.out.println("--Discount "+i+"--");
@@ -316,27 +320,29 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
             int dis=requestNumberInput("Enter Discount: ",scanner,100,1);
             genDisPairs.add(new int[]{num,dis});
         }
-        int isPer=requestNumberInput("is the contract for periodic orders or shortage? (0-shortage, 1-periodic)",scanner,1,0);
+        int isPer=requestNumberInput("is the contract for periodic orders or shortage? (0-shortage, 1-periodic): ",scanner,1,0);
         boolean done=false;
-        if(isPer==1) {
-            while(!done)
-            try {
-                System.out.println("Enter delivery days(eg. 1,2,3 for Sun,Mon,Tue): ");
-                String days = scanner.next();
-                boolean[] par = new boolean[7];
-                String[] split = days.split(",");
-                for (String day : split)
-                    par[Integer.parseInt(day) - 1] = true;
-                handleResponse(service.SignPeriodicContract(companyNumber, idPairs, discounts, genDisPairs, par));
-                done=true;
-            }
-            catch (Exception e){
-                System.out.print("Invalid syntax");
+        if(stock_manager.ValidateCatalogNumber(catalogNumberList).getValue()) {
+            if (isPer == 1) {
+                while (!done)
+                    try {
+                        System.out.println("Enter delivery days(eg. 1,2,3 for Sun,Mon,Tue): ");
+                        String days = scanner.next();
+                        boolean[] par = new boolean[7];
+                        String[] split = days.split(",");
+                        for (String day : split)
+                            par[Integer.parseInt(day) - 1] = true;
+
+                        handleResponse(service.SignPeriodicContract(companyNumber, idPairs, discounts, genDisPairs, par));
+                        done = true;
+                    } catch (Exception e) {
+                        System.out.print("Invalid syntax");
+                    }
+            } else {
+                handleResponse(service.SignShortageContract(companyNumber, idPairs, discounts, genDisPairs));
             }
         }
-        else {
-            handleResponse(service.SignShortageContract(companyNumber,idPairs,discounts,genDisPairs));
-        }
+        else System.out.println("Invalid catalog items: some of them are unrecognized");
     }
     public static void getContractChain(SupplyModuleService service,Scanner scanner){
         int companyNumber=requestNumberInput("Please state the company number with which the contract is signed with: ",scanner,-1,1);

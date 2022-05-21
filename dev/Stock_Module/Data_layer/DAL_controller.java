@@ -50,7 +50,8 @@ public  class DAL_controller {
     private DAL_controller()
     {
 
-        this.connection_string="jdbc:sqlite:"+System.getProperty("user.dir")+"\\..\\dev\\database.db";
+       this.connection_string="jdbc:sqlite:"+System.getProperty("user.dir")+"\\dev\\database.db";
+         //this.connection_string="jdbc:sqlite:database.db";
 
         this.products_table=new Products_DAO(connection_string);
         this.product_table=new Product_DAO(connection_string);

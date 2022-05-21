@@ -62,6 +62,20 @@ public class Stock {
 
 
     }
+    public boolean ValidateCatalogNum(List<Long> catalogNumberList) {
+        for (Long catalogNumber : catalogNumberList) {
+            boolean found = false;
+            for (Products products : this.products_list) {
+                if ((products.getCatalog_number() == catalogNumber)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+                return false;
+        }
+        return true;
+    }
     public void define_periodic_orders(String day,long products_catalog_number, int quantity, Double cost,  String name, String manufactorer, String category,String sub_cat,String sub_sub_cat)
     {
         Periodic_Order order=new Periodic_Order(day,products_catalog_number,quantity,cost,name,manufactorer,category,sub_cat,sub_sub_cat,dal_controller.getPeriodic_order_table());
