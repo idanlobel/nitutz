@@ -259,4 +259,15 @@ public class SupplyModuleService {
             return new IsError(e.getMessage());
         }
     }
+    public Response demoMode(){
+
+        try {
+            controller.clearDataBase();
+            controller.populateDataBase();
+            return new IsValue(null,"You are now running the demo data");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
 }

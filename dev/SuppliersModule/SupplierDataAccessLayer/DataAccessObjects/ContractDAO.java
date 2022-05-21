@@ -35,7 +35,7 @@ public class ContractDAO {
                 int price = rs3.getInt("Price");
                 String discounts = rs3.getString("Discounts");
                 List<int[]> productDiscounts = new ArrayList<>();
-                if(!Objects.equals(discounts, "")){
+                if(!Objects.equals(discounts, "") && discounts != null){
                     for (String part:discounts.split("l")) {
                         String[] pair = part.split("v");
                         productDiscounts.add(new int[]{Integer.parseInt(pair[0]), Integer.parseInt(pair[1])});

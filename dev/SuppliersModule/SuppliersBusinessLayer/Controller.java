@@ -315,6 +315,9 @@ public class Controller {
     public void clearDataBase() throws Exception {
         supplierDAO.deleteAllData();
     }
+    public void populateDataBase() throws Exception {
+        supplierDAO.populateDB();
+    }
     // public static LocalDate getArrivalDate(boolean[] days){ //return nearest date of a weekday that's also a delivery day
     //     int currWeekDay=LocalDate.now().getDayOfWeek().getValue(),daysTillDel=0;
     //     for(int i=currWeekDay+1;i<=7;i=i+1%7){

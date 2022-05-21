@@ -26,6 +26,7 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
                     "3: Manage Contracts\n" +
                     "4: View Orders\n" +
                     "5: Back to main menu\n" +
+                    "6: Load demo\n" +
                     "note: at any point input -1 to cancel operation and go back here\n";
             /*String line = """
                     choose action (type the numeration to execute):
@@ -37,11 +38,12 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
                     note: at any point input -1 to cancel operation and go back here
                     """;*/
             try {
-                choice = requestNumberInput(line, scanner, 5, 1);
+                choice = requestNumberInput(line, scanner, 6, 1);
                 if (choice == 1) ManageSuppliersChain(serviceObj, scanner);
                 if (choice == 2) ManageContactPeople(serviceObj, scanner);
                 if (choice == 3) ManageContractsChain(serviceObj,stock_manager, scanner);
                 if (choice == 4) ViewOrders(serviceObj, scanner);
+                if (choice == 6) demoModeStart(serviceObj);
             }
             catch (Exception e){
                 System.out.println(e.getMessage());
@@ -396,5 +398,8 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
         if(response.isError())
             System.out.println("ERROR! "+response.getMsg());
         else System.out.println(response.getMsg());
+    }
+    public static void demoModeStart(SupplyModuleService service){
+        handleResponse(service.demoMode());
     }
 }
