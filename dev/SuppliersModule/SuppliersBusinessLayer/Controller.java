@@ -317,6 +317,28 @@ public class Controller {
     }
     public void populateDataBase() throws Exception {
         supplierDAO.populateDB();
+        try {
+            List<Supplier> supplierList = supplierDAO.getAllSuppliers();
+            for (Supplier supplier : supplierList) {
+                suppliers.put(supplier.getCompanyNumber(), supplier);
+            }
+            List<Contract> contractList = contractDAO.getAllContracts();
+            for (Contract contract : contractList) {
+                if (contract.getType() == 0)
+                    shortageContracts.put(contract.getSupplier().getCompanyNumber(), contract);
+            }
+            List<Order> orderList = orderDAO.getAllOrders();
+            for (Order order : orderList) {
+                orderHistory.put(order.getId(), order);
+            }
+            for (int i = 0; i < 7; i++) {
+                periodicProducts.put(i, new ArrayList<>());
+                periodicSuppliers.put(i, new ArrayList<>());
+            }
+        }
+        catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
     }
     // public static LocalDate getArrivalDate(boolean[] days){ //return nearest date of a weekday that's also a delivery day
     //     int currWeekDay=LocalDate.now().getDayOfWeek().getValue(),daysTillDel=0;

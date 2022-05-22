@@ -111,7 +111,7 @@ public class ContractDAO {
                 Contract contract = get(cn);
                 if (!cacheContracts.containsKey(contract.getSupplier().getCompanyNumber())) cacheContracts.put(contract.getSupplier().getCompanyNumber(),contract);
             }
-            readAll = true;
+            //readAll = true;
         }
         list.addAll(cacheContracts.values());
         return list;

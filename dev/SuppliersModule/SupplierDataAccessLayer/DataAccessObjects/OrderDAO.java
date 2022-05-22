@@ -98,7 +98,7 @@ public class OrderDAO {
                 Order order = get(i);
                 if (!cacheOrders.containsKey(i)) cacheOrders.put(i,order);
             }
-            readAll = true;
+            //readAll = true;
         }
         list.addAll(cacheOrders.values());
         return list;

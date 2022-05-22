@@ -85,7 +85,7 @@ public class SupplierDAO {
                 Supplier supplier = get(cn);
                 if (!cacheSuppliers.containsKey(supplier.getCompanyNumber()))cacheSuppliers.put(supplier.getCompanyNumber(),supplier);
             }
-            readAll = true;
+            //readAll = true;
         }
         list.addAll(cacheSuppliers.values());
         return list;
