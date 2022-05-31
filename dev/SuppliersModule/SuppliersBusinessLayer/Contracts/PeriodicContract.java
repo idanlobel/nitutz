@@ -10,8 +10,8 @@ public class PeriodicContract extends Contract {
 
     private boolean[] deliveryDays; //size=7, true= delivery day
 
-    public PeriodicContract(Supplier supplier, List<SupplierProduct> products, HashMap<Integer, List<int[]>> discounts,List<int[]> generalDiscounts, boolean[] deliveryDays) {
-        super(supplier,products,discounts,generalDiscounts);
+    public PeriodicContract(int companyNumber,String orderingCP, List<SupplierProduct> products, HashMap<Integer, List<int[]>> discounts,List<int[]> generalDiscounts, boolean[] deliveryDays) {
+        super(companyNumber,orderingCP,products,discounts,generalDiscounts);
         this.deliveryDays=deliveryDays;
     }
     public boolean[] getDeliveryDays(){

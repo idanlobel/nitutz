@@ -7,13 +7,17 @@ import java.util.*;
 
 public class Contract {
     private final HashSet<Integer> productIds; //for contains
-    private final Supplier supplier;
+   // private final Supplier supplier;
     private final HashMap<Integer, SupplierProduct> products;
     private final HashMap<Integer, List<int[]>> discounts; //[0]=amount, [1]=percent (itemId is our system's id, not the supplier's)
     private final List<int[]> generalDiscounts;
-    public Contract(Supplier supplier, List<SupplierProduct> products, HashMap<Integer, List<int[]>> discounts,List<int[]> generalDiscounts) {
+    private final int companyNumber;
+    private String orderingContractPerson;
+    public Contract(int companyNumber,String orderingContractPerson, List<SupplierProduct> products, HashMap<Integer, List<int[]>> discounts,List<int[]> generalDiscounts) {
+        this.orderingContractPerson=orderingContractPerson;
+        this.companyNumber=companyNumber;
         this.productIds=new HashSet<>();
-        this.supplier = supplier;
+     //   this.supplier = supplier;
         this.products = new HashMap<>();
         this.discounts = discounts;
         this.generalDiscounts=generalDiscounts;
@@ -21,6 +25,18 @@ public class Contract {
             this.products.put(product.getId(), product);
             this.productIds.add(product.getId());
         }
+    }
+
+    public int getCompanyNumber() {
+        return companyNumber;
+    }
+
+    public String getOrderingCP() {
+        return orderingContractPerson;
+    }
+
+    public void setOrderingCP(String orderingContractPerson) {
+        this.orderingContractPerson = orderingContractPerson;
     }
 
     public HashMap<Integer,List<int[]>> getDiscounts() {
@@ -31,9 +47,9 @@ public class Contract {
         return generalDiscounts;
     }
 
-    public Supplier getSupplier() {
-        return supplier;
-    }
+ //   public Supplier getSupplier() {
+  //      return supplier;
+ //   }
     public Collection<Integer> getProductsIds() {
         return products.keySet();
     }

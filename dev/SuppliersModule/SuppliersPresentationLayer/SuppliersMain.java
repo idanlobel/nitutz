@@ -17,6 +17,7 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
 
     public  void RunSuppliers(SupplyModuleService serviceObj, Stock_Manager stock_manager) {
      //   SupplyModuleService serviceObj=new SupplyModuleService();
+        System.out.println("------Welcome to The Suppliers Module------");
         Scanner scanner=new Scanner(System.in);
         int choice=-1;
         while(choice!=5) {
@@ -179,7 +180,6 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
         boolean done=false;
         while (!done) {
             try {
-
                 System.out.println("Enter delivery days(eg. 1,2,3 for Sun,Mon,Tue): ");
                 String days = scanner.next();
                 boolean[] par = new boolean[7];
@@ -219,10 +219,7 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
             checkCancel(Email);
             contactPeople.add(new ContactPerson(cName,Email,cellNum));
         }
-        System.out.printf("please state the name of the contact person to handle orders: ");
-        String name=scanner.next();
-        checkCancel(name);
-        handleResponse(service.AddSupplier(companyNumber,companyName,bankNum,address,contactPeople,name));
+        handleResponse(service.AddSupplier(companyNumber,companyName,bankNum,address,contactPeople));
     }
     public static void checkCancel(String str){
         if(str.equals("-1")) throw new RuntimeException("Operation Canceled.");
@@ -322,6 +319,9 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
             int dis=requestNumberInput("Enter Discount: ",scanner,100,1);
             genDisPairs.add(new int[]{num,dis});
         }
+        System.out.printf("please state the name of the contact person to handle orders: ");
+        String name=scanner.next();
+        checkCancel(name);
         int isPer=requestNumberInput("is the contract for periodic orders or shortage? (0-shortage, 1-periodic): ",scanner,1,0);
         boolean done=false;
         if(stock_manager.ValidateCatalogNumber(catalogNumberList).getValue()) {
@@ -335,13 +335,13 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
                         for (String day : split)
                             par[Integer.parseInt(day) - 1] = true;
 
-                        handleResponse(service.SignPeriodicContract(companyNumber, idPairs, discounts, genDisPairs, par));
+                        handleResponse(service.SignPeriodicContract(companyNumber,name, idPairs, discounts, genDisPairs, par));
                         done = true;
                     } catch (Exception e) {
                         System.out.print("Invalid syntax");
                     }
             } else {
-                handleResponse(service.SignShortageContract(companyNumber, idPairs, discounts, genDisPairs));
+                handleResponse(service.SignShortageContract(companyNumber,name, idPairs, discounts, genDisPairs));
             }
         }
         else System.out.println("Invalid catalog items: some of them are unrecognized");

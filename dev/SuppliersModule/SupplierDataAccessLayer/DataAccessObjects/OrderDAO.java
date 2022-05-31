@@ -17,7 +17,7 @@ public class OrderDAO {
     private boolean readAll = false;
     private static HashMap<Integer, Order> cacheOrders = new HashMap<>();
     private static boolean retry = false;
-    public Order get(int id) throws Exception{
+    public Order get(int id){
         Order order = cacheOrders.get(id);
         if (order != null) return order;
         Connection conn = null;
@@ -52,7 +52,7 @@ public class OrderDAO {
             if (!retry){retry=true; get(id);}
             else{
                 retry=false;
-                throw new Exception(e.getMessage());
+                throw new RuntimeException(e.getMessage());
             }
         } finally {
             try {
@@ -60,16 +60,39 @@ public class OrderDAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                throw new Exception(ex.getMessage());
+                throw new RuntimeException(ex.getMessage());
             }
         }
-        if (order == null)throw new Exception("order doesn't exist");
+        if (order == null)throw new RuntimeException("order doesn't exist");
         cacheOrders.put(order.getId(), order);
         return order;
         //take from the db and insert to the cache then return
     }
-
-    public List<Order> getAllOrders() throws Exception{
+    public int getIdTracking(){
+        Connection conn = null;
+        try {
+            conn = DatabaseManager.getInstance().connect();
+            ResultSet rs = conn.createStatement().executeQuery("select max(Id) from Orders)");
+            while ( rs.next() ) {
+                int id = rs.getInt("max(Id)");
+                return id;
+            }
+        }
+        catch (Exception e){
+            return 0;
+        }
+        finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex.getMessage());
+            }
+        }
+        return 0;
+    }
+    public List<Order> getAllOrders(){
         List<Order> list = new ArrayList();
         if (!readAll){
             //read from DB and insert into cache orders;
@@ -84,14 +107,14 @@ public class OrderDAO {
                     ordersIDS.add(id);
                 }
             } catch (Exception e) {
-                throw new Exception(e.getMessage());
+                throw new RuntimeException(e.getMessage());
             } finally {
                 try {
                     if (conn != null) {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    throw new Exception(ex.getMessage());
+                    throw new RuntimeException(ex.getMessage());
                 }
             }
             for (int i:ordersIDS) {

@@ -10,7 +10,7 @@ public class SupplierDAO {
     private boolean readAll = false;
     private static HashMap<Integer, Supplier> cacheSuppliers = new HashMap<>();
     private static boolean retry = false;
-    public Supplier get(int companyNumber) throws Exception{
+    public Supplier get(int companyNumber){
         Supplier supplier = cacheSuppliers.get(companyNumber);
         if (supplier != null) return supplier;
         Connection conn = null;
@@ -32,14 +32,13 @@ public class SupplierDAO {
                 String supplierName = rs.getString("Name");
                 String supplierAddress = rs.getString("Address");
                 String bankNumber = rs.getString("BankNumber");
-                String orderingCPName = rs.getString("OrderingCP");
-                supplier = new Supplier(supplierName, companyNumber, bankNumber, supplierAddress, contactPersonList, orderingCPName);
+                supplier = new Supplier(supplierName, companyNumber, bankNumber, supplierAddress, contactPersonList);
             }
         } catch (Exception e) {
             if (!retry){retry=true; get(companyNumber);}
             else{
                 retry=false;
-                throw new Exception(e.getMessage());
+                throw new RuntimeException(e.getMessage());
             }
         } finally {
             try {
@@ -47,10 +46,10 @@ public class SupplierDAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                throw new Exception(ex.getMessage());
+                throw new RuntimeException(ex.getMessage());
             }
         }
-        if (supplier == null)throw new Exception("supplier doesn't exist");
+        if (supplier == null)throw new RuntimeException("supplier doesn't exist");
         cacheSuppliers.put(supplier.getCompanyNumber(),supplier);
         return supplier;
         //take from the db and insert to the cache then return
@@ -90,16 +89,15 @@ public class SupplierDAO {
         list.addAll(cacheSuppliers.values());
         return list;
     }
-    public void create(Supplier supplier) throws Exception {
-        if (cacheSuppliers.containsKey(supplier.getCompanyNumber())) throw new Exception("supplier already exists");
+    public void create(Supplier supplier){
+        if (cacheSuppliers.containsKey(supplier.getCompanyNumber())) throw new RuntimeException("supplier already exists");
         Connection conn=null;
-        String sql = "INSERT INTO Suppliers(CompanyNumber,BankNumber,Name,Address,OrderingCP) VALUES(";
+        String sql = "INSERT INTO Suppliers(CompanyNumber,BankNumber,Name,Address) VALUES(";
         try { //INSERT INTO Suppliers(CompanyNumber,BankNumber,Name,Address,OrderingCP) VALUES(i,'s','s','s','s');
             conn = DatabaseManager.getInstance().connect();
             Statement rs = conn.createStatement();
             //set Supplier data
-            sql+="'"+supplier.getCompanyNumber()+"','"+supplier.getBankNumber()+"','"+supplier.getName()+"','"+supplier.getAddress()+
-                    "','"+supplier.getOrderingCP().getName()+"');";
+            sql+="'"+supplier.getCompanyNumber()+"','"+supplier.getBankNumber()+"','"+supplier.getName()+"','"+supplier.getAddress()+"');";
             rs.addBatch(sql);
             //set his CPs;
             for (ContactPerson contactPerson:supplier.getContactList().values()) {
@@ -118,7 +116,7 @@ public class SupplierDAO {
             if (!retry){retry=true; create(supplier);}
             else{
                 retry=false;
-                throw new Exception(e.getMessage());
+                throw new RuntimeException(e.getMessage());
             }
         } finally {
             try {
@@ -126,13 +124,13 @@ public class SupplierDAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                throw new Exception(ex.getMessage());
+                throw new RuntimeException(ex.getMessage());
             }
         }
         cacheSuppliers.put(supplier.getCompanyNumber(),supplier);
     }
 
-    public void update(Supplier supplier) throws Exception {
+    public void update(Supplier supplier) {
         //if (!cacheSuppliers.containsKey(supplier.getCompanyNumber())) throw new Exception("supplier doesn't exist");
         //update to db first
         try {
@@ -140,11 +138,11 @@ public class SupplierDAO {
             create(supplier);
         }catch (Exception e){
             System.out.println("failed supplier update");
-            throw new Exception(e.getMessage());
+            throw new RuntimeException("failed supplier update"+e.getMessage());
         }
         cacheSuppliers.put(supplier.getCompanyNumber(), supplier);
     }
-    public void delete(int cn) throws Exception{
+    public void delete(int cn) {
         Connection conn=null;
         String sql = "DELETE from Suppliers where CompanyNumber = '"+cn+"';";
         String sql2 = "DELETE from ContactPeople where CompanyNumber = '"+cn+"';";
@@ -160,7 +158,7 @@ public class SupplierDAO {
             if (!retry){retry=true; delete(cn);}
             else{
                 retry=false;
-                throw new Exception(e.getMessage());
+                throw new RuntimeException(e.getMessage());
             }
         } finally {
             try {
@@ -168,12 +166,12 @@ public class SupplierDAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                throw new Exception(ex.getMessage());
+                throw new RuntimeException(ex.getMessage());
             }
         }
     }
 
-    public boolean exists(int cn) throws Exception {
+    public boolean exists(int cn)  {
         Supplier supplier = cacheSuppliers.get(cn);
         if (supplier != null) return true;
         Connection conn=null;
@@ -183,14 +181,14 @@ public class SupplierDAO {
             ResultSet rs = statement.executeQuery("select * from Suppliers where CompanyNumber = '"+cn+"'");
             if ( rs.next() ) return true;
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         } finally {
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                throw new Exception(ex.getMessage());
+                throw new RuntimeException(ex.getMessage());
             }
         }
         return false;

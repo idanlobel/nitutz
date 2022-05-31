@@ -26,6 +26,7 @@ public class DatabaseManager {
                     "\t\"DeliveryDays\"\tTEXT,\n" +
                     "\t\"ContractType\"\tINTEGER NOT NULL,\n" +
                     "\t\"DeliveredBySupplier\"\tINTEGER NOT NULL,\n" +
+                    "\t\"OrderingCP\"\tTEXT NOT NULL,\n" +
                     "\tPRIMARY KEY(\"CompanyNumber\"),\n" +
                     "\tFOREIGN KEY(\"CompanyNumber\") REFERENCES \"Suppliers\"(\"CompanyNumber\")\n" +
                     ")");
@@ -56,7 +57,6 @@ public class DatabaseManager {
                     "\t\"BankNumber\"\tINTEGER NOT NULL,\n" +
                     "\t\"Name\"\tTEXT NOT NULL,\n" +
                     "\t\"Address\"\tTEXT NOT NULL,\n" +
-                    "\t\"OrderingCP\"\tTEXT NOT NULL,\n" +
                     "\tPRIMARY KEY(\"CompanyNumber\")\n" +
                     ")");
             connection.commit();
