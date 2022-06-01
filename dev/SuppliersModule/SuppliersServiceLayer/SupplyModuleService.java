@@ -1,8 +1,8 @@
 package SuppliersModule.SuppliersServiceLayer;
 
-import SuppliersModule.Controllers.ContractController;
-import SuppliersModule.Controllers.OrderController;
-import SuppliersModule.Controllers.SuppliersController;
+import SuppliersModule.SuppliersBusinessLayer.Controllers.ContractController;
+import SuppliersModule.SuppliersBusinessLayer.Controllers.OrderController;
+import SuppliersModule.SuppliersBusinessLayer.Controllers.SuppliersController;
 import SuppliersModule.SuppliersBusinessLayer.*;
 import SuppliersModule.SuppliersBusinessLayer.Contracts.Contract;
 import SuppliersModule.SuppliersBusinessLayer.Responses.IsError;
@@ -108,9 +108,9 @@ public class SupplyModuleService {
             return new IsError(e.getMessage());
         }
     }
-    public Response<Contract> SignShortageContract(int companyNumber,String name, List<int[]> idPairsList, HashMap<Integer,List<int[]>> discountsList,List<int[]> generalDiscountsList){
+    public Response<Contract> SignShortageContract(int companyNumber,String orderCP, List<int[]> idPairsList, HashMap<Integer,List<int[]>> discountsList,List<int[]> generalDiscountsList){
         try {
-            return new IsValue<Contract>(contractController.SignShortageContract(companyNumber,name,idPairsList,discountsList,generalDiscountsList),"Contract added");
+            return new IsValue<Contract>(contractController.SignShortageContract(companyNumber,orderCP,idPairsList,discountsList,generalDiscountsList),"Contract added");
         }
         catch (Exception e){
             return new IsError(e.getMessage());
@@ -207,7 +207,7 @@ public class SupplyModuleService {
     public Response OrderProduct(int id,int amount){
 
         try {
-            contractController.ShortageOrder(id,amount);
+            orderController.orderProduct(contractController.ShortageOrder(id,amount),id,amount);
             return new IsValue(null,"Ordering successful");
         }
         catch (Exception e){

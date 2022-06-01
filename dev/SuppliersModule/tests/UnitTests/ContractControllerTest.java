@@ -1,11 +1,11 @@
 package SuppliersModule.tests.UnitTests;
 
 
-import SuppliersModule.Controllers.OrderController;
-import SuppliersModule.Controllers.SuppliersController;
+import SuppliersModule.SuppliersBusinessLayer.Controllers.OrderController;
+import SuppliersModule.SuppliersBusinessLayer.Controllers.SuppliersController;
 import SuppliersModule.SuppliersBusinessLayer.ContactPerson;
 import SuppliersModule.SuppliersBusinessLayer.Contracts.Contract;
-import SuppliersModule.Controllers.ContractController;
+import SuppliersModule.SuppliersBusinessLayer.Controllers.ContractController;
 import SuppliersModule.SuppliersBusinessLayer.Supplier;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;

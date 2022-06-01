@@ -1,4 +1,4 @@
-package SuppliersModule.Controllers;
+package SuppliersModule.SuppliersBusinessLayer.Controllers;
 
 import SuppliersModule.SupplierDataAccessLayer.DataAccessObjects.SupplierDAO;
 import SuppliersModule.SuppliersBusinessLayer.ContactPerson;

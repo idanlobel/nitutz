@@ -1,4 +1,4 @@
-package SuppliersModule.Controllers;
+package SuppliersModule.SuppliersBusinessLayer.Controllers;
 
 
 
@@ -14,15 +14,12 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class ContractController {
-    private ContractDAO contractDAO = new ContractDAO();
+    private final ContractDAO contractDAO = new ContractDAO();
     private final Hashtable<Integer, Contract> shortageContracts;
-    private final HashMap<Integer, Order> toDeliverOrders;
     private final HashMap<Integer, Collection<PeriodicProduct>> periodicProducts; //0-sunday, 6-saturday
     private final HashMap<Integer, Collection<PeriodicContract>> periodicSuppliers; //0-sunday, 6-saturday
-    private int orderIdTracker = 0;
 
     public ContractController()  {
-        toDeliverOrders = new HashMap<>();
         shortageContracts = new Hashtable<>();
         periodicProducts = new HashMap<>();
         periodicSuppliers = new HashMap<>();
@@ -178,15 +175,15 @@ public class ContractController {
             }
         }
     }
-    public void ShortageOrder(int id,int amount){
-        OrderProduct(id,amount,shortageContracts.values());
+    public Contract ShortageOrder(int id,int amount){
+          return chooseContract(id,amount,shortageContracts.values());
     }
-    public void PeriodicOrder(int id,int amount, int weekDay){
+    public Contract PeriodicOrder(int id,int amount, int weekDay){
         if(periodicSuppliers.get(weekDay).isEmpty())
             throw new RuntimeException("USER ERROR: No suppliers are delivering on a "+DayOfWeek.of(weekDay).toString());
-        OrderProduct(id,amount,new ArrayList<>(periodicSuppliers.get(weekDay)));
+        return chooseContract(id,amount,new ArrayList<>(periodicSuppliers.get(weekDay)));
     }
-    private void OrderProduct(int id, int amount,Collection<Contract> supplierOptions) {
+    private Contract chooseContract(int id, int amount,Collection<Contract> supplierOptions) {
         int chosenSupp=-1,bestPrice=-1,discount=100;
         Contract chosenContract=null;
         for(Contract contract: supplierOptions){
@@ -199,19 +196,10 @@ public class ContractController {
                     bestPrice=price;
             }
         }
-        Order order;
         if(chosenSupp == -1)
             throw new RuntimeException("USER ERROR: No supplier sells item "+id);
-        SupplierProduct supplierProduct=chosenContract.getProduct(id);
-        if(!toDeliverOrders.containsKey(chosenSupp)) {
-            order = new Order(orderIdTracker, chosenContract.getCompanyNumber(),
-                    chosenContract.getOrderingCP(), LocalDate.now().plusDays(1)); //TODO: PLACEHOLDER. CALC ARRIVAL DATE??
-            toDeliverOrders.put(chosenSupp, order);
-            order.AddProduct(supplierProduct, amount, supplierProduct.getPrice(), discount,chosenContract.getGeneralDiscounts());
-        }
-        else{
-            toDeliverOrders.get(chosenSupp).AddProduct(supplierProduct,amount,supplierProduct.getPrice(),discount,chosenContract.getGeneralDiscounts());
-        }
+        return chosenContract;
+
     }
 
     public void populateDataBase() {
