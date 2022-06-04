@@ -41,26 +41,75 @@ public class Stock {
 
     //orders products with required quantity
     //order  id
+  //    public void Order(long products_catalog_number, int quantity, Double cost, String expiry, String name, String manufactorer, String category,String sub_cat,String sub_sub_cat) {
+//        boolean added = false;
+//        for (Products products : this.products_list) {
+//            if (products.getCatalog_number()== products_catalog_number) {
+//                if((supplyModuleService.OrderProduct((int) products_catalog_number,quantity)) instanceof IsValue) {
+//                    products.update_quantity(quantity, cost, expiry, dal_controller.getProduct_table());
+//                    added = true;
+//                }
+//                else
+//                    added=false;
+//            }
+//        }
+//        if (!added) {
+//            //maybe we should ask the client if there is a default price for selling , for exmaple : cost * 1.5
+//            Products products = new Products(products_catalog_number, name, quantity, cost, cost * 1.5, expiry, manufactorer, category,sub_cat,sub_sub_cat,dal_controller.getProducts_table(),dal_controller.getProduct_table(),dal_controller.getSales_history_table());
+//            products_list.add(products);
+//        }
+//
+//
+//
+//    }
+
+
+
     public void Order(long products_catalog_number, int quantity, Double cost, String expiry, String name, String manufactorer, String category,String sub_cat,String sub_sub_cat) {
-        boolean added = false;
+        supplyModuleService.OrderProduct((int) products_catalog_number,quantity);
+
+    }
+
+//when transporters send a delivery , they will reach stock_manager who is the object of stock presnation,
+// he will ask for number of broken and unbroken items
+// and he will decide if to accept or decline
+    //if decline we will print something on sxcreen like "order declined" or something and will order new one using decline_deilvery function
+    //else we will reach accept_delivery function
+    public void decline_delivery(long products_catalog_number, int quantity, Double cost, String expiry, String name, String manufactorer, String category,String sub_cat,String sub_sub_cat)
+    {
+        supplyModuleService.OrderProduct((int) products_catalog_number,quantity);
+    }
+
+    //add_broken_items because it is written the emoplyee CAN prevent adding them to storage
+    public void accept_delivery(long products_catalog_number, int not_broken_quantity,int broken_quantity, Double cost, String expiry, String name, String manufactorer, String category,String sub_cat,String sub_sub_cat,boolean add_broken_items)
+    {
+        boolean added=false;
         for (Products products : this.products_list) {
             if (products.getCatalog_number()== products_catalog_number) {
-                if(!(supplyModuleService.OrderProduct((int) products_catalog_number,quantity)).isError()) {
-                    products.update_quantity(quantity, cost, expiry, dal_controller.getProduct_table());
-                    added = true;
+                products.update_quantity(not_broken_quantity, cost, expiry, dal_controller.getProduct_table());
+                added = true;
+                if(add_broken_items)
+                {
+                    products.update_quantity_broken(broken_quantity,cost,expiry,dal_controller.getProduct_table());
                 }
-                else
+            }
+                else{
                     added=false;
             }
         }
         if (!added) {
             //maybe we should ask the client if there is a default price for selling , for exmaple : cost * 1.5
-            Products products = new Products(products_catalog_number, name, quantity, cost, cost * 1.5, expiry, manufactorer, category,sub_cat,sub_sub_cat,dal_controller.getProducts_table(),dal_controller.getProduct_table(),dal_controller.getSales_history_table());
+            Products products = new Products(products_catalog_number, name, not_broken_quantity, cost, cost * 1.5, expiry, manufactorer, category,sub_cat,sub_sub_cat,dal_controller.getProducts_table(),dal_controller.getProduct_table(),dal_controller.getSales_history_table());
+            if(add_broken_items)
+            {
+                products.update_quantity_broken(broken_quantity,cost,expiry,dal_controller.getProduct_table());
+            }
             products_list.add(products);
         }
 
 
 
+    }
     }
     public boolean ValidateCatalogNum(List<Long> catalogNumberList) {
         for (Long catalogNumber : catalogNumberList) {
