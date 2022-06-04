@@ -205,6 +205,24 @@ public class Stock_main {
             }
         }
 
+        
+        if(order_in_array.length>6 && order_in_array[0].toLowerCase(Locale.ROOT).equals("accept") & order_in_array[1].toLowerCase(Locale.ROOT).equals("delivery"))
+        {
+            excuted=true;
+
+           stock_manager.accept_deilvery(order_in_array[2], order_in_array[3],order_in_array[4], order_in_array[5], order_in_array[6], order_in_array[7], order_in_array[8], order_in_array[9], order_in_array[10], order_in_array[11], order_in_array[12]);
+            System.out.println("successfully accepted delivery");
+        }
+
+        if(order_in_array.length>5 && order_in_array[0].toLowerCase(Locale.ROOT).equals("decline") & order_in_array[1].toLowerCase(Locale.ROOT).equals("delivery"))
+        {
+            excuted=true;
+
+            stock_manager.decline_delivery(order_in_array[2], order_in_array[3],order_in_array[4], order_in_array[5], order_in_array[6], order_in_array[7], order_in_array[8], order_in_array[9], order_in_array[10]);
+            System.out.println("successfully declined delivery");
+        }
+
+
         if(order_in_array.length>2 && order_in_array[0].toLowerCase(Locale.ROOT).equals("remove") & order_in_array[1].toLowerCase(Locale.ROOT).equals("broken") & order_in_array[2].toLowerCase(Locale.ROOT).equals("items"))
         {
             excuted=true;
