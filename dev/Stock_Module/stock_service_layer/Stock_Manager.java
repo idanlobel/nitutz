@@ -278,4 +278,25 @@ public Response<Boolean> ValidateCatalogNumber(List<Long> catalogNumbers){
         }
 
     }
+
+        public Response accept_deilvery(String products_catalog_number, String not_broken_quantity, String broken_quantity, String cost, String expiry, String name, String manufactorer, String category, String sub_cat, String sub_sub_cat, String add_broken_items) {
+        try {
+            mystock.accept_delivery(Long.parseLong(products_catalog_number),Integer.parseInt(not_broken_quantity),Integer.parseInt(broken_quantity),Double.parseDouble(cost),expiry,name,manufactorer,category,sub_cat,sub_sub_cat,Boolean.parseBoolean(add_broken_items));
+            return new IsOk(null,"done successfully");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
+
+
+    public Response decline_delivery(String products_catalog_number, String quantity, String cost, String expiry, String name, String manufactorer, String category, String sub_cat, String sub_sub_cat) {
+        try {
+            mystock.decline_delivery(Long.parseLong(products_catalog_number),Integer.parseInt(quantity),Double.parseDouble(cost),expiry,name,manufactorer,category,sub_cat,sub_sub_cat);
+            return new IsOk(null,"done successfully");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
 }
