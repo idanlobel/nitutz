@@ -244,4 +244,21 @@ public class Products {
         }
        return null;
     }
+
+      public void update_quantity_broken(int broken_quantity, Double cost, String expiry, Product_DAO product_table) {
+
+        for(int i=0;i<broken_quantity;i++)
+        {
+            Product new_product=new Product (this.name,LocalDate.now().toString(),cost,current_sell_price,expiry,product_table,catalog_number);
+            new_product.set_is_broken();
+            //new_items.add(new_product);
+            this.product_list.add(new_product);
+
+        }
+
+        this.storage_quantity=this.storage_quantity+broken_quantity ;
+        this.quantity=this.shelf_quantity+storage_quantity;
+        products_dao.update_products_quantity(quantity,storage_quantity,catalog_number);
+        //   return new_items;
+    }
 }
