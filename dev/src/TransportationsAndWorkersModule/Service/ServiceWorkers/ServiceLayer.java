@@ -35,7 +35,7 @@ public class ServiceLayer {
 
 
     //all of these are HR methods
-    public Response<Boolean> addWorkerToWeeklySchedule(int callerID,int weekID,int day, int shift, String site, int workerID) {
+    public Response<Boolean> addWorkerToWeeklySchedule(int callerID,String weekID,int day, int shift, String site, int workerID) {
         Response<Boolean> response;
         try {
             Worker worker = workerController.getWorker(workerID);
@@ -46,7 +46,7 @@ public class ServiceLayer {
         }
         return response;
     }
-    public Response<Boolean> removeWorkerFromWeeklySchedule(int callerID,int weekID,int day, int shift, String site, int workerID) {
+    public Response<Boolean> removeWorkerFromWeeklySchedule(int callerID,String weekID,int day, int shift, String site, int workerID) {
         Response<Boolean> response;
         try {
             Worker worker = workerController.getWorker(workerID);
@@ -58,7 +58,7 @@ public class ServiceLayer {
         }
         return response;
     }
-    public Response<Boolean> assignWorkerToJobInShift(int callerID,int weekID,int day, int shift, String site, int workerID, String job) {
+    public Response<Boolean> assignWorkerToJobInShift(int callerID,String weekID,int day, int shift, String site, int workerID, String job) {
         Response<Boolean> response;
         try {
             Worker worker = workerController.getWorker(workerID);
@@ -69,7 +69,7 @@ public class ServiceLayer {
         }
         return response;
     }
-    public Response<Boolean> removeWorkerFromJobInShift(int callerID,int weekID,int day, int shift, String site, int workerID,String job) {
+    public Response<Boolean> removeWorkerFromJobInShift(int callerID,String weekID,int day, int shift, String site, int workerID,String job) {
         Response<Boolean> response;
         try {
             Worker worker = workerController.getWorker(workerID);
@@ -80,7 +80,7 @@ public class ServiceLayer {
         }
         return response;
     }
-    public Response<Boolean> setShiftManagerToWeeklySchedule(int callerID,int weekID,int day, int shift, String site, int workerID) {
+    public Response<Boolean> setShiftManagerToWeeklySchedule(int callerID,String weekID,int day, int shift, String site, int workerID) {
         Response<Boolean> response;
         try {
             Worker worker = workerController.getWorker(workerID);
@@ -91,7 +91,7 @@ public class ServiceLayer {
         }
         return response;
     }
-    public Response<WeeklyScheduleSL> viewWeeklySchedule(int callerID, int weekID,String site){
+    public Response<WeeklyScheduleSL> viewWeeklySchedule(int callerID, String weekID,String site){
         Response<WeeklyScheduleSL> response;
        try {
            Weekly_Schedule weekly_schedule = shiftsController.getWeeklyScheduleSL(weekID, callerID, site);
@@ -114,7 +114,7 @@ public class ServiceLayer {
        }
         return response;
     }
-    public Response<List<WorkerSL>> showShiftWorkers(int callerID,int weekID, int day, int shift, String site){
+    public Response<List<WorkerSL>> showShiftWorkers(int callerID,String weekID, int day, int shift, String site){
         Response<List<WorkerSL>> response;
         try {
             List<WorkerSL> workerSLS = new LinkedList<>();
@@ -130,7 +130,7 @@ public class ServiceLayer {
         }
         return response;
     }
-    public Response<String> getShiftManagerInfo (int callerID,int weekID, int day, int shift, String site){
+    public Response<String> getShiftManagerInfo (int callerID,String weekID, int day, int shift, String site){
         Response<String> response;
         try {
             Worker worker = shiftsController.getShiftManager(weekID, day, shift,site,callerID);
@@ -141,10 +141,10 @@ public class ServiceLayer {
         }
         return response;
     }
-    public Response<Boolean> createWeeklySchedule(int callerID,int weekID,String site) {
+    public Response<Boolean> createWeeklySchedule(int callerID,String site,String weekID) {
         Response<Boolean> response;
         try {
-            response = Response.FromValue(shiftsController.createWeeklySchedule(weekID,callerID,site));
+            response = Response.FromValue(shiftsController.createWeeklySchedule(callerID,weekID,site));
         }catch (Exception e){
             response = Response.FromError(e.getMessage());
         }
@@ -230,7 +230,7 @@ public class ServiceLayer {
     }
 
     //these are shiftManager methods
-    public Response<Boolean> addTransaction(int weekID, int day, int shift, String site, int transactionID, int workerID){
+    public Response<Boolean> addTransaction(String weekID, int day, int shift, String site, int transactionID, int workerID){
         Response<Boolean> response;
         try {
             response = Response.FromValue(shiftsController.addTransaction(weekID, day, shift,site, transactionID, workerID));
@@ -240,7 +240,7 @@ public class ServiceLayer {
         }
         return response;
     }
-    public Response<Boolean> removeTransaction(int callerID, int weekID, int day, int shift, String site, int transactionID){
+    public Response<Boolean> removeTransaction(int callerID, String weekID, int day, int shift, String site, int transactionID){
         Response<Boolean> response;
         try {
             response = Response.FromValue(shiftsController.removeTransaction(weekID, day, shift,site, transactionID, callerID));
@@ -274,7 +274,7 @@ public class ServiceLayer {
         return response;
     }
 
-    public Response<Boolean> isShiftReady(int callerID, int weekID, int day, int shift, String site){
+    public Response<Boolean> isShiftReady(int callerID, String weekID, int day, int shift, String site){
         Response<Boolean> response;
         try {
             response = Response.FromValue(shiftsController.isShiftIsReady(weekID, day, shift,site,callerID));
@@ -285,7 +285,7 @@ public class ServiceLayer {
         return response;
     }
 
-    public Response<Boolean> isWeeklyScheduleReady(int callerID, int weekID, String site){
+    public Response<Boolean> isWeeklyScheduleReady(int callerID, String weekID, String site){
         Response<Boolean> response;
         try {
             response = Response.FromValue(shiftsController.isWeeklyScheduleReady(weekID,site,callerID));

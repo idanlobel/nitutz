@@ -34,7 +34,7 @@ public class DatabaseManager {
                     "\t\"worker_id\"\tINTEGER NOT NULL\n" +
                     ")");
             stmt.execute("CREATE TABLE if not exists \"shiftWorkerBook\" (\n" +
-                    "\t\"week_id\"\tINTEGER NOT NULL,\n" +
+                    "\t\"week_id\"\tTEXT NOT NULL,\n" +
                     "\t\"shift_type\"\tINTEGER NOT NULL,\n" +
                     "\t\"shift_day\"\tINTEGER NOT NULL,\n" +
                     "\t\"worker_id\"\tINTEGER NOT NULL,\n" +
@@ -46,7 +46,7 @@ public class DatabaseManager {
                     "\tPRIMARY KEY(\"job\")\n" +
                     ")");
             stmt.execute("CREATE TABLE if not exists \"weeklySchedule\" (\n" +
-                    "\t\"id\"\tINTEGER,\n" +
+                    "\t\"id\"\tTEXT,\n" +
                     "\t\"site\"\tTEXT NOT NULL,\n"+
                     "\tPRIMARY KEY (id,site)\n" +
                     ");");
@@ -56,7 +56,7 @@ public class DatabaseManager {
                     "\tPRIMARY KEY(\"id\")\n" +
                     ");");
             stmt.execute("CREATE TABLE if not exists \"transactions\" (\n" +
-                    "\t\"week_id\"\tINTEGER NOT NULL,\n" +
+                    "\t\"week_id\"\tTEXT NOT NULL,\n" +
                     "\t\"site\"\tTEXT NOT NULL,\n" +
                     "\t\"id\"\tINTEGER,\n" +
                     "\t\"data\"\tINTEGER,\n" +

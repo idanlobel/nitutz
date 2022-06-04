@@ -41,7 +41,7 @@ public class ShiftsController {
             throw new Exception(e.getMessage());
         }
     }
-    private Weekly_Schedule getWeeklySchedule(int weekID, String site) throws Exception {
+    private Weekly_Schedule getWeeklySchedule(String weekID, String site) throws Exception {
         try {
             return weeklyScheduleDAO.get(weekID,site);
         }
@@ -49,7 +49,7 @@ public class ShiftsController {
             throw new Exception(e.getMessage());
         }
     }
-    public Weekly_Schedule getWeeklyScheduleSL(int weekID,int callerID,String site ) throws Exception {
+    public Weekly_Schedule getWeeklyScheduleSL(String weekID,int callerID,String site ) throws Exception {
         try {
             if (workerDAO.readHR().getId()!=callerID)throw new Exception("only HR can see weekly schedule");
             return getWeeklySchedule(weekID,site);
@@ -73,7 +73,7 @@ public class ShiftsController {
     }
     //TODO:: For now we can't implement this method because we don't know which shifts the Business_Layer.HR would like to add -
     // Later we can implement it by using a GUI interface.
-    public boolean addWorkerToWeeklySchedule(int weekID,int day, int shift, String site,  int worker, int callerID) throws Exception {
+    public boolean addWorkerToWeeklySchedule(String weekID,int day, int shift, String site,  int worker, int callerID) throws Exception {
         try {
             if (workerDAO.readHR().getId()!=callerID)throw new Exception("only HR can add worker to weekly schedule");
             if(!workerDAO.get(worker).getSite().equals(site))throw new Exception("worker isnt working at the site of this schedule");
@@ -86,7 +86,7 @@ public class ShiftsController {
             throw new Exception(e.getMessage());
         }
     }
-    public boolean assignWorkerToJobInShift(int weekID, int day, int shift,String site, int id, String job, int callerID) throws Exception {
+    public boolean assignWorkerToJobInShift(String weekID, int day, int shift,String site, int id, String job, int callerID) throws Exception {
         try {
             if (workerDAO.readHR().getId()!=callerID)throw new Exception("only HR can assign worker to job in shift");
             Worker worker = workerDAO.get(id);
@@ -101,7 +101,7 @@ public class ShiftsController {
             throw new Exception(e.getMessage());
         }
     }
-    public boolean removeWorkerFromJobInShift(int weekID, int day, int shift,String site, int worker, String job, int callerID) throws Exception {
+    public boolean removeWorkerFromJobInShift(String weekID, int day, int shift,String site, int worker, String job, int callerID) throws Exception {
         try {
             if (workerDAO.readHR().getId()!=callerID)throw new Exception("only HR can remove worker from job in shift");
             if (!workerDAO.exists(worker)) throw new Exception("worker doesn't exist");
@@ -115,7 +115,7 @@ public class ShiftsController {
             throw new Exception(e.getMessage());
         }
     }
-    public boolean removeWorkerFromWeeklySchedule(int weekID,int day, int shift, String site, int worker,int callerID) throws Exception {
+    public boolean removeWorkerFromWeeklySchedule(String weekID,int day, int shift, String site, int worker,int callerID) throws Exception {
         try {
             if (workerDAO.readHR().getId()!=callerID)throw new Exception("only HR can remove worker from weekly schedule");
             if (!workerDAO.exists(worker)) throw new Exception("worker doesn't exist");
@@ -129,7 +129,7 @@ public class ShiftsController {
             throw new Exception(e.getMessage());
         }
     }
-    public boolean setShiftManagerToWeeklySchedule(int weekID,int day, int shift,String site, int id, int callerID) throws Exception {
+    public boolean setShiftManagerToWeeklySchedule(String weekID,int day, int shift,String site, int id, int callerID) throws Exception {
         try {
             if (workerDAO.readHR().getId()!=callerID)throw new Exception("only HR can assign shift manager to weekly schedule");
             if (!workerDAO.exists(id)) throw new Exception("worker doesn't exist");
@@ -143,7 +143,7 @@ public class ShiftsController {
             throw new Exception(e.getMessage());
         }
     }
-    public List<Worker> showShiftWorkers(int weekID, int day, int shift,String site, int callerID) throws Exception {
+    public List<Worker> showShiftWorkers(String weekID, int day, int shift,String site, int callerID) throws Exception {
         try {
             if (workerDAO.readHR().getId()!=callerID)throw new Exception("only HR can see shift workers");
             Weekly_Schedule weekly_schedule = getWeeklySchedule(weekID, site);
@@ -157,7 +157,7 @@ public class ShiftsController {
             throw new Exception(e.getMessage());
         }
     }
-    public Worker getShiftManager(int weekID, int day, int shift, String site, int callerID) throws Exception {
+    public Worker getShiftManager(String weekID, int day, int shift, String site, int callerID) throws Exception {
         try {
             //todo maybe we need to change it to return shift manager instead?
             if (workerDAO.readHR().getId()!=callerID)throw new Exception("only HR can see shift manager");
@@ -171,17 +171,17 @@ public class ShiftsController {
             throw new Exception(e.getMessage());
         }
     }
-    public boolean createWeeklySchedule(int weekID, int callerID, String site) throws Exception {
+    public boolean createWeeklySchedule(int callerID, String weekID, String site) throws Exception {
         try {
             if (workerDAO.readHR().getId()!=callerID)throw new Exception("only HR can create weekly schedule");
-            weeklyScheduleDAO.create(new Weekly_Schedule(weekID,site));
+            weeklyScheduleDAO.create(new Weekly_Schedule(site,weekID));
             return true;
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }
     }
 
-    public boolean removeWeeklySchedule(int weekID, int callerID, String site) throws Exception{
+    public boolean removeWeeklySchedule(String weekID, int callerID, String site) throws Exception{
         try {
             if (workerDAO.readHR().getId()!=callerID)throw new Exception("only HR can remove weekly schedule");
             weeklyScheduleDAO.delete(weekID,site);
@@ -190,7 +190,7 @@ public class ShiftsController {
             throw new Exception(e.getMessage());
         }
     }
-    public boolean addTransaction(int weekID, int day, int shift,String site, int transactionID, int workerID) throws Exception {
+    public boolean addTransaction(String weekID, int day, int shift,String site, int transactionID, int workerID) throws Exception {
         try {
             Transaction transaction = new Transaction(transactionID, workerID);
             Weekly_Schedule weekly_schedule = getWeeklySchedule(weekID,site);
@@ -206,7 +206,7 @@ public class ShiftsController {
             throw new Exception(e.getMessage());
         }
     }
-    public boolean removeTransaction(int weekID, int day, int shift,String site, int transactionID, int workerID) throws Exception {
+    public boolean removeTransaction(String weekID, int day, int shift,String site, int transactionID, int workerID) throws Exception {
        try {
            Weekly_Schedule weekly_schedule = getWeeklySchedule(weekID,site);
            weekly_schedule.getShift(day, shift).removeTransaction(transactionID, workerID);
@@ -217,7 +217,7 @@ public class ShiftsController {
            throw new Exception(e.getMessage());
        }
     }
-    public boolean isShiftIsReady (int weekID, int day, int shift,String site, int callerID) throws Exception {
+    public boolean isShiftIsReady (String weekID, int day, int shift,String site, int callerID) throws Exception {
         try {
             if (workerDAO.readHR().getId()!=callerID)throw new Exception("only HR can see if shift is ready");
             Weekly_Schedule weekly_schedule = getWeeklySchedule(weekID,site);
@@ -229,7 +229,7 @@ public class ShiftsController {
             throw new Exception(e.getMessage());
         }
     }
-    public boolean isWeeklyScheduleReady (int weekID,String site, int callerID) throws Exception {
+    public boolean isWeeklyScheduleReady (String weekID,String site, int callerID) throws Exception {
         try {
             if (workerDAO.readHR().getId()!=callerID)throw new Exception("only HR can see if weekly schedule is ready");
             for (int i = 0; i < 5; i++) {
@@ -244,7 +244,7 @@ public class ShiftsController {
         }
     }
 
-    public List<Worker> getDriversInShift(int weekID, String site, int day, int shift) throws Exception {
+    public List<Worker> getDriversInShift(String weekID, String site, int day, int shift) throws Exception {
         try {
             List<Worker> drivers = new LinkedList<>();
             HashMap<String, List<Integer>> jobs = weeklyScheduleDAO.get(weekID,site).getShift(day, shift).getJobToWorker();
@@ -259,7 +259,7 @@ public class ShiftsController {
         }
     }
 
-    public boolean isTransportationLegal(int weekID,String site, int day, int shift) throws Exception {
+    public boolean isTransportationLegal(String weekID,String site, int day, int shift) throws Exception {
         try {
             HashMap<String, List<Integer>> jobs = weeklyScheduleDAO.get(weekID,site).getShift(day-1, shift).getJobToWorker();
             List<Integer> storeKeepersIds = jobs.get("store keeper");
@@ -271,7 +271,7 @@ public class ShiftsController {
         }
     }
 
-    public List<WorkerDTO> getAllDrivers(int weekId , int Day , int shiftType) throws Exception {
+    public List<WorkerDTO> getAllDrivers(String weekId , int Day , int shiftType) throws Exception {
         try {
             HashMap<String, List<Integer>> jobs = weeklyScheduleDAO.get(weekId,"driver department").getShift(Day-1, shiftType).getJobToWorker();
             List<Worker> driversList = new LinkedList<>();

@@ -199,6 +199,9 @@ public class Shift {
             if (shift_transactions == null) {
                 shift_transactions = new LinkedList<>();
             }
+            if (hasTransaction(transaction.getTransactionID())) {
+                throw new Exception("There's already such transaction with that transaction id.");
+            }
             if ((shift_manager == workerID || WorkerController.getInstance().isHR(workerID)) &&
                     !hasTransaction(transaction.getTransactionID())) {
                 this.shift_transactions.add(transaction);
@@ -206,11 +209,11 @@ public class Shift {
             } else {
                 for (Integer w : workers) {
                     if (w == workerID) {
-                        if (hasTransaction(transaction.getTransactionID())) {
-                            throw new Exception("There's already such transaction with that transaction id.");
-                        } else {
+                        if (jobToWorker.get("cashier") != null && jobToWorker.get("cashier").contains(w)) {
                             this.shift_transactions.add(transaction);
                             return true;
+                        } else {
+                            throw new Exception("need to be cashier or HR or shift manager in order to add a transaction");
                         }
                     }
                 }

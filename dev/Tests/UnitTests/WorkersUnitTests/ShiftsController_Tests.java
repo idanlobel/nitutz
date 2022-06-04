@@ -33,11 +33,11 @@ public class ShiftsController_Tests {
             jobs.add("HR");
             Worker HR = new Worker("ori",3,"123","gev",new BankAccount(1,1),new EmploymentConditions(1,new Date()),jobs,"driver department");
             workerDAO.create(HR);
-            shiftsController.createWeeklySchedule(1, 3, "North");
+            shiftsController.createWeeklySchedule(3, "03-07-2022", "North");
         }
         catch(Exception e){
             try {
-                shiftsController.createWeeklySchedule(1, 3, "North");
+                shiftsController.createWeeklySchedule(3, "03-07-2022", "North");
             }
             catch(Exception e2){
                 // do nothing
@@ -49,11 +49,11 @@ public class ShiftsController_Tests {
     @Test
     void editWorkerSchedule_Success() throws Exception {
         try {
-            workerController.addWorker("Amihai", 6, "AB13", "amihai@gmail.com",
+            workerController.addWorker("Amihai", 13, "AB13", "amihai@gmail.com",
                     306721, 067, 50000, 3, "sniff33");
-            assertEquals(true, shiftsController.editWorkerSchedule(6, true, 1, 0));
-            assertEquals(true, shiftsController.editWorkerSchedule(6, false, 1, 1));
-            workerController.deleteWorker(6, 3);
+            assertEquals(true, shiftsController.editWorkerSchedule(13, true, 1, 0));
+            assertEquals(true, shiftsController.editWorkerSchedule(13, false, 1, 1));
+            workerController.deleteWorker(13, 3);
         }
         catch(Exception e){
             throw new Exception(e.getMessage());
@@ -73,8 +73,8 @@ public class ShiftsController_Tests {
     @Test
     void createWeeklySchedule_Success(){
         try {
-            assertEquals(true, shiftsController.createWeeklySchedule(5000, 3, "South"));
-            shiftsController.removeWeeklySchedule(5000, 3, "South");
+            assertEquals(true, shiftsController.createWeeklySchedule(3, "26-06-2022", "South"));
+            shiftsController.removeWeeklySchedule("26-06-2022", 3, "South");
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -84,7 +84,7 @@ public class ShiftsController_Tests {
     @Test
     void createWeeklySchedule_Failure(){
        try {
-           assertEquals(false,shiftsController.createWeeklySchedule(1, 3, "North"));
+           assertEquals(false,shiftsController.createWeeklySchedule(3, "03-07-2022", "North"));
        }
        catch(Exception e){
            assertEquals("week already exists", e.getMessage());
@@ -95,8 +95,10 @@ public class ShiftsController_Tests {
     @Test
     void addTransaction_Success(){
         try {
-            assertEquals(true, shiftsController.addTransaction(1, 1, 0, "North", 3, 3));
-            shiftsController.removeTransaction(1, 1, 0, "North", 3, 3);
+            shiftsController.createWeeklySchedule(3, "05-06-2022", "North");
+            assertEquals(true, shiftsController.addTransaction("05-06-2022", 1, 0, "North", 3, 3));
+            shiftsController.removeTransaction("05-06-2022", 1, 0, "North", 3, 3);
+            shiftsController.removeWeeklySchedule("05-06-2022",3,"North");
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -106,7 +108,7 @@ public class ShiftsController_Tests {
     @Test
     void addTransaction_Failure(){
         try {
-            assertEquals(false, shiftsController.addTransaction(1, 1, 0, "South", 576, 3));
+            assertEquals(false, shiftsController.addTransaction("05-06-2022", 1, 0, "South", 576, 3));
         }
         catch(Exception e){
             assertEquals("weekly schedule does not exists", e.getMessage());
@@ -117,8 +119,10 @@ public class ShiftsController_Tests {
     @Test
     void removeTransaction_Success(){
         try {
-            shiftsController.addTransaction(1, 1, 0, "North", 576, 3);
-            assertEquals(true, shiftsController.removeTransaction(1, 1, 0, "North", 576, 3));
+            shiftsController.createWeeklySchedule(3, "05-06-2022", "North");
+            shiftsController.addTransaction("05-06-2022", 1, 0, "North", 576, 3);
+            assertEquals(true, shiftsController.removeTransaction("05-06-2022", 1, 0, "North", 576, 3));
+            shiftsController.removeWeeklySchedule("05-06-2022",3,"North");
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -128,7 +132,7 @@ public class ShiftsController_Tests {
     @Test
     void removeTransaction_Failure(){
         try {
-            assertEquals(false, shiftsController.removeTransaction(1, 1, 0, "South", 579, 3));
+            assertEquals(false, shiftsController.removeTransaction("05-06-2022", 1, 0, "South", 579, 3));
         }
         catch(Exception e){
             assertEquals("weekly schedule does not exists", e.getMessage());

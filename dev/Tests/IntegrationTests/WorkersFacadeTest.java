@@ -37,27 +37,55 @@ class WorkersFacadeTest {
             jobs.add("HR");
             Worker HR = new Worker("ori",3,"123","gev",new BankAccount(1,1),new EmploymentConditions(1,new Date()),jobs,"driver department");
             workerDAO.create(HR);
+            shiftsController.createWeeklySchedule(3, "05-06-2022", "driver department");
+            workerController.addJob("driver", 3);
+            workerController.addJobForAWorker(3, "driver", 3);
+            workerController.addLicense(3, 3, "C");
+            shiftsController.addWorkerToWeeklySchedule("05-06-2022", 1, 0, "driver department", 3, 3);
+            shiftsController.assignWorkerToJobInShift("05-06-2022", 1, 0, "driver department", 3, "driver", 3);
         }
         catch (Exception e)
         {
             try {
-                shiftsController.createWeeklySchedule(1, 3, "driver department");
+                shiftsController.createWeeklySchedule(3, "05-06-2022", "driver department");
                 workerController.addJob("driver", 3);
                 workerController.addJobForAWorker(3, "driver", 3);
                 workerController.addLicense(3, 3, "C");
-                shiftsController.addWorkerToWeeklySchedule(1, 1, 0, "driver department", 3, 3);
-                shiftsController.assignWorkerToJobInShift(1, 1, 0, "driver department", 3, "driver", 3);
+                shiftsController.addWorkerToWeeklySchedule("05-06-2022", 1, 0, "driver department", 3, 3);
+                shiftsController.assignWorkerToJobInShift("05-06-2022", 1, 0, "driver department", 3, "driver", 3);
             }
             catch(Exception e2){
                 try {
                     workerController.addJob("driver", 3);
                     workerController.addJobForAWorker(3, "driver", 3);
                     workerController.addLicense(3, 3, "C");
-                    shiftsController.addWorkerToWeeklySchedule(1, 1, 0, "driver department", 3, 3);
-                    shiftsController.assignWorkerToJobInShift(1, 1, 0, "driver department", 3, "driver", 3);
+                    shiftsController.addWorkerToWeeklySchedule("05-06-2022", 1, 0, "driver department", 3, 3);
+                    shiftsController.assignWorkerToJobInShift("05-06-2022", 1, 0, "driver department", 3, "driver", 3);
                 }
                 catch(Exception e3){
-                    //do nothing
+                   try {
+                       workerController.addJobForAWorker(3, "driver", 3);
+                       workerController.addLicense(3, 3, "C");
+                       shiftsController.addWorkerToWeeklySchedule("05-06-2022", 1, 0, "driver department", 3, 3);
+                       shiftsController.assignWorkerToJobInShift("05-06-2022", 1, 0, "driver department", 3, "driver", 3);
+                   }catch (Exception e4){
+                       try {
+                           workerController.addLicense(3, 3, "C");
+                           shiftsController.addWorkerToWeeklySchedule("05-06-2022", 1, 0, "driver department", 3, 3);
+                           shiftsController.assignWorkerToJobInShift("05-06-2022", 1, 0, "driver department", 3, "driver", 3);
+                       }catch (Exception e5){
+                           try {
+                               shiftsController.addWorkerToWeeklySchedule("05-06-2022", 1, 0, "driver department", 3, 3);
+                               shiftsController.assignWorkerToJobInShift("05-06-2022", 1, 0, "driver department", 3, "driver", 3);
+                           }catch (Exception e6){
+                               try {
+                                   shiftsController.assignWorkerToJobInShift("05-06-2022", 1, 0, "driver department", 3, "driver", 3);
+                               }catch (Exception e7){
+
+                               }
+                           }
+                       }
+                   }
                 }
             }
         }
@@ -67,18 +95,18 @@ class WorkersFacadeTest {
     @Test
     void getAllDrivers_Success(){
         try {
-            workerController.addWorker("paprika",5,"bbb","bb",1,1,1,3,"driver department");
-            workerController.addJobForAWorker(5, "driver", 3);
-            workerController.addLicense(3, 5, "A");
-            shiftsController.addWorkerToWeeklySchedule(1, 1,0, "driver department", 5, 3);
-            shiftsController.assignWorkerToJobInShift(1, 1, 0, "driver department", 5, "driver", 3);
-            assertEquals(5, (workersFacade.getAllDrivers(1, 2, 0)).get(1).getId());
-            assertEquals(3, (workersFacade.getAllDrivers(1, 2, 0)).get(0).getId());
-            shiftsController.removeWorkerFromJobInShift(1, 1, 0, "driver department", 5, "driver", 3);
-            shiftsController.removeWorkerFromWeeklySchedule(1, 1, 0, "driver department", 5, 3);
-            workerController.removeLicense(3, 5, "A");
-            workerController.removeJobFromAWorker(5, "driver", 3);
-            workerController.deleteWorker(5, 3);
+            workerController.addWorker("paprika",12,"bbb","bb",1,1,1,3,"driver department");
+            workerController.addJobForAWorker(12, "driver", 3);
+            workerController.addLicense(3, 12, "A");
+            shiftsController.addWorkerToWeeklySchedule("05-06-2022", 1,0, "driver department", 12, 3);
+            shiftsController.assignWorkerToJobInShift("05-06-2022", 1, 0, "driver department", 12, "driver", 3);
+            assertEquals(12, (workersFacade.getAllDrivers("05-06-2022", 2, 0)).get(1).getId());
+            assertEquals(3, (workersFacade.getAllDrivers("05-06-2022", 2, 0)).get(0).getId());
+            shiftsController.removeWorkerFromJobInShift("05-06-2022", 1, 0, "driver department", 12, "driver", 3);
+            shiftsController.removeWorkerFromWeeklySchedule("05-06-2022", 1, 0, "driver department", 12, 3);
+            workerController.removeLicense(3, 12, "A");
+            workerController.removeJobFromAWorker(12, "driver", 3);
+            workerController.deleteWorker(12, 3);
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -88,7 +116,7 @@ class WorkersFacadeTest {
     @Test
     void getAllDrivers_Fail() {
         try {
-            workersFacade.getAllDrivers(2000, 2, 0);
+            workersFacade.getAllDrivers("12-06-2022", 2, 0);
         }
         catch(Exception e){
             assertEquals("weekly schedule does not exists", e.getMessage());
@@ -101,17 +129,21 @@ class WorkersFacadeTest {
         try{
             try {
                 workerController.addWorker("paprika", 7, "bbb", "bb", 1, 1, 1, 3, "sniff3");
-                shiftsController.createWeeklySchedule(2, 3, "sniff3");
+                shiftsController.createWeeklySchedule(3, "12-06-2022", "sniff3");
                 workerController.addJob("store keeper", 3);
                 workerController.addJobForAWorker(7, "store keeper", 3);
-                shiftsController.addWorkerToWeeklySchedule(2, 1, 0, "sniff3", 7, 3);
-                shiftsController.assignWorkerToJobInShift(2, 1, 0, "sniff3", 7, "store keeper", 3);
+                shiftsController.addWorkerToWeeklySchedule("12-06-2022", 1, 0, "sniff3", 7, 3);
+                shiftsController.assignWorkerToJobInShift("12-06-2022", 1, 0, "sniff3", 7, "store keeper", 3);
+                assertEquals(true, workersFacade.isTransportLegal("12-06-2022", 2, 0, "sniff3"));
+                workerController.removeJobFromAWorker(7, "driver", 3);
+                workerController.removeJob("store keeper",3);
+                shiftsController.removeWeeklySchedule("12-06-2022",3,"sniff3");
+                workerController.deleteWorker(7, 3);
             }
             catch(Exception e){
-                assertEquals(true, workersFacade.isTransportLegal(2, 2, 0, "sniff3"));
-                return;
+                System.out.println(e.getMessage());
             }
-            assertEquals(true, workersFacade.isTransportLegal(2, 2, 0, "sniff3"));
+
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -121,10 +153,10 @@ class WorkersFacadeTest {
     @Test
     void isTransportLegal_Fail(){
         try{
-            workersFacade.isTransportLegal(1, 2, 0, "driver department");
+            workersFacade.isTransportLegal("12-06-2022", 2, 0, "driver department");
         }
         catch(Exception e){
-            assertEquals("", e.getMessage());
+            assertEquals("weekly schedule does not exists", e.getMessage());
         }
     }
 

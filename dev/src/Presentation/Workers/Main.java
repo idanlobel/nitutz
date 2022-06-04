@@ -82,7 +82,7 @@ public class Main {
                 case 3: //addTransaction - a 'shift Manager' or a 'Cashier' or an 'HR' can do this method
                     List<Object> l1 = addOrRemoveTransaction();
                     if (l1 == null) break;
-                    Response<Boolean> ans1 = serviceLayer.addTransaction((int) l1.get(0),
+                    Response<Boolean> ans1 = serviceLayer.addTransaction((String) l1.get(0),
                             (int) l1.get(1), (int) l1.get(2),(String) l1.get(4), (int) l1.get(3), loginInfo.getWorkerID());
                     if (ans1.ErrorOccured())System.out.println(ans1.ErrorMessage);
                     else System.out.println("The transaction has been made successfully");
@@ -90,7 +90,7 @@ public class Main {
                 case 4: //removeTransaction - a 'shift manager' or an 'HR' can perform this method
                     List<Object> l2 = addOrRemoveTransaction();
                     if (l2 == null) break;
-                    Response<Boolean> ans2 = serviceLayer.removeTransaction(loginInfo.getWorkerID(), (int) l2.get(0),
+                    Response<Boolean> ans2 = serviceLayer.removeTransaction(loginInfo.getWorkerID(), (String) l2.get(0),
                             (int) l2.get(1), (int) l2.get(2),(String) l2.get(4), (int) l2.get(3));
                     if (ans2.ErrorOccured()) System.out.println(ans2.ErrorMessage);
                     else System.out.println("The transaction has been removed successfully");
@@ -112,11 +112,11 @@ public class Main {
                     if(!isHR(loginInfo.isHr()))
                         break;
                     sc = new Scanner(System.in);
-                    System.out.println("Please enter the id of the week for the weekly schedule: ");
-                    int weekID = sc.nextInt();
+                    System.out.println("Please enter the date of the week for the weekly schedule: ");
+                    String date = sc.nextLine();
                     System.out.println("Please enter the site of the weekly schedule: ");
                     String site = new Scanner(System.in).nextLine();
-                    Response<Boolean> res = serviceLayer.createWeeklySchedule(loginInfo.getWorkerID(), weekID, site);
+                    Response<Boolean> res = serviceLayer.createWeeklySchedule(loginInfo.getWorkerID(),site,date);
                     if (res.ErrorOccured())
                         System.out.println(res.ErrorMessage);
                     else
@@ -127,14 +127,14 @@ public class Main {
                         break;
                     List<Object> list1 = showShiftWorkers();
                     if (list1 == null) break;
-                    Response<List<WorkerSL>> workersInShift = serviceLayer.showShiftWorkers(loginInfo.getWorkerID(), (int) list1.get(0),
+                    Response<List<WorkerSL>> workersInShift = serviceLayer.showShiftWorkers(loginInfo.getWorkerID(), (String) list1.get(0),
                             (int) list1.get(1), (int) list1.get(2),(String)list1.get(3));
                     if (workersInShift.ErrorOccured())
                         System.out.println(workersInShift.ErrorMessage);
                     else if (workersInShift.value.isEmpty())
                         System.out.println("There are no workers in the specified shift");
                     else System.out.println("The workers in the desired shift are: " + workersInShift.value.toString() + "\n" +
-                                "And the shift manager is: " + serviceLayer.getShiftManagerInfo(loginInfo.getWorkerID(), (int) list1.get(0),
+                                "And the shift manager is: " + serviceLayer.getShiftManagerInfo(loginInfo.getWorkerID(), (String) list1.get(0),
                                 (int) list1.get(1), (int) list1.get(2),(String) list1.get(3)).value.toString());
                     break;
                 case 8: //viewWeeklySchedule TODO:: For now, if the Weekly Schedule will be shown only if being filled completely.
@@ -143,8 +143,8 @@ public class Main {
                     if(!isHR(loginInfo.isHr()))
                         break;
                     sc = new Scanner(System.in);
-                    System.out.println("Please enter the id of the week for the weekly schedule: ");
-                    int weeklyID = sc.nextInt();
+                    System.out.println("Please enter the date of the week for the weekly schedule: ");
+                    String weeklyID = sc.nextLine();
                     System.out.println("Please enter the site of the weekly schedule: ");
                     String site1 = new Scanner(System.in).nextLine();
                     Response<WeeklyScheduleSL> weeklySchedule = serviceLayer.viewWeeklySchedule(loginInfo.getWorkerID(), weeklyID,site1);
@@ -157,7 +157,7 @@ public class Main {
                         break;
                     List<Object> lst = addOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (lst == null) break;
-                    Response<Boolean> res2 = serviceLayer.setShiftManagerToWeeklySchedule(loginInfo.getWorkerID(), (int) lst.get(0),
+                    Response<Boolean> res2 = serviceLayer.setShiftManagerToWeeklySchedule(loginInfo.getWorkerID(), (String) lst.get(0),
                             (int) lst.get(1), (int) lst.get(2),(String)lst.get(4),(int) lst.get(3));
                     if (res2.ErrorOccured())
                         System.out.println(res2.ErrorMessage);
@@ -168,7 +168,7 @@ public class Main {
                         break;
                     List<Object> ls = addOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (ls == null) break;
-                    Response<Boolean> res3 = serviceLayer.removeWorkerFromWeeklySchedule(loginInfo.getWorkerID(), (int) ls.get(0),
+                    Response<Boolean> res3 = serviceLayer.removeWorkerFromWeeklySchedule(loginInfo.getWorkerID(), (String) ls.get(0),
                             (int) ls.get(1), (int) ls.get(2),(String)ls.get(4),(int) ls.get(3));
                     if (res3.ErrorOccured())
                         System.out.println(res3.ErrorMessage);
@@ -180,7 +180,7 @@ public class Main {
                         break;
                     List<Object> list2 = addOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (list2 == null) break;
-                    Response<Boolean> res4= serviceLayer.addWorkerToWeeklySchedule(loginInfo.getWorkerID(), (int) list2.get(0),
+                    Response<Boolean> res4= serviceLayer.addWorkerToWeeklySchedule(loginInfo.getWorkerID(), (String) list2.get(0),
                             (int) list2.get(1), (int) list2.get(2),(String)list2.get(4),(int) list2.get(3));
                     if (res4.ErrorOccured())
                         System.out.println(res4.ErrorMessage);
@@ -191,7 +191,7 @@ public class Main {
                     if(!isHR(loginInfo.isHr()))
                         break;
                     List<Object> list3 = showShiftWorkers();
-                    Response<Boolean> res5= serviceLayer.isShiftReady(loginInfo.getWorkerID(), (int)list3.get(0), (int)list3.get(1),
+                    Response<Boolean> res5= serviceLayer.isShiftReady(loginInfo.getWorkerID(), (String) list3.get(0), (int)list3.get(1),
                             (int)list3.get(2),(String) list3.get(3));
                     if(res5.ErrorOccured())
                         System.out.println(res5.ErrorMessage);
@@ -200,11 +200,11 @@ public class Main {
                 case 13: //isWeeklyScheduleReady
                     if(!isHR(loginInfo.isHr()))
                         break;
-                    System.out.println("Please enter the id of the week for the weekly schedule: ");
-                    int weekly_id_number = sc.nextInt();
+                    System.out.println("Please enter the date of the week for the weekly schedule: ");
+                    String weekID = sc.nextLine();
                     System.out.println("Please enter the name of the site of the weekly schedule: ");
                     String site2 = new Scanner(System.in).nextLine();
-                    Response<Boolean> res6= serviceLayer.isWeeklyScheduleReady(loginInfo.getWorkerID(), weekly_id_number,site2);
+                    Response<Boolean> res6= serviceLayer.isWeeklyScheduleReady(loginInfo.getWorkerID(), weekID,site2);
                     if(res6.ErrorOccured())
                         System.out.println(res6.ErrorMessage);
                     else System.out.println("The Weekly Schedule is ready");
@@ -273,7 +273,7 @@ public class Main {
                         break;
                     List<Object> listassign = assignOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (listassign == null) break;
-                    Response<Boolean> res12= serviceLayer.assignWorkerToJobInShift(loginInfo.getWorkerID(), (int) listassign.get(0),
+                    Response<Boolean> res12= serviceLayer.assignWorkerToJobInShift(loginInfo.getWorkerID(), (String) listassign.get(0),
                             (int) listassign.get(1), (int) listassign.get(2),(String) listassign.get(4) ,(int) listassign.get(3),(String)listassign.get(5));
                     if (res12.ErrorOccured())
                         System.out.println(res12.ErrorMessage);
@@ -285,7 +285,7 @@ public class Main {
                         break;
                     List<Object> listremove = assignOrRemoveInWeeklySchedule(loginInfo.getWorkerID());
                     if (listremove == null) break;
-                    Response<Boolean> res13= serviceLayer.removeWorkerFromJobInShift(loginInfo.getWorkerID(), (int) listremove.get(0),
+                    Response<Boolean> res13= serviceLayer.removeWorkerFromJobInShift(loginInfo.getWorkerID(), (String) listremove.get(0),
                             (int) listremove.get(1), (int) listremove.get(2),(String)listremove.get(4), (int) listremove.get(3),(String) listremove.get(5));
                     if (res13.ErrorOccured())
                         System.out.println(res13.ErrorMessage);
@@ -380,12 +380,8 @@ public class Main {
     }
     private static List<Object> addOrRemoveTransaction(){
         Scanner sc = new Scanner(System.in);
-        System.out.println("Please enter the id the week: ");
-        int weekID = sc.nextInt();
-        if(weekID <1){
-            System.out.println("You've entered an illegal option, please start the last process again.");
-            return null;
-        }
+        System.out.println("Please enter the date the week: ");
+        String weekID = sc.nextLine();
         System.out.println("Please enter the day of the week in which the shift is on: " +
                 "1 to 5");
         int shiftDay = sc.nextInt();
@@ -413,12 +409,8 @@ public class Main {
 
     private static List<Object> showShiftWorkers(){
         Scanner sc = new Scanner(System.in);
-        System.out.println("Please enter the week of the desired shift: ");
-        int shiftWeek = sc.nextInt();
-        if(shiftWeek < 1)  {
-            System.out.println("You've entered an illegal option, please start the last process again.");
-            return null;
-        }
+        System.out.println("Please enter the date of the week of the desired shift: ");
+        String shiftWeek = sc.nextLine();
         System.out.println("Please enter the day of the week in which the shift is on: " +
                 "1 to 5");
         int shiftDay = sc.nextInt();
@@ -440,12 +432,8 @@ public class Main {
 
     private static List<Object> addOrRemoveInWeeklySchedule(int hrID){
         Scanner sc = new Scanner(System.in);
-        System.out.println("Please enter the week of the desired shift: ");
-        int shiftWeek = sc.nextInt();
-        if(shiftWeek < 1)  {
-            System.out.println("You've entered an illegal option, please start the last process again.");
-            return null;
-        }
+        System.out.println("Please enter the date of the week of the desired shift: ");
+        String shiftWeek = sc.nextLine();
         System.out.println("Please enter the day of the week in which the shift is on: " +
                 "1 to 5");
         int shiftDay = sc.nextInt();

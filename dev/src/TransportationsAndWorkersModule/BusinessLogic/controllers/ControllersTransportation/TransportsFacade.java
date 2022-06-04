@@ -88,7 +88,7 @@ public class TransportsFacade {
             String[] time=departureTime.split(":");
             int shiftType=Integer.parseInt(time[0])>13?1:0;
             String[] dates=date.split(" ");
-            List<WorkerDTO>  lst= workersFacade.getAllDrivers(Integer.parseInt(dates[0]),Integer.parseInt(dates[1]),shiftType);
+            List<WorkerDTO>  lst= workersFacade.getAllDrivers(dates[0],Integer.parseInt(dates[1]),shiftType);
             return lst;
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,7 +101,7 @@ public class TransportsFacade {
             String[] time=departureTime.split(":");
             int shiftType=Integer.parseInt(time[0])>13?1:0;
             String[] dates=date.split(" ");
-            Boolean  aBoolean= workersFacade.isTransportLegal(Integer.parseInt(dates[0]),Integer.parseInt(dates[1]),shiftType,destinationId);
+            Boolean  aBoolean= workersFacade.isTransportLegal(dates[0],Integer.parseInt(dates[1]),shiftType,destinationId);
             return aBoolean;
         } catch (Exception e) {
             e.printStackTrace();

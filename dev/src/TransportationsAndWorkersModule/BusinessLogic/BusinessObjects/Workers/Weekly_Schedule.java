@@ -2,33 +2,31 @@ package src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Worker
 
 public class Weekly_Schedule {
     Shift[][] schedule;
-    int id;
 
+    String date;
     public String getSite() {
         return site;
     }
 
     String site;
 
-    public int getId() {
-        return id;
-    }
 
     //TODO:: צריך לבדוק פה שזה לא קיים כבר בדטאבייס...
-    public Weekly_Schedule( Shift[][] schedule, int id, String site) {
+    public Weekly_Schedule( Shift[][] schedule, String date, String site) {
         this.schedule = schedule;
-        this.id = id;
+        this.date=date;
         this.site=site;
     }
-    public Weekly_Schedule(int weekID, String site) {
+    public Weekly_Schedule(String site, String date) {
         this.schedule = new Shift[5][2];
         this.site=site;
+        this.date=date;
         for (int i =0; i<5; i++){
             for (int j = 0; j<2; j++){
                 schedule[i][j] = new Shift();
             }
         }
-        this.id=weekID;
+
     }
     public Shift getShift(int day, int shiftType)throws Exception{
         if ((day > 5 || day < 0) || (shiftType!= 0 && shiftType!= 1))
@@ -44,6 +42,11 @@ public class Weekly_Schedule {
             throw new Exception("There's no such schedule");
         }
     }
+
+    public String getId() {
+        return date;
+    }
+
 
     public boolean isWeeklyScheduleReady(){
         for(int i =0; i <5; i++){

@@ -11,15 +11,18 @@ import src.TransportationsAndWorkersModule.BusinessLogic.BusinessObjects.Workers
 import src.TransportationsAndWorkersModule.Dal.DatabaseManager;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class WeeklyScheduleDAO {
     private boolean readAll = false;
     private WorkerDAO workerDAO = new WorkerDAO();
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
     private JobsDAO jobsDAO = new JobsDAO();
-    private static HashMap<Integer,HashMap<String,Weekly_Schedule>> cacheWeeklySchedules = new HashMap<>(); //worker id to his workerSchedule
-    public Weekly_Schedule get(int id, String site) throws Exception{
-        HashMap<String, Weekly_Schedule> hashMap = cacheWeeklySchedules.get(id);
+    private static HashMap<String,HashMap<String,Weekly_Schedule>> cacheWeeklySchedules = new HashMap<>(); //worker id to his workerSchedule
+    public Weekly_Schedule get(String date, String site) throws Exception{
+        HashMap<String, Weekly_Schedule> hashMap = cacheWeeklySchedules.get(date);
         if (hashMap!=null && hashMap.get(site)!=null) return hashMap.get(site);
         Weekly_Schedule worker_schedule = null;
         //take from the db and insert to the cache then return
@@ -34,12 +37,12 @@ public class WeeklyScheduleDAO {
         try {
             conn = DatabaseManager.getInstance().connect();
             Statement statement = conn.createStatement();
-            ResultSet rs2 = statement.executeQuery("select * from weeklySchedule where id = '"+id+"' and site = '"+site+"'");
+            ResultSet rs2 = statement.executeQuery("select * from weeklySchedule where id = '"+date+"' and site = '"+site+"'");
             if (!rs2.next())throw new Exception("weekly schedule does not exists");
             conn.close();
             conn = DatabaseManager.getInstance().connect();
             Statement statement2 = conn.createStatement();
-            ResultSet rs = statement2.executeQuery("select * from shiftWorkerBook where week_id = '"+id+"' and site = '"+site+"'");
+            ResultSet rs = statement2.executeQuery("select * from shiftWorkerBook where week_id = '"+date+"' and site = '"+site+"'");
             while ( rs.next() ) {
                 int shift_type = rs.getInt("shift_type");
                 int day = rs.getInt("shift_day");
@@ -56,7 +59,7 @@ public class WeeklyScheduleDAO {
             conn.close();
             conn = DatabaseManager.getInstance().connect();
             Statement statement3 = conn.createStatement();
-            ResultSet rs3 = statement3.executeQuery("select * from transactions where week_id = '" + id + "' and site = '" + site + "'");
+            ResultSet rs3 = statement3.executeQuery("select * from transactions where week_id = '" + date + "' and site = '" + site + "'");
             while (rs3.next()) {
                 int shift_type = rs3.getInt("shift");
                 int day = rs3.getInt("day");
@@ -66,9 +69,9 @@ public class WeeklyScheduleDAO {
                 if (shifts[day][shift_type].getShift_transactions() == null) shifts[day][shift_type].addTransactionData(new Transaction(trans_id,wid));
                 shifts[day][shift_type].addTransaction(new Transaction(trans_id,wid),wid);
             }
-            worker_schedule = new Weekly_Schedule(shifts,id,site);
-            if (cacheWeeklySchedules.get(id)==null)cacheWeeklySchedules.put(id,new HashMap<>());
-            cacheWeeklySchedules.get(id).put(site,worker_schedule);
+            worker_schedule = new Weekly_Schedule(shifts,date,site);
+            if (cacheWeeklySchedules.get(date)==null)cacheWeeklySchedules.put(date,new HashMap<>());
+            cacheWeeklySchedules.get(date).put(site,worker_schedule);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }finally {
@@ -90,6 +93,11 @@ public class WeeklyScheduleDAO {
         String sqlCreate = "INSERT INTO weeklySchedule(id, site) VALUES('"+weekly_schedule.getId()+"','"+weekly_schedule.getSite()+"');";
         List<String> jobs = jobsDAO.getAllJobs();
         try {
+            conn = DatabaseManager.getInstance().connect();
+            Statement statement = conn.createStatement();
+            ResultSet rs2 = statement.executeQuery("select * from weeklySchedule where id = '"+weekly_schedule.getId()+"' and site = '"+weekly_schedule.getSite()+"'");
+            if (rs2.next())throw new Exception("week already exists");
+            conn.close();
             conn = DatabaseManager.getInstance().connect();
             Statement rs = conn.createStatement();
             rs.addBatch(sqlCreate);
@@ -151,7 +159,7 @@ public class WeeklyScheduleDAO {
         if (cacheWeeklySchedules.get(weekly_schedule.getId())==null)cacheWeeklySchedules.put(weekly_schedule.getId(), new HashMap<>());
         cacheWeeklySchedules.get(weekly_schedule.getId()).put(weekly_schedule.getSite(),weekly_schedule);
     }
-    public void delete(int id, String site) throws Exception {
+    public void delete(String id, String site) throws Exception {
         HashMap<String, Weekly_Schedule> hashMap = cacheWeeklySchedules.get(id);
         if (hashMap==null || hashMap.get(site)==null) throw new Exception("week doesnt exist");
         //delete from db first
