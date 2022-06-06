@@ -15,13 +15,13 @@ public class Stock {
     private DAL_controller dal_controller;
     private SupplyModuleService supplyModuleService;
 
-    public Stock() {
+    public Stock(SupplyModuleService supplyModuleService) {
 
         this.products_list = new ArrayList<>();
         this.sales_list = new ArrayList<>();
         this.periodic_orders_list = new ArrayList<>();
         dal_controller = DAL_controller.getInstance();
-        supplyModuleService=new SupplyModuleService();
+        this.supplyModuleService=supplyModuleService;
 
     }
 
@@ -106,10 +106,6 @@ public class Stock {
             }
             products_list.add(products);
         }
-
-
-
-    }
     }
     public boolean ValidateCatalogNum(List<Long> catalogNumberList) {
         for (Long catalogNumber : catalogNumberList) {

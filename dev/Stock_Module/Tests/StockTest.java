@@ -3,6 +3,7 @@ package Stock_Module.Tests;
 
 import Stock_Module.Data_layer.DAL_controller;
 import Stock_Module.busniess_layer.*;
+import SuppliersModule.SuppliersServiceLayer.SupplyModuleService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ class StockTest {
 
     @BeforeEach
     void setUp() {
-        stock_test=new Stock();
+        stock_test=new Stock(new SupplyModuleService());
 
     }
 

@@ -7,6 +7,7 @@ import Stock_Module.stock_service_layer.Responses.IsError;
 import Stock_Module.stock_service_layer.Responses.IsOk;
 import Stock_Module.stock_service_layer.Responses.Response;
 import Stock_Module.stock_service_layer.Stock_Manager;
+import SuppliersModule.SuppliersServiceLayer.SupplyModuleService;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,7 +26,7 @@ public class Integration_tests {
     @BeforeEach
     void setUp() throws Exception {
 
-       stock_manager_test=new Stock_Manager();
+       stock_manager_test=new Stock_Manager(new SupplyModuleService());
         order_catalog_99=stock_manager_test.make_order("99","20","20.0","2022-05-08","something","something","something","something","something");
         order_catalog_88=stock_manager_test.make_order("88","20","20.0","2022-05-08","something","something","something","something","something");
         order_catalog_72=stock_manager_test.make_order("72","5","5.5","2022-07-18","milka","something","diary","milk products","chocolate");
