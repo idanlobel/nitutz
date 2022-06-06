@@ -5,6 +5,7 @@ import Stock_Module.busniess_layer.Stock;
 import Stock_Module.stock_service_layer.Responses.IsError;
 import Stock_Module.stock_service_layer.Responses.IsOk;
 import Stock_Module.stock_service_layer.Responses.Response;
+import SuppliersModule.SuppliersServiceLayer.SupplyModuleService;
 
 import java.util.List;
 
@@ -14,9 +15,9 @@ public class Stock_Manager {
 
 
 
-    public Stock_Manager()
+    public Stock_Manager(SupplyModuleService supplyModuleService)
     {
-        mystock=new Stock();
+        mystock=new Stock(supplyModuleService);
     }
 
 

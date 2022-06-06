@@ -214,10 +214,20 @@ public class SupplyModuleService {
             return new IsError(e.getMessage());
         }
     }
+    public Response HandlePeriodicOrder(){
+
+        try {
+            orderController.handlePeriodicOrder(contractController);
+            return new IsValue(null,"periodic products ordered");
+        }
+        catch (Exception e){
+            return new IsError(e.getMessage());
+        }
+    }
     public Response AddPeriodicProduct(int id,int amount,int day){
 
         try {
-            contractController.AddPeriodicProduct(id,amount,day);
+            orderController.AddPeriodicProduct(id,amount,day);
             return new IsValue(null,"periodic product added");
         }
         catch (Exception e){
@@ -227,7 +237,7 @@ public class SupplyModuleService {
     public Response ChangePeriodicProduct(int id,int amount,int day){
 
         try {
-            contractController.ChangePeriodicProductAmount(id,amount,day);
+            orderController.ChangePeriodicProductAmount(id,amount,day);
             return new IsValue(null,"periodic product changed");
         }
         catch (Exception e){
@@ -237,7 +247,7 @@ public class SupplyModuleService {
     public Response DeletePeriodicProduct(int id,int day){
 
         try {
-            contractController.RemovePeriodicProduct(id,day);
+            orderController.RemovePeriodicProduct(id,day);
             return new IsValue(null,"periodic product removed");
         }
         catch (Exception e){

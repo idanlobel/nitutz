@@ -319,32 +319,45 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
             int dis=requestNumberInput("Enter Discount: ",scanner,100,1);
             genDisPairs.add(new int[]{num,dis});
         }
-        System.out.printf("please state the name of the contact person to handle orders: ");
+        System.out.print("please state the name of the contact person to handle orders: ");
         String name=scanner.next();
         checkCancel(name);
         int isPer=requestNumberInput("is the contract for periodic orders or shortage? (0-shortage, 1-periodic): ",scanner,1,0);
         boolean done=false;
         if(stock_manager.ValidateCatalogNumber(catalogNumberList).getValue()) {
             if (isPer == 1) {
-                while (!done)
-                    try {
-                        System.out.println("Enter delivery days(eg. 1,2,3 for Sun,Mon,Tue): ");
-                        String days = scanner.next();
-                        boolean[] par = new boolean[7];
-                        String[] split = days.split(",");
-                        for (String day : split)
-                            par[Integer.parseInt(day) - 1] = true;
+                boolean[] par=getDelDays(scanner);
+                handleResponse(service.SignPeriodicContract(companyNumber, name, idPairs, discounts, genDisPairs, par));
 
-                        handleResponse(service.SignPeriodicContract(companyNumber,name, idPairs, discounts, genDisPairs, par));
-                        done = true;
-                    } catch (Exception e) {
-                        System.out.print("Invalid syntax");
-                    }
             } else {
+                int isDel=requestNumberInput("does the contract have set delivery days? (0-no, 1-yes): ",scanner,1,0);
+                boolean[] par;
+                if(isDel==1) {
+                    par = getDelDays(scanner);
+                    //TODO
+                }
                 handleResponse(service.SignShortageContract(companyNumber,name, idPairs, discounts, genDisPairs));
             }
         }
         else System.out.println("Invalid catalog items: some of them are unrecognized");
+    }
+    public static boolean[] getDelDays(Scanner scanner){
+        boolean done=false;
+        boolean[] par = new boolean[7];
+        while (!done) {
+            try {
+                System.out.println("Enter delivery days(eg. 1,2,3 for Sun,Mon,Tue): ");
+                String days = scanner.next();
+                String[] split = days.split(",");
+                for (String day : split)
+                    par[Integer.parseInt(day) - 1] = true;
+
+                done = true;
+            } catch (Exception e) {
+                System.out.print("Invalid syntax");
+            }
+        }
+        return par;
     }
     public static void getContractChain(SupplyModuleService service,Scanner scanner){
         int companyNumber=requestNumberInput("Please state the company number with which the contract is signed with: ",scanner,-1,1);
