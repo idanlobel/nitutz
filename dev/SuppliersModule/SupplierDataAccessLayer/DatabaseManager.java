@@ -21,6 +21,10 @@ public class DatabaseManager {
                     "\tPRIMARY KEY(\"CompanyNumber\",\"FullName\"),\n" +
                     "\tFOREIGN KEY(\"CompanyNumber\") REFERENCES \"Suppliers\"(\"CompanyNumber\")\n" +
                     ")");
+            stmt.execute("CREATE TABLE if not exists \"PeriodicProducts\" (\n" +
+                    "\t\"CatalogNumber\"\tINTEGER NOT NULL,\n" +
+                    "\t\"WeekDay\"\tINTEGER NOT NULL,\n" +
+                    "\t\"Amount\"\tINTEGER NOT NULL\n)");
             stmt.execute("CREATE TABLE if not exists \"Contracts\" (\n" +
                     "\t\"CompanyNumber\"\tINTEGER NOT NULL,\n" +
                     "\t\"DeliveryDays\"\tTEXT,\n" +

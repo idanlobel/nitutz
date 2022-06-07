@@ -5,6 +5,7 @@ import Stock_Module.Data_layer.DAL_controller;
 import Stock_Module.busniess_layer.Products;
 import Stock_Module.busniess_layer.Sale;
 import Stock_Module.busniess_layer.Stock;
+import SuppliersModule.SuppliersServiceLayer.SupplyModuleService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ class SaleTest {
 
     @BeforeEach
     void setUp() {
-        stock_test=new Stock();
+        stock_test=new Stock(new SupplyModuleService());
         products_test=new Products(1,"something",10,50.0,100.0,LocalDate.now().toString(),"something","something","something","something", DAL_controller.getInstance().getProducts_table(), DAL_controller.getInstance().getProduct_table(),DAL_controller.getInstance().getSales_history_table());
         sale_test = new Sale(0, LocalDate.now().toString(),LocalDate.of(2033,4,6).toString(),"something",DAL_controller.getInstance().getSale_table());
     }

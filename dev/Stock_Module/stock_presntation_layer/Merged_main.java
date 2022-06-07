@@ -18,17 +18,17 @@ import java.time.LocalTime;
 
 public class Merged_main {
     public static void main(String[] args) throws Exception {
-        Stock_Manager stock_manager=new Stock_Manager();
         SupplyModuleService serviceObj=new SupplyModuleService();
+        Stock_Manager stock_manager=new Stock_Manager(serviceObj);
         Stock_main stock_main=new Stock_main(stock_manager);
         Scanner scanner=new Scanner(System.in);
         String current_order="";
         String[] order_in_array=new String[200];
         SuppliersMain suppliersMain=new SuppliersMain();
         ScheduledExecutorService executorService=Executors.newScheduledThreadPool(2);
-        executorService.scheduleAtFixedRate(() -> System.out.println(stock_manager.check_shortage_order().getValue()),
+        executorService.scheduleAtFixedRate(() -> System.out.println(stock_manager.check_shortage_order().getMsg()),
                 LocalDateTime.now().until(LocalDateTime.of(LocalDate.now().plusDays(1),LocalTime.of(5,0)), ChronoUnit.MINUTES),60*24, TimeUnit.MINUTES);
-        executorService.scheduleAtFixedRate(() -> System.out.println(stock_manager.check_periodic_order().getValue()),
+        executorService.scheduleAtFixedRate(() -> System.out.println(serviceObj.HandlePeriodicOrder().getMsg()),
                 LocalDateTime.now().until(LocalDateTime.of(LocalDate.now().plusDays(1),LocalTime.of(5,0)), ChronoUnit.MINUTES),60*24, TimeUnit.MINUTES);
         System.out.println("if you want to load stock data please type yes");
         current_order=scanner.nextLine();
@@ -58,8 +58,8 @@ public class Merged_main {
                     suppliersMain.RunSuppliers(serviceObj,stock_manager);
                 }
             else if(order_in_array[0].toLowerCase(Locale.ROOT).equals("handle")){
-                System.out.println(stock_manager.check_shortage_order().getValue());
-                System.out.println(stock_manager.check_periodic_order().getValue());
+                System.out.println(stock_manager.check_shortage_order().getMsg());
+                System.out.println(serviceObj.HandlePeriodicOrder().getMsg());
             }
             else
                 {

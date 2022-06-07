@@ -1,16 +1,15 @@
 package SuppliersModule.SupplierDataAccessLayer.DataAccessObjects;
 
 import SuppliersModule.SupplierDataAccessLayer.DatabaseManager;
-import SuppliersModule.SuppliersBusinessLayer.Orders.Order;
+import SuppliersModule.SuppliersBusinessLayer.Order;
+import SuppliersModule.SuppliersBusinessLayer.Products.PeriodicProduct;
+import SuppliersModule.SuppliersBusinessLayer.Supplier;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class OrderDAO {
     private boolean readAll = false;
@@ -67,6 +66,7 @@ public class OrderDAO {
         return order;
         //take from the db and insert to the cache then return
     }
+
     public int getIdTracking(){
         Connection conn = null;
         try {
@@ -167,7 +167,43 @@ public class OrderDAO {
         }
         cacheOrders.put(order.getId(),order);
     }
-
+    public void createPeriodicProduct(PeriodicProduct periodicProduct,int weekday) {
+        Connection conn=null;
+        String sql = "INSERT INTO PeriodicProducts(CatalogNumber,WeekDay,Amount) VALUES(";
+        try {
+            conn = DatabaseManager.getInstance().connect();
+            Statement rs = conn.createStatement();
+            //set order data
+            sql+="'"+periodicProduct.getId()+"','"+weekday+"','"+periodicProduct.getAmount()+"');";
+            rs.addBatch(sql);
+            //set his CPs;
+            /*for (ContactPerson contactPerson:supplier.getContactList().values()) {
+                String sql2="\nINSERT INTO ContactPeople(FullName,Email,CellNumber,CompanyNumber) VALUES('"
+                        +contactPerson.getName()+"','"
+                        +contactPerson.getEmail() +"','"
+                        +contactPerson.getCellNumber() +"','"
+                        +supplier.getCompanyNumber()+"');";
+                rs.addBatch(sql2);
+            }*/
+            //PreparedStatement rs = conn.prepareStatement(sql);
+            rs.executeBatch();
+            conn.commit();
+        } catch(Exception e) {
+            if (!retry){retry=true; createPeriodicProduct(periodicProduct,weekday);}
+            else{
+                retry=false;
+                throw new RuntimeException(e.getMessage());
+            }
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex.getMessage());
+            }
+        }
+    }
     public void update(Order order) throws Exception {
         //if (!cacheSuppliers.containsKey(supplier.getCompanyNumber())) throw new Exception("supplier doesn't exist");
         //update to db first
@@ -179,6 +215,15 @@ public class OrderDAO {
             throw new Exception(e.getMessage());
         }
         cacheOrders.put(order.getId(), order);
+    }
+    public void updatePeriodicProduct(PeriodicProduct periodicProduct,int weekDay) {
+        try {
+            deletePeriodicProduct(periodicProduct.getId(),weekDay);
+            createPeriodicProduct(periodicProduct,weekDay);
+        }catch (Exception e){
+            System.out.println("failed periodic product update");
+            throw new RuntimeException(e.getMessage());
+        }
     }
     public void delete(int id) throws Exception{
         Connection conn=null;
@@ -208,6 +253,33 @@ public class OrderDAO {
             }
         }
     }
+    public void deletePeriodicProduct(int catalogNumber,int weekDay) {
+        Connection conn=null;
+        String sql = "DELETE from PeriodicProducts where CatalogNumber = '"+catalogNumber+"' AND WeekDay = '"+weekDay+"';";
+        //String sql2 = "DELETE from ContactPeople where CompanyNumber = '"+cn+"';";
+        try {
+            conn = DatabaseManager.getInstance().connect();
+            Statement rs = conn.createStatement();
+            rs.addBatch(sql);
+            //rs.addBatch(sql2);
+            rs.executeBatch();
+            conn.commit();
+        } catch(Exception e) {
+            if (!retry){retry=true; deletePeriodicProduct(catalogNumber,weekDay);}
+            else{
+                retry=false;
+                throw new RuntimeException(e.getMessage());
+            }
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex.getMessage());
+            }
+        }
+    }
 
     public boolean exists(int id) throws Exception {
         Order order = cacheOrders.get(id);
@@ -230,5 +302,37 @@ public class OrderDAO {
             }
         }
         return false;
+    }
+    public HashMap<Integer, Collection<PeriodicProduct>> getAllPeriodicProducts() throws Exception{
+        HashMap<Integer,Collection<PeriodicProduct>> map = new HashMap();
+        for(int i=0;i<7;i++)
+            map.put(i,new ArrayList<>());
+        if (!readAll){
+            //read from DB and insert into cache suppliers;
+            Connection conn=null;
+            try {
+                conn = DatabaseManager.getInstance().connect();
+                Statement statement = conn.createStatement();
+                ResultSet rs = statement.executeQuery("select CatalogNumber,WeekDay,Amount from PeriodicProducts");
+                while ( rs.next() ) {
+                    int catalogNumber = rs.getInt("CatalogNumber");
+                    int weekDay= rs.getInt("WeekDay");
+                    int amount= rs.getInt("Amount");
+                    map.get(weekDay).add(new PeriodicProduct(catalogNumber,amount));
+                }
+            } catch (Exception e) {
+                throw new Exception(e.getMessage());
+            } finally {
+                try {
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } catch (SQLException ex) {
+                    throw new Exception(ex.getMessage());
+                }
+            }
+            //readAll = true;
+        }
+        return map;
     }
 }

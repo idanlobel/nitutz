@@ -14,12 +14,11 @@ import java.util.*;
 public class ContractController {
     private final ContractDAO contractDAO = new ContractDAO();
     private final Hashtable<Integer, Contract> shortageContracts;
-    private final HashMap<Integer, Collection<PeriodicProduct>> periodicProducts; //0-sunday, 6-saturday
+
     private final HashMap<Integer, Collection<PeriodicContract>> periodicSuppliers; //0-sunday, 6-saturday
 
     public ContractController()  {
         shortageContracts = new Hashtable<>();
-        periodicProducts = new HashMap<>();
         periodicSuppliers = new HashMap<>();
         try {
 
@@ -29,7 +28,6 @@ public class ContractController {
                     shortageContracts.put(contract.getCompanyNumber(), contract);
             }
             for (int i = 0; i < 7; i++) {
-                periodicProducts.put(i, new ArrayList<>());
                 periodicSuppliers.put(i, new ArrayList<>());
             }
         }
@@ -154,34 +152,18 @@ public class ContractController {
    //     toDeliverOrders.clear();
    //     return tmp;
    // }
-    public void AddPeriodicProduct(int id,int amount,int weekDay){
-        periodicProducts.get(weekDay).add(new PeriodicProduct(id,amount));
-    }
-    public void RemovePeriodicProduct(int id,int weekDay){
-        for(PeriodicProduct periodicProduct:periodicProducts.get(weekDay)){
-            if(periodicProduct.getId()==id){
-                periodicProducts.get(weekDay).remove(periodicProduct);
-                break;
-            }
-        }
-    }
-    public void ChangePeriodicProductAmount(int id,int newAmount,int weekDay){
-        for(PeriodicProduct periodicProduct:periodicProducts.get(weekDay)){
-            if(periodicProduct.getId()==id){
-                periodicProduct.setAmount(newAmount);
-                break;
-            }
-        }
-    }
+
     public Contract ShortageOrder(int id,int amount){
           return chooseContract(id,amount,shortageContracts.values());
     }
-    public Contract PeriodicOrder(int id,int amount, int weekDay){
-        if(periodicSuppliers.get(weekDay).isEmpty())
-            throw new RuntimeException("USER ERROR: No suppliers are delivering on a "+DayOfWeek.of(weekDay).toString());
-        return chooseContract(id,amount,new ArrayList<>(periodicSuppliers.get(weekDay)));
+
+
+    public Contract periodicOrder(PeriodicProduct periodicProduct, int weekDay){
+        if (periodicSuppliers.get(weekDay).isEmpty())
+            throw new RuntimeException("USER ERROR: No suppliers are delivering on a " + DayOfWeek.of(weekDay).toString());
+        return chooseContract(periodicProduct.getId(),periodicProduct.getAmount(),periodicSuppliers.get(weekDay));
     }
-    private Contract chooseContract(int id, int amount,Collection<Contract> supplierOptions) {
+    private Contract chooseContract(int id, int amount,Collection<? extends Contract> supplierOptions) {
         int chosenSupp=-1,bestPrice=-1,discount=100;
         Contract chosenContract=null;
         for(Contract contract: supplierOptions){
@@ -208,7 +190,6 @@ public class ContractController {
                     shortageContracts.put(contract.getCompanyNumber(), contract);
             }
             for (int i = 0; i < 7; i++) {
-                periodicProducts.put(i, new ArrayList<>());
                 periodicSuppliers.put(i, new ArrayList<>());
             }
         }
