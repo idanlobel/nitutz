@@ -4,7 +4,6 @@ import SuppliersModule.SupplierDataAccessLayer.DatabaseManager;
 import SuppliersModule.SuppliersBusinessLayer.Contracts.Contract;
 import SuppliersModule.SuppliersBusinessLayer.Contracts.PeriodicContract;
 import SuppliersModule.SuppliersBusinessLayer.Products.SupplierProduct;
-import SuppliersModule.SuppliersBusinessLayer.Supplier;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

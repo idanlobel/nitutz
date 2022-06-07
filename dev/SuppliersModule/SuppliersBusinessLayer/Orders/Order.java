@@ -1,4 +1,4 @@
-package SuppliersModule.SuppliersBusinessLayer;
+package SuppliersModule.SuppliersBusinessLayer.Orders;
 
 
 import SuppliersModule.SuppliersBusinessLayer.Products.Product;
@@ -9,11 +9,11 @@ import java.util.HashMap;
 
 public class Order {
     private final int id;
-    private final int supplyCompanyNumber;
-    private final HashMap<Product,int[]> itemInfos; //[0]=amount,[1]=initial price [2]=discount
-    private final String contactPerson;
-    private int totalPrice;
-    private final LocalDate orderDate;
+    protected final int supplyCompanyNumber;
+    protected final HashMap<SupplierProduct,int[]> itemInfos; //[0]=amount,[1]=initial price [2]=discount
+    protected final String contactPerson;
+    protected int totalPrice;
+    protected final LocalDate orderDate;
     private final LocalDate arrivalDate;
     private int generalDiscount;
     private int totalItemAmount;
@@ -91,7 +91,9 @@ public class Order {
             itemsDetails = output.toString();
         }
     }
-
+    public boolean isDeliveryOrder(){
+        return false;
+    }
     public int getTotalPrice() {
         return totalPrice*generalDiscount;
     }

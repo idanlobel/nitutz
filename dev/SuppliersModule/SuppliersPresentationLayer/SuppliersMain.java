@@ -1,11 +1,11 @@
 package SuppliersModule.SuppliersPresentationLayer;
 
 import Stock_Module.stock_service_layer.Stock_Manager;
-import SuppliersModule.SuppliersBusinessLayer.ContactPerson;
+import SuppliersModule.SuppliersBusinessLayer.Suppliers.ContactPerson;
 import SuppliersModule.SuppliersBusinessLayer.Contracts.Contract;
-import SuppliersModule.SuppliersBusinessLayer.Order;
+import SuppliersModule.SuppliersBusinessLayer.Orders.Order;
 import SuppliersModule.SuppliersBusinessLayer.Responses.Response;
-import SuppliersModule.SuppliersBusinessLayer.Supplier;
+import SuppliersModule.SuppliersBusinessLayer.Suppliers.Supplier;
 import SuppliersModule.SuppliersServiceLayer.SupplyModuleService;
 
 import java.util.ArrayList;
@@ -322,6 +322,7 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
         System.out.printf("please state the name of the contact person to handle orders: ");
         String name=scanner.next();
         checkCancel(name);
+        int selfDel=requestNumberInput("Are the products to be delivered by us? (1- yes 0-no)",scanner,1,0);
         int isPer=requestNumberInput("is the contract for periodic orders or shortage? (0-shortage, 1-periodic): ",scanner,1,0);
         boolean done=false;
         if(stock_manager.ValidateCatalogNumber(catalogNumberList).getValue()) {
@@ -335,13 +336,13 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
                         for (String day : split)
                             par[Integer.parseInt(day) - 1] = true;
 
-                        handleResponse(service.SignPeriodicContract(companyNumber,name, idPairs, discounts, genDisPairs, par));
+                        handleResponse(service.SignPeriodicContract(companyNumber,name, idPairs, discounts, genDisPairs, par,selfDel==1));
                         done = true;
                     } catch (Exception e) {
                         System.out.print("Invalid syntax");
                     }
             } else {
-                handleResponse(service.SignShortageContract(companyNumber,name, idPairs, discounts, genDisPairs));
+                handleResponse(service.SignShortageContract(companyNumber,name, idPairs, discounts, genDisPairs,selfDel==1));
             }
         }
         else System.out.println("Invalid catalog items: some of them are unrecognized");

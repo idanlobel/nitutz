@@ -5,12 +5,10 @@ package SuppliersModule.SuppliersBusinessLayer.Controllers;
 import SuppliersModule.SupplierDataAccessLayer.DataAccessObjects.ContractDAO;
 import SuppliersModule.SuppliersBusinessLayer.Contracts.Contract;
 import SuppliersModule.SuppliersBusinessLayer.Contracts.PeriodicContract;
-import SuppliersModule.SuppliersBusinessLayer.Order;
 import SuppliersModule.SuppliersBusinessLayer.Products.PeriodicProduct;
 import SuppliersModule.SuppliersBusinessLayer.Products.SupplierProduct;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.*;
 
 public class ContractController {
@@ -39,14 +37,14 @@ public class ContractController {
             System.out.println("System contract data load failed. sql error message: "+e.getMessage());
         }
     }
-    public Contract SignPeriodicContract(int companyNumber,String name, List<int[]> itemInfoList, HashMap<Integer,List<int[]>> discountsList,List<int[]> generalDiscountsList, boolean[] deliveryDays) throws Exception {
+    public Contract SignPeriodicContract(int companyNumber,String name, List<int[]> itemInfoList, HashMap<Integer,List<int[]>> discountsList,List<int[]> generalDiscountsList, boolean[] deliveryDays,boolean selfDel) throws Exception {
         if(deliveryDays.length != 7)
             throw new IllegalArgumentException("SYSTEM ERROR: Delivery days must be 7 days array");
         ArrayList<SupplierProduct> SupplierItems=new ArrayList<>();
         for(int[] itemInfo: itemInfoList){
             SupplierItems.add(new SupplierProduct(itemInfo[0],itemInfo[1],itemInfo[2]));
         }
-        PeriodicContract contract=new PeriodicContract(companyNumber,name,SupplierItems,discountsList,generalDiscountsList,deliveryDays);
+        PeriodicContract contract=new PeriodicContract(companyNumber,name,SupplierItems,discountsList,generalDiscountsList,deliveryDays,selfDel);
         for(int i=0;i<7;i++)
             if(deliveryDays[i])
                 periodicSuppliers.get(i).add(contract);
@@ -59,7 +57,7 @@ public class ContractController {
             ((PeriodicContract) contract).setDeliveryDays(days);
         contractDAO.update(getContract(companyNumber));
     }
-    public Contract SignShortageContract(int companyNumber,String name, List<int[]> itemInfoList, HashMap<Integer, List<int[]>> discountsList,List<int[]> generalDiscountsList) throws Exception {
+    public Contract SignShortageContract(int companyNumber,String name, List<int[]> itemInfoList, HashMap<Integer, List<int[]>> discountsList,List<int[]> generalDiscountsList,boolean selfDel) throws Exception {
         ArrayList<Integer> catalogs=new ArrayList<>();
         for(int[] info:itemInfoList)
             catalogs.add(info[2]);
@@ -67,7 +65,7 @@ public class ContractController {
         for(int[] itemInfo: itemInfoList){
             SupplierItems.add(new SupplierProduct(itemInfo[0],itemInfo[1],itemInfo[2]));
         }
-        Contract contract = new Contract(companyNumber,name,SupplierItems,discountsList,generalDiscountsList);
+        Contract contract = new Contract(companyNumber,name,SupplierItems,discountsList,generalDiscountsList,selfDel);
         shortageContracts.put(companyNumber,contract);
         contractDAO.create(contract);
         return contract;

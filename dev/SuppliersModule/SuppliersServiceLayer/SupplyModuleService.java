@@ -3,11 +3,13 @@ package SuppliersModule.SuppliersServiceLayer;
 import SuppliersModule.SuppliersBusinessLayer.Controllers.ContractController;
 import SuppliersModule.SuppliersBusinessLayer.Controllers.OrderController;
 import SuppliersModule.SuppliersBusinessLayer.Controllers.SuppliersController;
-import SuppliersModule.SuppliersBusinessLayer.*;
 import SuppliersModule.SuppliersBusinessLayer.Contracts.Contract;
+import SuppliersModule.SuppliersBusinessLayer.Orders.Order;
 import SuppliersModule.SuppliersBusinessLayer.Responses.IsError;
 import SuppliersModule.SuppliersBusinessLayer.Responses.Response;
 import SuppliersModule.SuppliersBusinessLayer.Responses.IsValue;
+import SuppliersModule.SuppliersBusinessLayer.Suppliers.ContactPerson;
+import SuppliersModule.SuppliersBusinessLayer.Suppliers.Supplier;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +25,7 @@ public class SupplyModuleService {
         orderController=new OrderController();
     }
 
-    public Response<Supplier> AddSupplier(Integer companyNumber, String name,  String bankNumber,String address, List<ContactPerson> contactPeople){
+    public Response<Supplier> AddSupplier(Integer companyNumber, String name, String bankNumber, String address, List<ContactPerson> contactPeople){
         try{
             return new IsValue<Supplier>(suppliersController.AddSupplier(name, companyNumber, bankNumber,address, contactPeople),"Supplier added");
         }
@@ -108,17 +110,17 @@ public class SupplyModuleService {
             return new IsError(e.getMessage());
         }
     }
-    public Response<Contract> SignShortageContract(int companyNumber,String orderCP, List<int[]> idPairsList, HashMap<Integer,List<int[]>> discountsList,List<int[]> generalDiscountsList){
+    public Response<Contract> SignShortageContract(int companyNumber,String orderCP, List<int[]> idPairsList, HashMap<Integer,List<int[]>> discountsList,List<int[]> generalDiscountsList,boolean selfDel){
         try {
-            return new IsValue<Contract>(contractController.SignShortageContract(companyNumber,orderCP,idPairsList,discountsList,generalDiscountsList),"Contract added");
+            return new IsValue<Contract>(contractController.SignShortageContract(companyNumber,orderCP,idPairsList,discountsList,generalDiscountsList,selfDel),"Contract added");
         }
         catch (Exception e){
             return new IsError(e.getMessage());
         }
     }
-    public Response<Contract> SignPeriodicContract(int companyNumber,String name, List<int[]> idPairsList, HashMap<Integer,List<int[]>> discountsList,List<int[]> generalItemAmountsDiscounts, boolean[] deliveryDays){
+    public Response<Contract> SignPeriodicContract(int companyNumber,String name, List<int[]> idPairsList, HashMap<Integer,List<int[]>> discountsList,List<int[]> generalItemAmountsDiscounts, boolean[] deliveryDays, boolean selfDel){
         try {
-            return new IsValue<Contract>(contractController.SignPeriodicContract(companyNumber,name,idPairsList,discountsList,generalItemAmountsDiscounts,deliveryDays),"Contract added");
+            return new IsValue<Contract>(contractController.SignPeriodicContract(companyNumber,name,idPairsList,discountsList,generalItemAmountsDiscounts,deliveryDays,selfDel),"Contract added");
         }
         catch (Exception e){
             return new IsError(e.getMessage());

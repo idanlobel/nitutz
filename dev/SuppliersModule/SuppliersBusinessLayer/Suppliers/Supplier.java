@@ -1,4 +1,6 @@
-package SuppliersModule.SuppliersBusinessLayer;
+package SuppliersModule.SuppliersBusinessLayer.Suppliers;
+
+import SuppliersModule.SuppliersBusinessLayer.Suppliers.ContactPerson;
 
 import java.util.HashMap;
 import java.util.List;

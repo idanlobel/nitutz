@@ -1,11 +1,11 @@
 package SuppliersModule.SuppliersBusinessLayer.Contracts;
 
 import SuppliersModule.SuppliersBusinessLayer.Products.SupplierProduct;
-import SuppliersModule.SuppliersBusinessLayer.Supplier;
 
 import java.util.*;
 
 public class Contract {
+    private final boolean selfDelivery;
     private final HashSet<Integer> productIds; //for contains
    // private final Supplier supplier;
     private final HashMap<Integer, SupplierProduct> products;
@@ -13,7 +13,7 @@ public class Contract {
     private final List<int[]> generalDiscounts;
     private final int companyNumber;
     private String orderingContractPerson;
-    public Contract(int companyNumber,String orderingContractPerson, List<SupplierProduct> products, HashMap<Integer, List<int[]>> discounts,List<int[]> generalDiscounts) {
+    public Contract(int companyNumber,String orderingContractPerson, List<SupplierProduct> products, HashMap<Integer, List<int[]>> discounts,List<int[]> generalDiscounts,boolean selfDelivery) {
         this.orderingContractPerson=orderingContractPerson;
         this.companyNumber=companyNumber;
         this.productIds=new HashSet<>();
@@ -21,12 +21,15 @@ public class Contract {
         this.products = new HashMap<>();
         this.discounts = discounts;
         this.generalDiscounts=generalDiscounts;
+        this.selfDelivery=selfDelivery;
         for (SupplierProduct product : products) {
             this.products.put(product.getId(), product);
             this.productIds.add(product.getId());
         }
     }
-
+    public boolean isSelfDelivery(){
+        return selfDelivery;
+    }
     public int getCompanyNumber() {
         return companyNumber;
     }

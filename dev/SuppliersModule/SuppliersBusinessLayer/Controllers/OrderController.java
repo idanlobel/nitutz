@@ -2,7 +2,8 @@ package SuppliersModule.SuppliersBusinessLayer.Controllers;
 
 import SuppliersModule.SupplierDataAccessLayer.DataAccessObjects.OrderDAO;
 import SuppliersModule.SuppliersBusinessLayer.Contracts.Contract;
-import SuppliersModule.SuppliersBusinessLayer.Order;
+import SuppliersModule.SuppliersBusinessLayer.Orders.DeliveryOrder;
+import SuppliersModule.SuppliersBusinessLayer.Orders.Order;
 import SuppliersModule.SuppliersBusinessLayer.Products.SupplierProduct;
 
 import java.time.LocalDate;
@@ -14,12 +15,12 @@ import java.util.List;
 public class OrderController {
     private final OrderDAO orderDAO = new OrderDAO();
     private final Hashtable<Integer, Order> orderHistory;
-    private final HashMap<Integer, Order> toDeliverOrders;
+    private final HashMap<Integer, Order> toHandleOrders;
     private int orderIdTracker;
 
     public OrderController(){
         orderHistory = new Hashtable<>();
-        toDeliverOrders = new HashMap<>();
+        toHandleOrders = new HashMap<>();
         orderIdTracker=orderDAO.getIdTracking();
         List<Order> orderList = orderDAO.getAllOrders();
         for (Order order : orderList) {
@@ -27,18 +28,21 @@ public class OrderController {
         }
     }
     public void orderProduct(Contract contract,int id,int amount){
-        Order order;
+         Order order;
         int companyNumber=contract.getCompanyNumber();
         SupplierProduct supplierProduct=contract.getProduct(id);
-        if(!toDeliverOrders.containsKey(companyNumber)) {
-            order = new Order(orderIdTracker, contract.getCompanyNumber(),
-                    contract.getOrderingCP(), LocalDate.now().plusDays(1)); //TODO: PLACEHOLDER. CALC ARRIVAL DATE??
+        if(!toHandleOrders.containsKey(companyNumber)) {
+            if(contract.isSelfDelivery())
+                order = new Order(orderIdTracker, contract.getCompanyNumber(),
+                      contract.getOrderingCP(), LocalDate.now().plusDays(1)); //TODO: PLACEHOLDER. CALC ARRIVAL DATE??
+            else order=new DeliveryOrder(orderIdTracker, contract.getCompanyNumber(),
+                    contract.getOrderingCP(), LocalDate.now().plusDays(1));
             orderIdTracker++;
-            toDeliverOrders.put(companyNumber, order);
+            toHandleOrders.put(companyNumber, order);
             order.AddProduct(supplierProduct, amount, supplierProduct.getPrice(), contract.getDiscount(id,amount),contract.getGeneralDiscounts());
         }
         else{
-            toDeliverOrders.get(companyNumber).AddProduct(supplierProduct,amount,supplierProduct.getPrice(),contract.getDiscount(id,amount),contract.getGeneralDiscounts());
+            toHandleOrders.get(companyNumber).AddProduct(supplierProduct,amount,supplierProduct.getPrice(),contract.getDiscount(id,amount),contract.getGeneralDiscounts());
         }
     }
     public Order getOrder(int orderId) throws Exception {
@@ -67,6 +71,23 @@ public class OrderController {
         catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }
+    }
+    public void CloseOrders(){
+        for(Order order:toHandleOrders.values()){
+            if(order.isDeliveryOrder());
+                //TODO: send to delivery module
+
+            else{
+                //TODO: send to stock??
+            }
+            try {
+                orderDAO.create(order);
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        toHandleOrders.clear();
     }
 
 }

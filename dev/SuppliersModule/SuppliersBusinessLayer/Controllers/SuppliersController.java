@@ -1,8 +1,8 @@
 package SuppliersModule.SuppliersBusinessLayer.Controllers;
 
 import SuppliersModule.SupplierDataAccessLayer.DataAccessObjects.SupplierDAO;
-import SuppliersModule.SuppliersBusinessLayer.ContactPerson;
-import SuppliersModule.SuppliersBusinessLayer.Supplier;
+import SuppliersModule.SuppliersBusinessLayer.Suppliers.ContactPerson;
+import SuppliersModule.SuppliersBusinessLayer.Suppliers.Supplier;
 
 import java.util.ArrayList;
 import java.util.Hashtable;

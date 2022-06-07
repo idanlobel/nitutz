@@ -1,13 +1,4 @@
 package SuppliersModule.SupplierDataAccessLayer;
-import SuppliersModule.SupplierDataAccessLayer.DataAccessObjects.ContractDAO;
-import SuppliersModule.SupplierDataAccessLayer.DataAccessObjects.SupplierDAO;
-import SuppliersModule.SuppliersBusinessLayer.Contracts.Contract;
-import SuppliersModule.SuppliersBusinessLayer.Products.SupplierProduct;
-import SuppliersModule.SuppliersBusinessLayer.Supplier;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class DataMain {
     public static void main(String[] args) throws Exception {

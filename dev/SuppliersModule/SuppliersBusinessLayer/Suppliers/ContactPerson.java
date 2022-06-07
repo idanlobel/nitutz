@@ -1,4 +1,4 @@
-package SuppliersModule.SuppliersBusinessLayer;
+package SuppliersModule.SuppliersBusinessLayer.Suppliers;
 
 public class ContactPerson {
     private final String name;

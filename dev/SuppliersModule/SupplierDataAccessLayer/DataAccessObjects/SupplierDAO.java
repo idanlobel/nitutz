@@ -1,7 +1,7 @@
 package SuppliersModule.SupplierDataAccessLayer.DataAccessObjects;
 import SuppliersModule.SupplierDataAccessLayer.DatabaseManager;
-import SuppliersModule.SuppliersBusinessLayer.ContactPerson;
-import SuppliersModule.SuppliersBusinessLayer.Supplier;
+import SuppliersModule.SuppliersBusinessLayer.Suppliers.ContactPerson;
+import SuppliersModule.SuppliersBusinessLayer.Suppliers.Supplier;
 import java.sql.*;
 import java.util.*;
 
