@@ -54,9 +54,9 @@ public class ContractDAO {
                 for(int i = 0; i < arrDeliveryDays.length; i++)
                     boolDeliveryDay[i] = Boolean.parseBoolean(arrDeliveryDays[i].substring(1));
                 if(contractType == 0)
-                    contract = new Contract(companyNumber,orderingCP, supplierProductList, discountsMap, generalDiscounts);
+                    contract = new Contract(companyNumber,orderingCP, supplierProductList, discountsMap, generalDiscounts,deliveryType==1);
                 else
-                    contract = new PeriodicContract(companyNumber,orderingCP, supplierProductList, discountsMap, generalDiscounts, boolDeliveryDay);
+                    contract = new PeriodicContract(companyNumber,orderingCP, supplierProductList, discountsMap, generalDiscounts, boolDeliveryDay,deliveryType==1);
 
             }
         } catch (Exception e) {

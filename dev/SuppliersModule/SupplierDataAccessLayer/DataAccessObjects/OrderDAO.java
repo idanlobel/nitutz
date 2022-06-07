@@ -1,9 +1,8 @@
 package SuppliersModule.SupplierDataAccessLayer.DataAccessObjects;
 
 import SuppliersModule.SupplierDataAccessLayer.DatabaseManager;
-import SuppliersModule.SuppliersBusinessLayer.Order;
+import SuppliersModule.SuppliersBusinessLayer.Orders.Order;
 import SuppliersModule.SuppliersBusinessLayer.Products.PeriodicProduct;
-import SuppliersModule.SuppliersBusinessLayer.Supplier;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

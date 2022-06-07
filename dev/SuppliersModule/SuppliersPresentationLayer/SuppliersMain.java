@@ -328,7 +328,7 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
         if(stock_manager.ValidateCatalogNumber(catalogNumberList).getValue()) {
             if (isPer == 1) {
                 boolean[] par=getDelDays(scanner);
-                handleResponse(service.SignPeriodicContract(companyNumber, name, idPairs, discounts, genDisPairs, par));
+                handleResponse(service.SignPeriodicContract(companyNumber, name, idPairs, discounts, genDisPairs, par,selfDel==1));
 
             } else {
                 int isDel=requestNumberInput("does the contract have set delivery days? (0-no, 1-yes): ",scanner,1,0);
@@ -337,7 +337,7 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
                     par = getDelDays(scanner);
                     //TODO
                 }
-                handleResponse(service.SignShortageContract(companyNumber,name, idPairs, discounts, genDisPairs));
+                handleResponse(service.SignShortageContract(companyNumber,name, idPairs, discounts, genDisPairs,selfDel==1));
             }
         }
         else System.out.println("Invalid catalog items: some of them are unrecognized");
@@ -352,18 +352,10 @@ public class SuppliersMain { //note: this code is assumed to be made as a placeh
                 String[] split = days.split(",");
                 for (String day : split)
                     par[Integer.parseInt(day) - 1] = true;
-
-                        handleResponse(service.SignPeriodicContract(companyNumber,name, idPairs, discounts, genDisPairs, par,selfDel==1));
-                        done = true;
+                    done = true;
                     } catch (Exception e) {
                         System.out.print("Invalid syntax");
                     }
-            } else {
-                handleResponse(service.SignShortageContract(companyNumber,name, idPairs, discounts, genDisPairs,selfDel==1));
-                done = true;
-            } catch (Exception e) {
-                System.out.print("Invalid syntax");
-            }
         }
         return par;
     }

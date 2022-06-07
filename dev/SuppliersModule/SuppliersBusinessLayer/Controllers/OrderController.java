@@ -2,7 +2,6 @@ package SuppliersModule.SuppliersBusinessLayer.Controllers;
 
 import SuppliersModule.SupplierDataAccessLayer.DataAccessObjects.OrderDAO;
 import SuppliersModule.SuppliersBusinessLayer.Contracts.Contract;
-import SuppliersModule.SuppliersBusinessLayer.Order;
 import SuppliersModule.SuppliersBusinessLayer.Products.PeriodicProduct;
 import SuppliersModule.SuppliersBusinessLayer.Orders.DeliveryOrder;
 import SuppliersModule.SuppliersBusinessLayer.Orders.Order;
